@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Fuentes locales ─────────────────────────────────────────────────────── */
+@font-face {
+  font-family: "Qalinza";
+  src: url("/fonts/Qalinza/Qalinza-Regular.woff2") format("woff2"),
+       url("/fonts/Qalinza/Qalinza-Regular.woff")  format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Nexa";
+  src: url("/fonts/Nexa/Nexa-Regular.woff2") format("woff2"),
+       url("/fonts/Nexa/Nexa-Regular.woff")  format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Nexa";
+  src: url("/fonts/Nexa/Nexa-Bold.woff2") format("woff2"),
+       url("/fonts/Nexa/Nexa-Bold.woff")  format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ─── Base ─────────────────────────────────────────────────────────────────── */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply font-body text-brand-navy bg-white antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+  }
+}
+
+/* ─── Utilidades de componente ──────────────────────────────────────────────── */
+@layer components {
+  .section-padding {
+    @apply px-6 py-20 md:px-12 lg:px-24;
+  }
+
+  .container-allura {
+    @apply max-w-6xl mx-auto;
+  }
+}
