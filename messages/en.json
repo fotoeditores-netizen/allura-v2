@@ -1,0 +1,36 @@
+{
+  "nav": {
+    "howItWorks": "How it works",
+    "about": "About us",
+    "team": "Our team",
+    "contact": "Contact us",
+    "blog": "Blog",
+    "services": "Services",
+    "cta": "Book your consultation"
+  },
+  "footer": {
+    "whatsappHeading": "Can we help you?",
+    "whatsappSub": "Our team responds in less than 24 hours.",
+    "whatsappCta": "Chat on WhatsApp",
+    "navSection": "Navigation",
+    "servicesSection": "Specialties",
+    "contactSection": "Contact",
+    "brand": "Excellence in medical tourism in Medellín. Premium dentistry and aesthetic facial medicine with the warmth of Colombia.",
+    "location": "Medellín, Colombia",
+    "whatsappAvail": "WhatsApp available",
+    "copyright": "All rights reserved.",
+    "navLinks": {
+      "home": "Home",
+      "howItWorks": "How it works",
+      "services": "Services",
+      "about": "About us",
+      "team": "Our team",
+      "blog": "Blog",
+      "contact": "Contact us"
+    },
+    "legal": {
+      "privacy": "Privacy policy",
+      "accessibility": "Accessibility statement"
+    }
+  }
+}

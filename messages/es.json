@@ -1,0 +1,36 @@
+{
+  "nav": {
+    "howItWorks": "Cómo funciona",
+    "about": "Sobre nosotros",
+    "team": "Equipo",
+    "contact": "Contáctanos",
+    "blog": "Blog",
+    "services": "Servicios",
+    "cta": "Agenda tu consulta"
+  },
+  "footer": {
+    "whatsappHeading": "¿Podemos ayudarte?",
+    "whatsappSub": "Nuestro equipo responde en menos de 24 horas.",
+    "whatsappCta": "Hablar por WhatsApp",
+    "navSection": "Navegación",
+    "servicesSection": "Especialidades",
+    "contactSection": "Contacto",
+    "brand": "Turismo médico de excelencia en Medellín. Odontología premium y medicina facial estética con la calidez de Colombia.",
+    "location": "Medellín, Colombia",
+    "whatsappAvail": "WhatsApp disponible",
+    "copyright": "Todos los derechos reservados.",
+    "navLinks": {
+      "home": "Inicio",
+      "howItWorks": "Cómo funciona",
+      "services": "Servicios",
+      "about": "Sobre nosotros",
+      "team": "Equipo",
+      "blog": "Blog",
+      "contact": "Contáctanos"
+    },
+    "legal": {
+      "privacy": "Políticas de privacidad",
+      "accessibility": "Declaración de accesibilidad"
+    }
+  }
+}
