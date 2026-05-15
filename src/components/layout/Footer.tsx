@@ -1,19 +1,10 @@
-import Link from "next/link";
 import Image from "next/image";
 import { Instagram, Facebook, Linkedin, MessageCircle } from "lucide-react";
+import { getTranslations } from "next-intl/server";
+import { Link } from "@/navigation";
 
 const WHATSAPP_URL =
   "https://wa.me/573001234567?text=Hola%2C%20me%20interesa%20conocer%20m%C3%A1s%20sobre%20los%20servicios%20de%20Allura%20Healthcare";
-
-const navLinks = [
-  { href: "/",              label: "Inicio" },
-  { href: "/como-funciona", label: "Cómo funciona" },
-  { href: "/servicios",     label: "Servicios" },
-  { href: "/nosotros",      label: "Sobre nosotros" },
-  { href: "/equipo",        label: "Equipo" },
-  { href: "/blog",          label: "Blog" },
-  { href: "/contacto",      label: "Contáctanos" },
-];
 
 const serviceLinks = [
   { href: "/servicios/full-mouth-reconstruction", label: "Full Mouth Reconstruction" },
@@ -22,22 +13,27 @@ const serviceLinks = [
   { href: "/servicios/facial-harmony",            label: "Facial Harmony" },
 ];
 
-const legalLinks = [
-  { href: "/politicas-de-privacidad", label: "Políticas de privacidad" },
-  { href: "/accesibilidad",           label: "Declaración de accesibilidad" },
-];
+export async function Footer() {
+  const t = await getTranslations("footer");
 
-export function Footer() {
+  const navLinks = [
+    { href: "/",              label: t("navLinks.home") },
+    { href: "/como-funciona", label: t("navLinks.howItWorks") },
+    { href: "/servicios",     label: t("navLinks.services") },
+    { href: "/nosotros",      label: t("navLinks.about") },
+    { href: "/equipo",        label: t("navLinks.team") },
+    { href: "/blog",          label: t("navLinks.blog") },
+    { href: "/contacto",      label: t("navLinks.contact") },
+  ];
+
   return (
     <footer className="bg-brand-navy text-brand-light">
       {/* WhatsApp CTA Banner */}
       <div className="border-b border-white/10">
         <div className="container-allura px-6 md:px-12 py-8 flex flex-col sm:flex-row items-center justify-between gap-6">
           <div>
-            <p className="font-heading text-lg text-white mb-1">¿Podemos ayudarte?</p>
-            <p className="font-body text-sm text-brand-silver">
-              Nuestro equipo responde en menos de 24 horas.
-            </p>
+            <p className="font-heading text-lg text-white mb-1">{t("whatsappHeading")}</p>
+            <p className="font-body text-sm text-brand-silver">{t("whatsappSub")}</p>
           </div>
           <a
             href={WHATSAPP_URL}
@@ -46,7 +42,7 @@ export function Footer() {
             className="inline-flex items-center gap-2 px-6 py-3 bg-[#25D366] text-white rounded-full font-body font-bold text-sm hover:bg-[#22c55e] transition-colors flex-shrink-0"
           >
             <MessageCircle size={16} />
-            Hablar por WhatsApp
+            {t("whatsappCta")}
           </a>
         </div>
       </div>
@@ -66,7 +62,7 @@ export function Footer() {
               />
             </Link>
             <p className="font-body text-sm leading-relaxed text-brand-silver mb-6">
-              Turismo médico de excelencia en Medellín. Odontología premium y medicina facial estética con la calidez de Colombia.
+              {t("brand")}
             </p>
             <div className="flex gap-4">
               <a href="#" aria-label="Instagram" className="text-brand-silver hover:text-white transition-colors">
@@ -83,11 +79,16 @@ export function Footer() {
 
           {/* Navigation */}
           <div>
-            <p className="font-heading text-sm tracking-widest uppercase text-white mb-4">Navegación</p>
+            <p className="font-heading text-sm tracking-widest uppercase text-white mb-4">
+              {t("navSection")}
+            </p>
             <ul className="space-y-2">
               {navLinks.map(({ href, label }) => (
                 <li key={href}>
-                  <Link href={href} className="font-body text-sm text-brand-silver hover:text-white transition-colors">
+                  <Link
+                    href={href}
+                    className="font-body text-sm text-brand-silver hover:text-white transition-colors"
+                  >
                     {label}
                   </Link>
                 </li>
@@ -97,11 +98,16 @@ export function Footer() {
 
           {/* Services */}
           <div>
-            <p className="font-heading text-sm tracking-widest uppercase text-white mb-4">Especialidades</p>
+            <p className="font-heading text-sm tracking-widest uppercase text-white mb-4">
+              {t("servicesSection")}
+            </p>
             <ul className="space-y-2">
               {serviceLinks.map(({ href, label }) => (
                 <li key={href}>
-                  <Link href={href} className="font-body text-sm text-brand-silver hover:text-white transition-colors">
+                  <Link
+                    href={href}
+                    className="font-body text-sm text-brand-silver hover:text-white transition-colors"
+                  >
                     {label}
                   </Link>
                 </li>
@@ -111,16 +117,23 @@ export function Footer() {
 
           {/* Contact */}
           <div>
-            <p className="font-heading text-sm tracking-widest uppercase text-white mb-4">Contacto</p>
-            <p className="font-body text-sm text-brand-silver mb-1">Medellín, Colombia</p>
+            <p className="font-heading text-sm tracking-widest uppercase text-white mb-4">
+              {t("contactSection")}
+            </p>
+            <p className="font-body text-sm text-brand-silver mb-1">{t("location")}</p>
             <p className="font-body text-sm text-brand-silver mb-1">
               <a href="mailto:info@allura.co" className="hover:text-white transition-colors">
                 info@allura.co
               </a>
             </p>
             <p className="font-body text-sm text-brand-silver">
-              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
-                WhatsApp disponible
+              <a
+                href={WHATSAPP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-white transition-colors"
+              >
+                {t("whatsappAvail")}
               </a>
             </p>
           </div>
@@ -129,14 +142,21 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="border-t border-brand-blue/20 mt-12 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="font-body text-xs text-brand-silver">
-            © {new Date().getFullYear()} Allura Healthcare. Todos los derechos reservados.
+            © {new Date().getFullYear()} Allura Healthcare. {t("copyright")}
           </p>
           <div className="flex gap-6">
-            {legalLinks.map(({ href, label }) => (
-              <Link key={href} href={href} className="font-body text-xs text-brand-silver hover:text-white transition-colors">
-                {label}
-              </Link>
-            ))}
+            <Link
+              href="/politicas-de-privacidad"
+              className="font-body text-xs text-brand-silver hover:text-white transition-colors"
+            >
+              {t("legal.privacy")}
+            </Link>
+            <Link
+              href="/accesibilidad"
+              className="font-body text-xs text-brand-silver hover:text-white transition-colors"
+            >
+              {t("legal.accessibility")}
+            </Link>
           </div>
         </div>
       </div>

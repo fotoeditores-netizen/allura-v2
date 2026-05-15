@@ -1,10 +1,10 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { ChevronDown } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { useRef, useState } from "react";
+import { ChevronDown } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { Link, usePathname } from "@/navigation";
+import { cn } from "@/lib/utils";
 
 const serviceItems = [
   { href: "/servicios/full-mouth-reconstruction", label: "Allura Full Mouth Reconstruction" },
@@ -13,16 +13,9 @@ const serviceItems = [
   { href: "/servicios/facial-harmony",            label: "Allura Facial Harmony" },
 ];
 
-const links = [
-  { href: "/como-funciona", label: "Cómo funciona" },
-  { href: "/nosotros",      label: "Sobre nosotros" },
-  { href: "/equipo",        label: "Equipo" },
-  { href: "/contacto",      label: "Contáctanos" },
-  { href: "/blog",          label: "Blog" },
-];
-
 export function Nav({ dark = false }: { dark?: boolean }) {
   const pathname = usePathname();
+  const t = useTranslations("nav");
   const [open, setOpen] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -38,12 +31,19 @@ export function Nav({ dark = false }: { dark?: boolean }) {
     "font-body text-sm tracking-wide transition-colors duration-200",
     dark ? "text-white/80 hover:text-white" : "text-brand-navy hover:text-brand-blue"
   );
-
   const activeLinkClass = dark ? "text-white" : "text-brand-blue";
+
+  const navLinks = [
+    { href: "/como-funciona", label: t("howItWorks") },
+    { href: "/nosotros",      label: t("about") },
+    { href: "/equipo",        label: t("team") },
+    { href: "/contacto",      label: t("contact") },
+    { href: "/blog",          label: t("blog") },
+  ];
 
   return (
     <nav className="hidden md:flex items-center gap-7">
-      {links.slice(0, 3).map(({ href, label }) => (
+      {navLinks.slice(0, 3).map(({ href, label }) => (
         <Link
           key={href}
           href={href}
@@ -66,13 +66,10 @@ export function Nav({ dark = false }: { dark?: boolean }) {
             pathname.startsWith("/servicios") && activeLinkClass
           )}
         >
-          Servicios
+          {t("services")}
           <ChevronDown
             size={14}
-            className={cn(
-              "transition-transform duration-200",
-              open && "rotate-180"
-            )}
+            className={cn("transition-transform duration-200", open && "rotate-180")}
           />
         </button>
 
@@ -83,11 +80,11 @@ export function Nav({ dark = false }: { dark?: boolean }) {
         <div
           className={cn(
             "absolute top-full left-1/2 -translate-x-1/2 pt-3 z-50 transition-all duration-200 ease-in-out",
-            open ? "opacity-100 visible pointer-events-auto translate-y-0"
-                 : "opacity-0 invisible pointer-events-none -translate-y-1"
+            open
+              ? "opacity-100 visible pointer-events-auto translate-y-0"
+              : "opacity-0 invisible pointer-events-none -translate-y-1"
           )}
         >
-          {/* Arrow */}
           <div className="mx-auto w-3 h-3 -mb-1.5 border-l border-t border-brand-light bg-white rotate-45 ml-[116px]" />
           <ul className="bg-white border border-brand-light rounded-xl shadow-xl py-2 min-w-[260px] overflow-hidden">
             {serviceItems.map(({ href, label }) => (
@@ -104,7 +101,7 @@ export function Nav({ dark = false }: { dark?: boolean }) {
         </div>
       </div>
 
-      {links.slice(3).map(({ href, label }) => (
+      {navLinks.slice(3).map(({ href, label }) => (
         <Link
           key={href}
           href={href}

@@ -1,10 +1,12 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Menu, X, ChevronDown } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { Link } from "@/navigation";
 import { Nav } from "./Nav";
+import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
 import { cn } from "@/lib/utils";
 
 const serviceItems = [
@@ -14,24 +16,25 @@ const serviceItems = [
   { href: "/servicios/facial-harmony",            label: "Allura Facial Harmony" },
 ];
 
-const mobileLinks = [
-  { href: "/como-funciona", label: "Cómo funciona" },
-  { href: "/nosotros",      label: "Sobre nosotros" },
-  { href: "/equipo",        label: "Equipo" },
-  { href: "/contacto",      label: "Contáctanos" },
-  { href: "/blog",          label: "Blog" },
-];
-
 export function Header() {
-  const [scrolled,      setScrolled]      = useState(false);
-  const [menuOpen,      setMenuOpen]      = useState(false);
-  const [servicesOpen,  setServicesOpen]  = useState(false);
+  const [scrolled,     setScrolled]     = useState(false);
+  const [menuOpen,     setMenuOpen]     = useState(false);
+  const [servicesOpen, setServicesOpen] = useState(false);
+  const t = useTranslations("nav");
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  const mobileLinks = [
+    { href: "/como-funciona", label: t("howItWorks") },
+    { href: "/nosotros",      label: t("about") },
+    { href: "/equipo",        label: t("team") },
+    { href: "/contacto",      label: t("contact") },
+    { href: "/blog",          label: t("blog") },
+  ];
 
   return (
     <header
@@ -70,12 +73,17 @@ export function Header() {
         {/* Desktop nav */}
         <Nav dark={false} />
 
-        {/* CTA */}
+        {/* Language switcher — desktop only */}
+        <div className="hidden md:flex items-center">
+          <LanguageSwitcher />
+        </div>
+
+        {/* CTA — desktop only */}
         <Link
           href="/contacto"
           className="hidden md:inline-flex items-center px-5 py-2.5 text-sm font-body font-bold bg-brand-navy text-white rounded-full hover:bg-brand-blue transition-colors duration-200 flex-shrink-0"
         >
-          Agenda tu consulta
+          {t("cta")}
         </Link>
 
         {/* Mobile hamburger */}
@@ -91,7 +99,6 @@ export function Header() {
       {/* Mobile menu */}
       {menuOpen && (
         <div className="md:hidden bg-white border-t border-brand-light px-6 py-5 flex flex-col gap-1">
-          {/* Links before Servicios */}
           {mobileLinks.slice(0, 3).map(({ href, label }) => (
             <Link
               key={href}
@@ -109,13 +116,10 @@ export function Header() {
               className="w-full flex items-center justify-between text-brand-navy/80 font-body text-base py-2.5 hover:text-brand-navy transition-colors"
               onClick={() => setServicesOpen(!servicesOpen)}
             >
-              Servicios
+              {t("services")}
               <ChevronDown
                 size={16}
-                className={cn(
-                  "transition-transform duration-200",
-                  servicesOpen && "rotate-180"
-                )}
+                className={cn("transition-transform duration-200", servicesOpen && "rotate-180")}
               />
             </button>
             {servicesOpen && (
@@ -134,7 +138,6 @@ export function Header() {
             )}
           </div>
 
-          {/* Links after Servicios */}
           {mobileLinks.slice(3).map(({ href, label }) => (
             <Link
               key={href}
@@ -146,12 +149,17 @@ export function Header() {
             </Link>
           ))}
 
+          {/* Language switcher — mobile */}
+          <div className="py-2.5 border-t border-brand-light mt-1">
+            <LanguageSwitcher />
+          </div>
+
           <Link
             href="/contacto"
-            className="mt-3 text-center px-5 py-3 text-sm font-body font-bold bg-brand-navy text-white rounded-full hover:bg-brand-blue transition-colors"
+            className="mt-2 text-center px-5 py-3 text-sm font-body font-bold bg-brand-navy text-white rounded-full hover:bg-brand-blue transition-colors"
             onClick={() => setMenuOpen(false)}
           >
-            Agenda tu consulta
+            {t("cta")}
           </Link>
         </div>
       )}
