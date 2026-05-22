@@ -6,7 +6,9 @@
     "contact": "Contact us",
     "blog": "Blog",
     "services": "Services",
-    "cta": "Book your consultation"
+    "cta": "Book your consultation",
+    "pay": "Pay here",
+    "searchLabel": "Search"
   },
   "footer": {
     "whatsappHeading": "Can we help you?",

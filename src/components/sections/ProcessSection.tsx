@@ -4,39 +4,31 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Button } from "@/components/ui/Button";
+import { useTranslations } from "next-intl";
 
-const steps = [
+const stepsMeta = [
   {
-    step: "PASO 01",
-    title: "Cuéntanos tu objetivo",
-    description: "Te guiaremos en los primeros pasos",
     image: "/images/imagenes_web/medellin-turismo-medico-paciente-bienestar-allura-healthcare_edited.jpg",
-    alt: "Paciente investigando tratamientos desde casa con vista a Medellín",
+    alt: "Patient researching treatments from home with a view of Medellín",
   },
   {
-    step: "PASO 02",
-    title: "Consulta virtual",
-    description: "Evaluación inicial con un especialista",
     image: "/images/imagenes_web/allura-healthcare-seguimiento-remoto-internacional.jpg",
-    alt: "Consulta virtual con especialista Allura Healthcare por videollamada",
+    alt: "Virtual consultation with Allura Healthcare specialist via video call",
   },
   {
-    step: "PASO 03",
-    title: "Plan personalizado",
-    description: "Recibe un itinerario y plan detallado",
     image: "/images/imagenes_web/allura-healthcare-doctor-paciente.jpg",
-    alt: "Doctor presentando plan de tratamiento personalizado en tablet a paciente",
+    alt: "Doctor presenting personalized treatment plan on tablet to patient",
   },
   {
-    step: "PASO 04",
-    title: "Tratamiento experto",
-    description: "Atención de excelencia y seguimiento continuo",
     image: "/images/imagenes_web/allura-healthcare-como-funciona-proceso-acompanamiento_edited_edited.jpg",
-    alt: "Acompañamiento experto y seguimiento continuo en clínica Allura Medellín",
+    alt: "Expert support and continuous follow-up at Allura Medellín clinic",
   },
 ];
 
 export function ProcessSection() {
+  const t = useTranslations("process");
+  const steps = t.raw("steps") as Array<{ step: string; title: string; description: string }>;
+
   return (
     <section className="section-padding bg-brand-light/30">
       <div className="container-allura">
@@ -47,16 +39,16 @@ export function ProcessSection() {
           transition={{ duration: 0.6 }}
         >
           <SectionHeading
-            eyebrow="Cómo funciona"
-            title="Tu proceso con Allura: simple, seguro y humano"
+            eyebrow={t("eyebrow")}
+            title={t("title")}
             centered
           />
         </motion.div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
-          {steps.map(({ step, title, description, image, alt }, i) => (
+          {steps.map(({ step, title, description }, i) => (
             <motion.div
-              key={step}
+              key={i}
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -65,14 +57,16 @@ export function ProcessSection() {
             >
               <div className="relative w-full aspect-[4/5] overflow-hidden">
                 <Image
-                  src={image}
-                  alt={alt}
+                  src={stepsMeta[i].image}
+                  alt={stepsMeta[i].alt}
                   fill
                   className="object-cover object-top transition-transform duration-500 hover:scale-105"
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                 />
               </div>
-              <div className={`px-6 py-5 flex flex-col gap-2 ${i % 2 === 0 ? 'bg-white' : 'bg-brand-light'}`}>
+              <div
+                className={`px-6 py-5 flex flex-col gap-2 ${i % 2 === 0 ? "bg-white" : "bg-brand-light"}`}
+              >
                 <p className="font-body text-xs tracking-[0.2em] uppercase text-brand-blue">
                   {step}
                 </p>
@@ -95,7 +89,7 @@ export function ProcessSection() {
           className="flex justify-center mt-12"
         >
           <Button href="/contacto" variant="primary">
-            Comienza tu consulta personalizada
+            {t("cta")}
           </Button>
         </motion.div>
       </div>

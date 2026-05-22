@@ -2,9 +2,10 @@ import { Link } from "@/navigation";
 import { ChevronRight } from "lucide-react";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { CTABanner } from "@/components/sections/CTABanner";
+import { getTranslations } from "next-intl/server";
 
 const WHATSAPP_URL =
-  "https://wa.me/573001234567?text=Hola%2C%20me%20interesa%20conocer%20m%C3%A1s%20sobre%20los%20servicios%20de%20Allura%20Healthcare";
+  "https://wa.me/17862087572?text=Hola%2C%20me%20interesa%20conocer%20m%C3%A1s%20sobre%20los%20servicios%20de%20Allura%20Healthcare";
 
 interface Step {
   title: string;
@@ -23,7 +24,7 @@ interface ServiceDetailTemplateProps {
   specialty: "odontologia" | "facial";
 }
 
-export function ServiceDetailTemplate({
+export async function ServiceDetailTemplate({
   category,
   categorySlug,
   title,
@@ -33,6 +34,8 @@ export function ServiceDetailTemplate({
   candidates,
   timeline,
 }: ServiceDetailTemplateProps) {
+  const t = await getTranslations("serviceDetail");
+
   return (
     <>
       {/* Hero with breadcrumb */}
@@ -40,7 +43,7 @@ export function ServiceDetailTemplate({
         <div className="container-allura">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-2 font-body text-xs text-white/50 mb-8">
-            <Link href="/servicios" className="hover:text-white transition-colors">Servicios</Link>
+            <Link href="/servicios" className="hover:text-white transition-colors">{t("breadcrumbServices")}</Link>
             <ChevronRight size={12} />
             <Link href={`/servicios/${categorySlug}`} className="hover:text-white transition-colors">{category}</Link>
             <ChevronRight size={12} />
@@ -57,7 +60,7 @@ export function ServiceDetailTemplate({
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-7 py-3 bg-[#25D366] text-white rounded-full font-body font-bold text-sm hover:bg-[#22c55e] transition-colors"
             >
-              Hablar por WhatsApp
+              {t("whatsapp")}
             </a>
           </div>
         </div>
@@ -66,7 +69,7 @@ export function ServiceDetailTemplate({
       {/* Benefits */}
       <section className="section-padding bg-white">
         <div className="container-allura">
-          <SectionHeading eyebrow="Beneficios" title="¿Qué lograrás con este tratamiento?" />
+          <SectionHeading eyebrow={t("benefitsLabel")} title={t("benefitsTitle")} />
           <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-10">
             {benefits.map((benefit) => (
               <li key={benefit} className="flex items-start gap-3">
@@ -81,7 +84,7 @@ export function ServiceDetailTemplate({
       {/* Process */}
       <section className="section-padding bg-brand-light">
         <div className="container-allura">
-          <SectionHeading eyebrow="Proceso" title="Paso a paso del tratamiento" centered />
+          <SectionHeading eyebrow={t("processLabel")} title={t("processTitle")} centered />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
             {steps.map(({ title: stepTitle, description: stepDesc }, i) => (
               <div key={stepTitle} className="bg-white rounded-2xl p-7 shadow-sm border border-brand-light">
@@ -98,7 +101,7 @@ export function ServiceDetailTemplate({
       <section className="section-padding bg-white">
         <div className="container-allura grid grid-cols-1 md:grid-cols-2 gap-14">
           <div>
-            <SectionHeading eyebrow="Candidatos" title="¿Para quién es este tratamiento?" />
+            <SectionHeading eyebrow={t("candidatesLabel")} title={t("candidatesTitle")} />
             <ul className="mt-8 space-y-3">
               {candidates.map((c) => (
                 <li key={c} className="flex items-start gap-3">
@@ -109,7 +112,7 @@ export function ServiceDetailTemplate({
             </ul>
           </div>
           <div>
-            <SectionHeading eyebrow="Duración estimada" title="¿Cuánto tiempo toma?" />
+            <SectionHeading eyebrow={t("timelineLabel")} title={t("timelineTitle")} />
             <div className="mt-8 bg-brand-light rounded-2xl p-7">
               <p className="font-body text-base text-brand-navy leading-relaxed">{timeline}</p>
             </div>
@@ -120,12 +123,12 @@ export function ServiceDetailTemplate({
       {/* Why Allura */}
       <section className="section-padding bg-brand-navy">
         <div className="container-allura text-center max-w-2xl mx-auto">
-          <p className="font-body text-xs tracking-[0.2em] uppercase text-brand-blue mb-4">Por qué Allura</p>
+          <p className="font-body text-xs tracking-[0.2em] uppercase text-brand-blue mb-4">{t("whyLabel")}</p>
           <h2 className="font-heading text-3xl text-white mb-6">
-            Excelencia, tecnología y acompañamiento total
+            {t("whyTitle")}
           </h2>
           <p className="font-body text-brand-silver leading-relaxed mb-10">
-            En Allura combinamos especialistas certificados internacionalmente, tecnología de diagnóstico 3D y un modelo de atención diseñado especialmente para pacientes que viajan desde el exterior. Tu bienestar comienza antes de llegar y continúa mucho después de regresar.
+            {t("whyBody")}
           </p>
           <a
             href={WHATSAPP_URL}
@@ -133,7 +136,7 @@ export function ServiceDetailTemplate({
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-7 py-3 bg-[#25D366] text-white rounded-full font-body font-bold text-sm hover:bg-[#22c55e] transition-colors"
           >
-            Hablar por WhatsApp
+            {t("whatsapp")}
           </a>
         </div>
       </section>

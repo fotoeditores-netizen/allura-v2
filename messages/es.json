@@ -6,7 +6,9 @@
     "contact": "Contáctanos",
     "blog": "Blog",
     "services": "Servicios",
-    "cta": "Agenda tu consulta"
+    "cta": "Agenda tu consulta",
+    "pay": "Paga aquí",
+    "searchLabel": "Buscar"
   },
   "footer": {
     "whatsappHeading": "¿Podemos ayudarte?",

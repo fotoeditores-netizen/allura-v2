@@ -2,78 +2,43 @@ import type { Metadata } from "next";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { CTABanner } from "@/components/sections/CTABanner";
 import { Button } from "@/components/ui/Button";
-
-export const metadata: Metadata = {
-  title: "Cómo funciona — Allura Healthcare",
-  description: "Descubre el proceso paso a paso para recibir atención médica y odontológica de excelencia en Medellín con Allura Healthcare.",
-};
+import { getTranslations } from "next-intl/server";
 
 const WHATSAPP_URL =
-  "https://wa.me/573001234567?text=Hola%2C%20me%20interesa%20conocer%20m%C3%A1s%20sobre%20los%20servicios%20de%20Allura%20Healthcare";
+  "https://wa.me/17862087572?text=Hola%2C%20me%20interesa%20conocer%20m%C3%A1s%20sobre%20los%20servicios%20de%20Allura%20Healthcare";
 
-const steps = [
-  {
-    number: "01",
-    title: "Comparte tus necesidades",
-    description:
-      "Completa nuestro formulario de contacto con tus objetivos de salud y bienestar. El equipo Allura te responde con orientación personalizada en menos de 24 horas, sin compromiso.",
-    image: "/images/imagenes_web/allura-healthcare-contacto-inicial-turismo-en-salud-premium.png",
-    alt: "Contacto inicial con Allura Healthcare para turismo en salud premium",
-  },
-  {
-    number: "02",
-    title: "Consulta virtual con especialistas",
-    description:
-      "Agenda una reunión segura por videollamada con los médicos u odontólogos certificados de Allura. Recibirás un diagnóstico preliminar, opciones de tratamiento y un presupuesto claro antes de viajar.",
-    image: "/images/imagenes_web/allura-healthcare-consulta-virtual-especialista-turismo-en-salud.jpg",
-    alt: "Consulta virtual con especialista de Allura Healthcare para turismo en salud",
-  },
-  {
-    number: "03",
-    title: "Plan médico y experiencia de viaje",
-    description:
-      "Nuestro equipo diseña tu plan integral: citas, fechas, alojamiento recomendado y actividades opcionales en Medellín. Todo coordinado para que tu estancia sea cómoda y memorable.",
-    image: "/images/imagenes_web/allura-healthcare-reserva-organizacion-viaje-turismo-en-salud.jpg",
-    alt: "Reserva y organización del viaje de turismo en salud con Allura Healthcare en Medellín",
-  },
-  {
-    number: "04",
-    title: "Procedimiento y acompañamiento total",
-    description:
-      "Coordinamos tu llegada, los procedimientos clínicos, la recuperación y el seguimiento post-retorno desde tu país de origen. Estamos contigo en cada etapa.",
-    image: "/images/imagenes_web/allura-healthcare-tratamiento-acompanamiento-in-situ-turismo-en-salud.png",
-    alt: "Acompañamiento in situ durante tratamiento médico en Allura Healthcare Medellín",
-  },
+const stepImages = [
+  "/images/imagenes_web/allura-healthcare-contacto-inicial-turismo-en-salud-premium.png",
+  "/images/imagenes_web/allura-healthcare-consulta-virtual-especialista-turismo-en-salud.jpg",
+  "/images/imagenes_web/allura-healthcare-reserva-organizacion-viaje-turismo-en-salud.jpg",
+  "/images/imagenes_web/allura-healthcare-tratamiento-acompanamiento-in-situ-turismo-en-salud.png",
 ];
 
-const faqs = [
-  {
-    q: "¿Necesito hablar español para recibir atención?",
-    a: "No. Contamos con coordinadores bilingües (español e inglés) disponibles durante todo el proceso.",
-  },
-  {
-    q: "¿Qué pasa si necesito seguimiento después de regresar a mi país?",
-    a: "Ofrecemos seguimiento remoto con videollamadas y comunicación directa con tu especialista vía WhatsApp.",
-  },
-  {
-    q: "¿Los procedimientos incluyen garantía?",
-    a: "Sí. Todos nuestros tratamientos incluyen garantías según el tipo de procedimiento, con protocolos claros de seguimiento.",
-  },
-  {
-    q: "¿Puedo combinar varios tratamientos en un mismo viaje?",
-    a: "Absolutamente. De hecho, muchos pacientes optimizan su viaje combinando tratamientos odontológicos y de medicina facial estética.",
-  },
-];
+export async function generateMetadata({
+  params: { locale },
+}: {
+  params: { locale: string };
+}): Promise<Metadata> {
+  const t = await getTranslations({ locale, namespace: "comoFunciona" });
+  return {
+    title: t("metaTitle"),
+    description: t("metaDesc"),
+  };
+}
 
-export default function ComoFuncionaPage() {
+export default async function ComoFuncionaPage() {
+  const t = await getTranslations("comoFunciona");
+  const steps = t.raw("steps") as Array<{ number: string; title: string; description: string }>;
+  const faqs = t.raw("faqs") as Array<{ q: string; a: string }>;
+
   return (
     <>
       {/* Hero */}
       <section className="bg-brand-navy pt-40 pb-20 px-6 md:px-12 text-center">
         <SectionHeading
-          eyebrow="El proceso"
-          title="Cómo funciona Allura"
-          subtitle="Un proceso diseñado para que tu experiencia de turismo médico sea transparente, segura y sin estrés, desde tu país hasta Medellín."
+          eyebrow={t("heroEyebrow")}
+          title={t("heroTitle")}
+          subtitle={t("heroSubtitle")}
           centered
           light
         />
@@ -83,7 +48,7 @@ export default function ComoFuncionaPage() {
       <section className="section-padding bg-white">
         <div className="container-allura">
           <div className="space-y-16">
-            {steps.map(({ number, title, description, image, alt }, i) => (
+            {steps.map(({ number, title, description }, i) => (
               <div
                 key={number}
                 className={`grid grid-cols-1 md:grid-cols-2 gap-12 items-center ${
@@ -98,9 +63,7 @@ export default function ComoFuncionaPage() {
                 <div className={`relative aspect-video rounded-2xl overflow-hidden ${i % 2 !== 0 ? "md:order-1" : ""}`}>
                   <div
                     className="absolute inset-0 bg-cover bg-center"
-                    style={{ backgroundImage: `url('${image}')` }}
-                    role="img"
-                    aria-label={alt}
+                    style={{ backgroundImage: `url('${stepImages[i]}')` }}
                   />
                 </div>
               </div>
@@ -113,8 +76,8 @@ export default function ComoFuncionaPage() {
       <section className="section-padding bg-brand-light">
         <div className="container-allura max-w-3xl">
           <SectionHeading
-            eyebrow="Preguntas frecuentes"
-            title="Lo que más nos preguntan"
+            eyebrow={t("faqLabel")}
+            title={t("faqTitle")}
             centered
           />
           <div className="mt-12 space-y-6">
@@ -132,9 +95,9 @@ export default function ComoFuncionaPage() {
       <section className="section-padding bg-white">
         <div className="container-allura text-center max-w-xl mx-auto">
           <SectionHeading
-            eyebrow="¿Listo para comenzar?"
-            title="Tu primer paso es una conversación"
-            subtitle="Cuéntanos tu caso sin compromiso. Nuestro equipo te orienta de forma gratuita."
+            eyebrow={t("ctaEyebrow")}
+            title={t("ctaTitle")}
+            subtitle={t("ctaSubtitle")}
             centered
           />
           <div className="flex flex-col sm:flex-row gap-3 justify-center mt-10">
@@ -144,10 +107,10 @@ export default function ComoFuncionaPage() {
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 px-7 py-3 bg-[#25D366] text-white rounded-full font-body font-bold text-sm hover:bg-[#22c55e] transition-colors"
             >
-              Hablar por WhatsApp
+              {t("ctaWhatsapp")}
             </a>
             <Button href="/contacto" variant="primary">
-              Formulario de contacto
+              {t("ctaContact")}
             </Button>
           </div>
         </div>

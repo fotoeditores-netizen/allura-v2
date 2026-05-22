@@ -3,8 +3,11 @@
 import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { useTranslations } from "next-intl";
 
 export function HeroSection() {
+  const t = useTranslations("hero");
+
   return (
     <section className="relative h-screen min-h-[640px] flex items-center justify-center overflow-hidden">
       {/* Background video */}
@@ -23,7 +26,7 @@ export function HeroSection() {
         />
       </video>
 
-      {/* Overlay — sutil, más aire que antes */}
+      {/* Overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-brand-navy/60 via-brand-navy/45 to-brand-navy/75" />
 
       {/* Content */}
@@ -34,7 +37,7 @@ export function HeroSection() {
           transition={{ duration: 0.6 }}
           className="font-body text-xs tracking-[0.25em] uppercase text-white/60 mb-6"
         >
-          Medellín, Colombia · Pacientes Internacionales
+          {t("eyebrow")}
         </motion.p>
 
         <motion.h1
@@ -43,7 +46,9 @@ export function HeroSection() {
           transition={{ duration: 0.7, delay: 0.1 }}
           className="font-heading text-5xl md:text-6xl lg:text-7xl text-white leading-tight tracking-tight mb-6 max-w-4xl mx-auto"
         >
-          Salud que inspira,<br className="hidden sm:block" /> viajes que transforman
+          {t("headlinePart1")}
+          <br className="hidden sm:block" />
+          {" "}{t("headlinePart2")}
         </motion.h1>
 
         <motion.p
@@ -52,7 +57,7 @@ export function HeroSection() {
           transition={{ duration: 0.7, delay: 0.2 }}
           className="font-body text-base md:text-lg text-white/75 leading-relaxed max-w-2xl mx-auto mb-10"
         >
-          Atención médica y odontológica premium en Medellín, con acompañamiento personalizado para pacientes internacionales.
+          {t("subtext")}
         </motion.p>
 
         <motion.div
@@ -62,10 +67,10 @@ export function HeroSection() {
           className="flex flex-col sm:flex-row gap-3 justify-center"
         >
           <Button href="/servicios" variant="secondary">
-            Conoce nuestros servicios
+            {t("ctaPrimary")}
           </Button>
           <Button href="/como-funciona" variant="outline" className="border-white/50 hover:border-white">
-            ¿Cómo funciona?
+            {t("ctaSecondary")}
           </Button>
         </motion.div>
       </div>

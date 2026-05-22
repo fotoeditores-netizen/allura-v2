@@ -4,6 +4,7 @@ import { Link } from "@/navigation";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { useTranslations } from "next-intl";
 
 const cardBgStyles = [
   { backgroundColor: "#ffffff" },
@@ -12,47 +13,42 @@ const cardBgStyles = [
   { backgroundColor: "#eaeeef" },
 ];
 
-const services = [
+const servicesMeta = [
   {
-    title: "Full Mouth Reconstruction",
-    description: "Solución integral para recuperar función, estabilidad y una sonrisa que vuelva a sentirse segura.",
     image: "/images/imagenes_web/Allura-Full-Mouth-Reconstruction.jpg",
     href: "/servicios/full-mouth-reconstruction",
   },
   {
-    title: "Smile Makeover",
-    description: "Diseño personalizado de sonrisa para transformar la estética dental con precisión y armonía.",
     image: "/images/imagenes_web/Cosmetic_dentistry_allurahealthcare.jpg",
     href: "/servicios/smile-makeover",
   },
   {
-    title: "Allura Aligners",
-    description: "Ortodoncia invisible de última generación con planificación digital y seguimiento personalizado.",
     image: "/images/imagenes_web/Invisalign_Allurahealthcare_.jpg",
     href: "/servicios/aligners",
   },
   {
-    title: "Facial Harmony",
-    description: "Medicina facial estética de precisión: toxina botulínica, rellenos y rejuvenecimiento integral.",
     image: "/images/imagenes_web/allura-healthcare-evaluacion-facial-estructural.jpg",
     href: "/servicios/facial-harmony",
   },
 ];
 
 export function ServicesPreview() {
+  const t = useTranslations("servicesPreview");
+  const services = t.raw("services") as Array<{ title: string; description: string }>;
+
   return (
     <section className="section-padding bg-white">
       <div className="container-allura">
         <SectionHeading
-          eyebrow="Nuestros servicios"
-          title="Especialidades Allura"
-          subtitle="Odontología premium y medicina facial estética para pacientes internacionales."
+          eyebrow={t("eyebrow")}
+          title={t("title")}
+          subtitle={t("subtitle")}
         />
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-12">
-          {services.map(({ title, description, image, href }, i) => (
+          {services.map(({ title, description }, i) => (
             <motion.div
-              key={title}
+              key={i}
               initial={{ opacity: 0, scale: 0.97 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
@@ -63,15 +59,12 @@ export function ServicesPreview() {
               <div className="relative h-52 flex-shrink-0 overflow-hidden">
                 <div
                   className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-                  style={{ backgroundImage: `url('${image}')` }}
+                  style={{ backgroundImage: `url('${servicesMeta[i].image}')` }}
                 />
               </div>
 
               {/* Content area */}
-              <div
-                className="flex flex-col flex-1 p-6"
-                style={cardBgStyles[i]}
-              >
+              <div className="flex flex-col flex-1 p-6" style={cardBgStyles[i]}>
                 <h3 className="font-heading text-xl text-brand-navy mb-2 leading-tight">
                   {title}
                 </h3>
@@ -79,10 +72,10 @@ export function ServicesPreview() {
                   {description}
                 </p>
                 <Link
-                  href={href}
+                  href={servicesMeta[i].href}
                   className="inline-flex items-center gap-2 self-center font-body text-sm text-[#eaeeef] bg-brand-navy px-6 py-[10px] rounded transition-all duration-300 ease-out hover:bg-brand-blue hover:text-white"
                 >
-                  Quiero saber más <ArrowRight size={14} />
+                  {t("learnMore")} <ArrowRight size={14} />
                 </Link>
               </div>
             </motion.div>

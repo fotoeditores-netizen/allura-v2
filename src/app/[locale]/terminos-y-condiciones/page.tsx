@@ -151,8 +151,8 @@ export default function TerminosYCondicionesPage({
               </h2>
               <p>
                 {isEn ? "For questions about these Terms and Conditions, write to us at " : "Para preguntas sobre estos Términos y Condiciones, escríbenos a "}
-                <a href="mailto:info@allura.co" className="text-brand-blue hover:underline">
-                  info@allura.co
+                <a href="mailto:contact@allurahealthcare.com" className="text-brand-blue hover:underline">
+                  contact@allurahealthcare.com
                 </a>.
               </p>
             </div>

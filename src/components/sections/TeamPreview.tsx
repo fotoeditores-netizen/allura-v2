@@ -3,41 +3,21 @@
 import { motion } from "framer-motion";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Button } from "@/components/ui/Button";
+import { useTranslations } from "next-intl";
 
-const team = [
-  {
-    name: "Dra. Johanna Jaramillo",
-    specialty: "Odontóloga, Especialista en Prótesis Periodontal",
-    image: "/images/equipo/Dra-Johanna-Jaramillo-Allura.avif",
-  },
-  {
-    name: "Dr. Santiago Henao",
-    specialty: "Odontólogo y Ortodoncista",
-    image: "/images/equipo/Dr-Santiago-Henao-Allura.avif",
-  },
-  {
-    name: "Dra. Daniela Alzate",
-    specialty: "Odontóloga, Ortodoncista y MSc.",
-    image: "/images/equipo/Dra-Daniela-Alzate-Allura.avif",
-  },
-  {
-    name: "Dr. Iván Darío Jiménez",
-    specialty: "Odontólogo, Ortodoncista y MSc.",
-    image: "/images/equipo/Dr-Ivan-Jimenez-Allura.avif",
-  },
-  {
-    name: "Dr. Sebastián Muñoz",
-    specialty: "Odontólogo, MSc, Especialista en Prótesis Periodontal",
-    image: "/images/equipo/Dr-Sebastian-Munoz-Allura.avif",
-  },
-  {
-    name: "Dr. Alejandro Cifuentes",
-    specialty: "Odontólogo, Especialista en Rehabilitación Oral",
-    image: "/images/equipo/Dr-Alejandro-Cifuentes-Allura.avif",
-  },
+const teamMeta = [
+  { name: "Dra. Johanna Jaramillo", image: "/images/equipo/Dra-Johanna-Jaramillo-Allura.avif" },
+  { name: "Dr. Santiago Henao",     image: "/images/equipo/Dr-Santiago-Henao-Allura.avif" },
+  { name: "Dra. Daniela Alzate",    image: "/images/equipo/Dra-Daniela-Alzate-Allura.avif" },
+  { name: "Dr. Iván Darío Jiménez", image: "/images/equipo/Dr-Ivan-Jimenez-Allura.avif" },
+  { name: "Dr. Sebastián Muñoz",    image: "/images/equipo/Dr-Sebastian-Munoz-Allura.avif" },
+  { name: "Dr. Alejandro Cifuentes",image: "/images/equipo/Dr-Alejandro-Cifuentes-Allura.avif" },
 ];
 
 export function TeamPreview() {
+  const t = useTranslations("teamPreview");
+  const members = t.raw("members") as Array<{ specialty: string }>;
+
   return (
     <section className="section-padding bg-white">
       <div className="container-allura">
@@ -48,15 +28,15 @@ export function TeamPreview() {
           transition={{ duration: 0.6 }}
         >
           <SectionHeading
-            eyebrow="Nuestro equipo"
-            title="Conoce nuestro equipo experto"
-            subtitle="Conoce a los profesionales que acompañan cada proceso con criterio clínico, experiencia internacional y atención personalizada."
+            eyebrow={t("eyebrow")}
+            title={t("title")}
+            subtitle={t("subtitle")}
             centered
           />
         </motion.div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
-          {team.map(({ name, specialty, image }, i) => (
+          {teamMeta.map(({ name, image }, i) => (
             <motion.div
               key={name}
               initial={{ opacity: 0, y: 24 }}
@@ -71,12 +51,12 @@ export function TeamPreview() {
                   style={{ backgroundImage: `url('${image}')` }}
                 />
               </div>
-              <div className={`px-6 py-5 ${i % 2 === 0 ? 'bg-white' : 'bg-brand-light'}`}>
+              <div className={`px-6 py-5 ${i % 2 === 0 ? "bg-white" : "bg-brand-light"}`}>
                 <h3 className="font-heading text-lg text-brand-navy mb-1 leading-snug">
                   {name}
                 </h3>
                 <p className="font-body text-xs text-brand-blue tracking-wide leading-relaxed">
-                  {specialty}
+                  {members[i]?.specialty}
                 </p>
               </div>
             </motion.div>
@@ -91,7 +71,7 @@ export function TeamPreview() {
           className="flex justify-center mt-12"
         >
           <Button href="/equipo" variant="primary">
-            Conoce más sobre ellos
+            {t("cta")}
           </Button>
         </motion.div>
       </div>

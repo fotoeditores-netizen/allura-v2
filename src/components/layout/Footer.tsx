@@ -2,9 +2,10 @@ import Image from "next/image";
 import { Instagram, Facebook, Linkedin, MessageCircle } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/navigation";
+import { QualitySlider } from "./QualitySlider";
 
 const WHATSAPP_URL =
-  "https://wa.me/573001234567?text=Hola%2C%20me%20interesa%20conocer%20m%C3%A1s%20sobre%20los%20servicios%20de%20Allura%20Healthcare";
+  "https://wa.me/17862087572?text=Hola%2C%20me%20interesa%20conocer%20m%C3%A1s%20sobre%20los%20servicios%20de%20Allura%20Healthcare";
 
 const serviceLinks = [
   { href: "/servicios/full-mouth-reconstruction", label: "Full Mouth Reconstruction" },
@@ -44,6 +45,43 @@ export async function Footer() {
             <MessageCircle size={16} />
             {t("whatsappCta")}
           </a>
+        </div>
+      </div>
+
+      {/* Partners / Aliados */}
+      <div className="border-b border-white/10">
+        <div className="container-allura px-6 md:px-12 py-6">
+          <p className="font-heading text-sm tracking-widest uppercase text-white text-center mb-5">
+            Nuestros aliados
+          </p>
+          <div className="flex items-center justify-center gap-8 md:gap-14 flex-wrap">
+            {[
+              { src: "/images/imagenes_web/logo-muvon-travel.png",              alt: "Muvon Travel" },
+              { src: "/images/imagenes_web/logo-maskart.png",                   alt: "Maskart" },
+              { src: "/images/imagenes_web/logo-odontologia-de-precision.png",  alt: "Odontología de Precisión" },
+              { src: "/images/imagenes_web/logo-orto-rio.png",                  alt: "Orto Río" },
+            ].map(({ src, alt }) => (
+              <div key={alt} className="flex items-center justify-center h-16">
+                <Image
+                  src={src}
+                  alt={alt}
+                  width={182}
+                  height={64}
+                  className="max-h-full w-auto object-contain"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Comprometidos con la calidad – slider */}
+      <div className="bg-white">
+        <div className="container-allura px-6 md:px-12 py-8">
+          <p className="font-heading text-sm tracking-widest uppercase text-brand-navy text-center mb-6">
+            Comprometidos con la calidad
+          </p>
+          <QualitySlider />
         </div>
       </div>
 
@@ -122,8 +160,8 @@ export async function Footer() {
             </p>
             <p className="font-body text-sm text-brand-silver mb-1">{t("location")}</p>
             <p className="font-body text-sm text-brand-silver mb-1">
-              <a href="mailto:info@allura.co" className="hover:text-white transition-colors">
-                info@allura.co
+              <a href="mailto:contact@allurahealthcare.com" className="hover:text-white transition-colors">
+                contact@allurahealthcare.com
               </a>
             </p>
             <p className="font-body text-sm text-brand-silver">

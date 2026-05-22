@@ -2,53 +2,32 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { Stethoscope, Leaf, Plane, Sparkles } from "lucide-react";
+import { Stethoscope, Leaf, Plane, Sparkles, type LucideIcon } from "lucide-react";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Button } from "@/components/ui/Button";
+import { useTranslations } from "next-intl";
 
-const benefits = [
-  {
-    icon: Stethoscope,
-    title: "Excelencia médica",
-    description:
-      "Especialistas, infraestructura moderna y tecnología de última generación.",
-  },
-  {
-    icon: Leaf,
-    title: "Recuperación más cómoda",
-    description:
-      "Clima templado, hospitalidad local y estancias diseñadas para pacientes extranjeros.",
-  },
-  {
-    icon: Plane,
-    title: "Conectividad y logística",
-    description:
-      "Vuelos desde ciudades clave, alojamientos boutique y apoyo durante todo el viaje.",
-  },
-  {
-    icon: Sparkles,
-    title: "Bienestar y experiencia",
-    description:
-      "Paisaje, gastronomía y una energía urbana que acompaña el proceso de transformación.",
-  },
-];
+const icons: LucideIcon[] = [Stethoscope, Leaf, Plane, Sparkles];
 
 const gallery = [
   {
     src: "/images/imagenes_web/medellin-turismo-salud-clima-templado-recuperacion-paciente.jpg",
-    alt: "Paisaje aéreo de Guatapé — naturaleza y clima para la recuperación",
+    alt: "Aerial view of Guatapé — nature and climate for recovery",
   },
   {
     src: "/images/imagenes_web/medellin-turismo-medico-especialista-internacional-tecnologia-avanzada.jpg",
-    alt: "Especialistas médicos con tecnología de vanguardia en Medellín",
+    alt: "Medical specialists with cutting-edge technology in Medellín",
   },
   {
     src: "/images/imagenes_web/medellin-turismo-escaleras-comuna-13.jpg",
-    alt: "Escaleras de la Comuna 13 — energía urbana y cultura de Medellín",
+    alt: "Stairs of Comuna 13 — urban energy and culture of Medellín",
   },
 ];
 
 export function MedellinSection() {
+  const t = useTranslations("medellin");
+  const benefits = t.raw("benefits") as Array<{ title: string; description: string }>;
+
   return (
     <section className="section-padding bg-white">
       <div className="container-allura">
@@ -61,38 +40,41 @@ export function MedellinSection() {
           transition={{ duration: 0.6 }}
         >
           <SectionHeading
-            eyebrow="Por qué Medellín"
-            title="Medellín como destino, el bienestar como propósito"
-            subtitle="Una ciudad moderna, hospitalaria y bien conectada, ideal para pacientes internacionales que buscan atención de alto nivel y una recuperación más cómoda."
+            eyebrow={t("eyebrow")}
+            title={t("title")}
+            subtitle={t("subtitle")}
             centered
           />
         </motion.div>
 
         {/* Benefit Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-14">
-          {benefits.map(({ icon: Icon, title, description }, i) => (
-            <motion.div
-              key={title}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-              className={`${i % 2 === 0 ? 'bg-white' : 'bg-brand-light'} rounded-2xl p-7 border border-brand-light flex flex-col gap-4`}
-            >
-              <div className="w-11 h-11 rounded-xl bg-brand-navy/10 flex items-center justify-center">
-                <Icon size={22} className="text-brand-navy" />
-              </div>
-              <h3 className="font-heading text-lg text-brand-navy leading-snug">
-                {title}
-              </h3>
-              <p className="font-body text-sm text-brand-silver leading-relaxed">
-                {description}
-              </p>
-            </motion.div>
-          ))}
+          {benefits.map(({ title, description }, i) => {
+            const Icon = icons[i];
+            return (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                className={`${i % 2 === 0 ? "bg-white" : "bg-brand-light"} rounded-2xl p-7 border border-brand-light flex flex-col gap-4`}
+              >
+                <div className="w-11 h-11 rounded-xl bg-brand-navy/10 flex items-center justify-center">
+                  <Icon size={22} className="text-brand-navy" />
+                </div>
+                <h3 className="font-heading text-lg text-brand-navy leading-snug">
+                  {title}
+                </h3>
+                <p className="font-body text-sm text-brand-silver leading-relaxed">
+                  {description}
+                </p>
+              </motion.div>
+            );
+          })}
         </div>
 
-        {/* Image Gallery */}
+        {/* Image Gallery — src paths are locale-agnostic */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -125,7 +107,7 @@ export function MedellinSection() {
           className="flex justify-center mt-12"
         >
           <Button href="/como-funciona" variant="primary">
-            Explora Medellín con Allura
+            {t("cta")}
           </Button>
         </motion.div>
 

@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { X } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 interface TeamCardProps {
   name: string;
@@ -14,6 +15,7 @@ interface TeamCardProps {
 
 export function TeamCard({ name, specialty, image, formacion, reconocimiento, enfoque, bgLight = false }: TeamCardProps) {
   const [active, setActive] = useState(false);
+  const t = useTranslations('teamCard');
 
   const handleClick = () => {
     if (typeof window !== 'undefined' && window.matchMedia('(hover: none)').matches) {
@@ -23,22 +25,19 @@ export function TeamCard({ name, specialty, image, formacion, reconocimiento, en
 
   return (
     <div className="rounded-2xl overflow-hidden shadow-sm border border-brand-navy/20 bg-white">
-      {/* Foto con overlay encima */}
       <div
         className="relative aspect-square cursor-pointer select-none"
         onMouseEnter={() => setActive(true)}
         onMouseLeave={() => setActive(false)}
         onClick={handleClick}
         role="img"
-        aria-label={`Ver detalle de ${name}`}
+        aria-label={`${t('ariaDetail')} ${name}`}
       >
-        {/* Foto */}
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: `url('${image}')` }}
         />
 
-        {/* Overlay — aparece solo sobre la foto */}
         <div
           aria-hidden={!active}
           className={[
@@ -47,19 +46,17 @@ export function TeamCard({ name, specialty, image, formacion, reconocimiento, en
             active ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none',
           ].join(' ')}
         >
-          {/* Botón cerrar — solo móvil */}
           <button
             className="md:hidden self-end text-white/50 hover:text-white p-1 -mt-1 -mr-1 flex-shrink-0"
             onClick={(e) => { e.stopPropagation(); setActive(false); }}
-            aria-label="Cerrar"
+            aria-label={t('ariaClose')}
           >
             <X size={14} />
           </button>
 
-          {/* Formación */}
           <div>
             <p className="font-body text-[9px] tracking-[0.18em] uppercase text-brand-blue mb-1.5">
-              Formación
+              {t('formacion')}
             </p>
             <ul className="space-y-1">
               {formacion.map((item) => (
@@ -74,7 +71,7 @@ export function TeamCard({ name, specialty, image, formacion, reconocimiento, en
           {reconocimiento && reconocimiento.length > 0 && (
             <div>
               <p className="font-body text-[9px] tracking-[0.18em] uppercase text-brand-blue mb-1.5">
-                Reconocimiento
+                {t('reconocimiento')}
               </p>
               <ul className="space-y-1">
                 {reconocimiento.map((item) => (
@@ -89,7 +86,7 @@ export function TeamCard({ name, specialty, image, formacion, reconocimiento, en
 
           <div>
             <p className="font-body text-[9px] tracking-[0.18em] uppercase text-brand-blue mb-1.5">
-              Enfoque clínico
+              {t('enfoque')}
             </p>
             <ul className="space-y-1">
               {enfoque.map((item) => (
@@ -103,7 +100,6 @@ export function TeamCard({ name, specialty, image, formacion, reconocimiento, en
         </div>
       </div>
 
-      {/* Nombre y especialidad — siempre visible, fuera de la foto */}
       <div className={`p-6 ${bgLight ? 'bg-brand-light' : 'bg-white'}`}>
         <h3 className="font-heading text-lg text-brand-navy mb-1">{name}</h3>
         <p className="font-body text-xs text-brand-blue tracking-wide leading-relaxed">{specialty}</p>

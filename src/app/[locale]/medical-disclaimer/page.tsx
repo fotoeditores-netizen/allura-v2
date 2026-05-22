@@ -127,8 +127,8 @@ export default function MedicalDisclaimerPage({
                 {isEn
                   ? "For questions about treatments or to schedule a virtual consultation with one of our specialists, contact us at "
                   : "Para preguntas sobre tratamientos o para agendar una consulta virtual con uno de nuestros especialistas, contáctanos en "}
-                <a href="mailto:info@allura.co" className="text-brand-blue hover:underline">
-                  info@allura.co
+                <a href="mailto:contact@allurahealthcare.com" className="text-brand-blue hover:underline">
+                  contact@allurahealthcare.com
                 </a>
                 {isEn ? " or via WhatsApp." : " o por WhatsApp."}
               </p>

@@ -2,9 +2,10 @@ import { Link } from "@/navigation";
 import { ArrowRight } from "lucide-react";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { CTABanner } from "@/components/sections/CTABanner";
+import { getTranslations } from "next-intl/server";
 
 const WHATSAPP_URL =
-  "https://wa.me/573001234567?text=Hola%2C%20me%20interesa%20conocer%20m%C3%A1s%20sobre%20los%20servicios%20de%20Allura%20Healthcare";
+  "https://wa.me/17862087572?text=Hola%2C%20me%20interesa%20conocer%20m%C3%A1s%20sobre%20los%20servicios%20de%20Allura%20Healthcare";
 
 export interface SubService {
   slug: string;
@@ -22,7 +23,7 @@ interface ServiceCategoryTemplateProps {
   subServices: SubService[];
 }
 
-export function ServiceCategoryTemplate({
+export async function ServiceCategoryTemplate({
   title,
   eyebrow,
   subtitle,
@@ -31,6 +32,8 @@ export function ServiceCategoryTemplate({
   heroImage,
   subServices,
 }: ServiceCategoryTemplateProps) {
+  const t = await getTranslations("serviceTemplate");
+
   return (
     <>
       {/* Hero */}
@@ -54,7 +57,7 @@ export function ServiceCategoryTemplate({
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-7 py-3 bg-[#25D366] text-white rounded-full font-body font-bold text-sm hover:bg-[#22c55e] transition-colors"
           >
-            Hablar por WhatsApp
+            {t("whatsapp")}
           </a>
         </div>
       </section>
@@ -70,9 +73,9 @@ export function ServiceCategoryTemplate({
       <section className="section-padding bg-brand-light">
         <div className="container-allura">
           <SectionHeading
-            eyebrow="Tratamientos"
-            title="Nuestras soluciones especializadas"
-            subtitle="Cada tratamiento es diseñado según tu caso particular."
+            eyebrow={t("treatmentsLabel")}
+            title={t("treatmentsTitle")}
+            subtitle={t("treatmentsSubtitle")}
             centered
           />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
@@ -88,7 +91,7 @@ export function ServiceCategoryTemplate({
                 <p className="font-body text-sm text-brand-silver leading-relaxed flex-1 mb-5">{desc}</p>
                 <div className="flex justify-center">
                   <span className="inline-flex items-center gap-1.5 font-body text-sm text-[#eaeeef] bg-brand-navy px-6 py-[10px] rounded transition-all duration-300 ease-out group-hover:bg-brand-blue group-hover:text-white">
-                    Quiero saber más <ArrowRight size={14} />
+                    {t("learnMore")} <ArrowRight size={14} />
                   </span>
                 </div>
               </Link>
