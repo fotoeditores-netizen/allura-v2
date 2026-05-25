@@ -9,11 +9,13 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
+    "@sanity/image-url": "^2.1.1",
     "clsx": "^2",
     "framer-motion": "^11",
     "lucide-react": "^0.441.0",
     "next": "14.2.35",
     "next-intl": "^3.26.5",
+    "next-sanity": "^9.12.3",
     "pptxgenjs": "^4.0.1",
     "react": "^18",
     "react-dom": "^18",
@@ -22,6 +24,7 @@
     "zod": "^3"
   },
   "devDependencies": {
+    "@sanity/types": "^5.26.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
