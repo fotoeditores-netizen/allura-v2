@@ -29,9 +29,10 @@ export const popup = defineType({
           if (!isActive) return true
           const { document, getClient } = context
           const client = getClient({ apiVersion: '2024-01-01' })
+          const rawId = (document?._id ?? '').replace(/^drafts\./, '')
           const activePopups = await client.fetch(
-            `count(*[_type == "popup" && isActive == true && _id != $id])`,
-            { id: document?._id ?? '' }
+            `count(*[_type == "popup" && isActive == true && !(_id in [$draftId, $pubId])])`,
+            { draftId: `drafts.${rawId}`, pubId: rawId }
           )
           if (activePopups > 0) return 'Ya hay un popup activo. Desactívalo antes de activar este.'
           return true

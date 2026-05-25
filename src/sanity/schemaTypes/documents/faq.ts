@@ -9,7 +9,7 @@ export const faq = defineType({
   icon: HelpCircleIcon,
   fields: [
     defineField({ name: 'question', title: 'Pregunta', type: 'object', fields: [{ name: 'es', title: 'Español', type: 'string', validation: (Rule) => Rule.required() }, { name: 'en', title: 'English', type: 'string', validation: (Rule) => Rule.required() }] }),
-    defineField({ name: 'answer', title: 'Respuesta', type: 'localePortableText', validation: (Rule) => Rule.required() }),
+    defineField({ name: 'answer', title: 'Respuesta', type: 'localePortableText' }),
     defineField({
       name: 'category', title: 'Categoría', type: 'string',
       options: { list: [{ title: 'General', value: 'general' }, { title: 'Servicios', value: 'servicios' }, { title: 'Viaje y alojamiento', value: 'viaje' }, { title: 'Pagos', value: 'pagos' }, { title: 'Post-tratamiento', value: 'post-tratamiento' }] },
