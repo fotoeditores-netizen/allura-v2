@@ -3,9 +3,12 @@ import { Instagram, Facebook, Linkedin, MessageCircle } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/navigation";
 import { QualitySlider } from "./QualitySlider";
+import { client } from "@/sanity/lib/client";
+import { globalConfigQuery, type GlobalConfig } from "@/sanity/lib/queries";
 
-const WHATSAPP_URL =
+const WHATSAPP_FALLBACK =
   "https://wa.me/17862087572?text=Hola%2C%20me%20interesa%20conocer%20m%C3%A1s%20sobre%20los%20servicios%20de%20Allura%20Healthcare";
+const EMAIL_FALLBACK = "contact@allurahealthcare.com";
 
 const serviceLinks = [
   { href: "/servicios/full-mouth-reconstruction", label: "Full Mouth Reconstruction" },
@@ -15,7 +18,16 @@ const serviceLinks = [
 ];
 
 export async function Footer() {
-  const t = await getTranslations("footer");
+  const [t, config] = await Promise.all([
+    getTranslations("footer"),
+    client.fetch<GlobalConfig | null>(globalConfigQuery, {}, { next: { revalidate: 3600 } }),
+  ]);
+
+  const whatsappUrl = config?.whatsappUrl ?? WHATSAPP_FALLBACK;
+  const email = config?.email ?? EMAIL_FALLBACK;
+  const instagram = config?.instagram;
+  const facebook = config?.facebook;
+  const linkedin = config?.linkedin;
 
   const navLinks = [
     { href: "/",              label: t("navLinks.home") },
@@ -37,7 +49,7 @@ export async function Footer() {
             <p className="font-body text-sm text-brand-silver">{t("whatsappSub")}</p>
           </div>
           <a
-            href={WHATSAPP_URL}
+            href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-6 py-3 bg-[#25D366] text-white rounded-full font-body font-bold text-sm hover:bg-[#22c55e] transition-colors flex-shrink-0"
@@ -103,13 +115,13 @@ export async function Footer() {
               {t("brand")}
             </p>
             <div className="flex gap-4">
-              <a href="#" aria-label="Instagram" className="text-brand-silver hover:text-white transition-colors">
+              <a href={instagram ?? "#"} aria-label="Instagram" className="text-brand-silver hover:text-white transition-colors">
                 <Instagram size={18} />
               </a>
-              <a href="#" aria-label="Facebook" className="text-brand-silver hover:text-white transition-colors">
+              <a href={facebook ?? "#"} aria-label="Facebook" className="text-brand-silver hover:text-white transition-colors">
                 <Facebook size={18} />
               </a>
-              <a href="#" aria-label="LinkedIn" className="text-brand-silver hover:text-white transition-colors">
+              <a href={linkedin ?? "#"} aria-label="LinkedIn" className="text-brand-silver hover:text-white transition-colors">
                 <Linkedin size={18} />
               </a>
             </div>
@@ -160,13 +172,13 @@ export async function Footer() {
             </p>
             <p className="font-body text-sm text-brand-silver mb-1">{t("location")}</p>
             <p className="font-body text-sm text-brand-silver mb-1">
-              <a href="mailto:contact@allurahealthcare.com" className="hover:text-white transition-colors">
-                contact@allurahealthcare.com
+              <a href={`mailto:${email}`} className="hover:text-white transition-colors">
+                {email}
               </a>
             </p>
             <p className="font-body text-sm text-brand-silver">
               <a
-                href={WHATSAPP_URL}
+                href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-white transition-colors"
