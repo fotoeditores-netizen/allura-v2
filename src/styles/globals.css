@@ -55,3 +55,32 @@
     @apply max-w-6xl mx-auto;
   }
 }
+
+/* ─── QualitySlider ─────────────────────────────────────────────────────────── */
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(calc(-1 * var(--track-half))); }
+}
+
+.quality-wrapper {
+  --item-w: 220px;
+  --gap: 56px;
+  --count: 9;
+  --track-half: calc(var(--count) * (var(--item-w) + var(--gap)));
+}
+
+@media (min-width: 768px) {
+  .quality-wrapper {
+    --item-w: 240px;
+    --gap: 72px;
+  }
+}
+
+.quality-track {
+  animation: marquee 32s linear infinite;
+  will-change: transform;
+}
+
+.quality-track:hover {
+  animation-play-state: paused;
+}

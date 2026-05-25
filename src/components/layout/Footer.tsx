@@ -20,7 +20,9 @@ const serviceLinks = [
 export async function Footer() {
   const [t, config] = await Promise.all([
     getTranslations("footer"),
-    client.fetch<GlobalConfig | null>(globalConfigQuery, {}, { next: { revalidate: 3600 } }),
+    client.fetch<GlobalConfig | null>(globalConfigQuery, {}, {
+      next: { revalidate: process.env.NODE_ENV === "development" ? 0 : 3600 },
+    }),
   ]);
 
   const whatsappUrl = config?.whatsappUrl ?? WHATSAPP_FALLBACK;
@@ -191,7 +193,7 @@ export async function Footer() {
 
         {/* Bottom bar */}
         <div className="border-t border-brand-blue/20 mt-12 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="font-body text-xs text-brand-silver">
+          <p className="font-body text-xs text-brand-silver" suppressHydrationWarning>
             © {new Date().getFullYear()} Allura Healthcare. {t("copyright")}
           </p>
           <div className="flex flex-wrap justify-center sm:justify-end gap-x-6 gap-y-2">

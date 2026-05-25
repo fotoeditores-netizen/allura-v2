@@ -37,7 +37,18 @@
       "Bash(ITI\")",
       "PowerShell(Get-ChildItem \"c:\\\\Users\\\\publi\\\\Desktop\\\\ALLURA\\\\public\\\\images\\\\imagenes_web\\\\\" | Select-Object Name | Where-Object { $_.Name -match \"marca-pais|anato|ITI|transparent\" })",
       "PowerShell(netstat -ano)",
-      "Bash(node -e \"const p = require\\('./package.json'\\); const deps = {...p.dependencies,...p.devDependencies}; console.log\\('framer-motion:', deps['framer-motion']||'NOT FOUND'\\); console.log\\('tailwind:', deps['tailwindcss']||'NOT FOUND'\\);\")"
+      "Bash(node -e \"const p = require\\('./package.json'\\); const deps = {...p.dependencies,...p.devDependencies}; console.log\\('framer-motion:', deps['framer-motion']||'NOT FOUND'\\); console.log\\('tailwind:', deps['tailwindcss']||'NOT FOUND'\\);\")",
+      "Bash(npm list *)",
+      "Bash(curl -s --max-time 10 \"https://jfuyg4x0.api.sanity.io/v2024-01-01/data/query/production?query=*%5B_type%3D%3D%22globalConfig%22%5D%5B0%5D%7BwhatsappUrl%2Cemail%7D\" -H \"Authorization: Bearer skgbCrILzUV3KSObWfVL2zuZ5P1ymuSRhFwdv8nywJccPgrCT6b00I1yG9PezHIDD9MwvrcBfT88TBz8ghzEvXP9uIrc1dWasvX8dXGMhF8DZBc5ooem2T4YiJ7ovQ2lYcfBEkG3DtkWVXZkJLHERwKyc7hdneP7jr1KF8H23cgVdsDOGf3a\")",
+      "Bash(curl -s --max-time 15 \"http://localhost:3002/es\")",
+      "Bash(python3 -c \"import sys; html=sys.stdin.read\\(\\); print\\('HTML len:', len\\(html\\), '| WA:', '17862087572' in html, '| Email:', 'allurahealthcare' in html, '| Footer:', 'brand-navy' in html\\)\")",
+      "Bash(python3 -c \"import json,sys; p=json.load\\(sys.stdin\\); exports=p.get\\('exports',{}\\); [print\\(k\\) for k in exports if 'struct' in k.lower\\(\\)]\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" --max-time 5 \"http://localhost:3000/studio\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" --max-time 5 \"http://localhost:3000/es\")",
+      "PowerShell(Start-Process -NoNewWindow -FilePath \"cmd.exe\" -ArgumentList \"/c cd /d c:\\\\Users\\\\publi\\\\Desktop\\\\ALLURA && npx next dev --port 3000 > C:\\\\Temp\\\\nextdev.log 2>&1\")",
+      "PowerShell(Stop-Process -Name node -Force -ErrorAction SilentlyContinue)",
+      "Bash(Test-Path \"c:\\\\Users\\\\publi\\\\Desktop\\\\ALLURA\\\\src\\\\sanity\\\\schemaTypes\\\\objects\" -PathType Container)",
+      "Bash(node -e \"const icons = require\\('@sanity/icons'\\); const names = ['UsersIcon','TagIcon','StarIcon','HelpCircleIcon','SparklesIcon','DocumentIcon','EditIcon','ImageIcon','PlayIcon','TrendUpwardIcon','BellIcon']; names.forEach\\(n => console.log\\(n, n in icons ? 'OK' : 'MISSING'\\)\\);\")"
     ],
     "additionalDirectories": [
       "C:\\Temp"
