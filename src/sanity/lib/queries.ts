@@ -489,7 +489,7 @@ export const blogPostSlugsQuery = groq`
 export interface TestimonialItem {
   _id: string
   patientName: string
-  patientOrigin?: { es?: string; en?: string }
+  patientOrigin?: LocaleString
   quote: { es: string; en: string }
   rating: number
   photo?: {
