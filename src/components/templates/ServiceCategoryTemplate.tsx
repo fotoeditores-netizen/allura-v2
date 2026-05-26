@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { CTABanner } from "@/components/sections/CTABanner";
 import { getTranslations } from "next-intl/server";
+import type { ServiceCategoryData } from "@/sanity/lib/queries";
 
 const WHATSAPP_URL =
   "https://wa.me/17862087572?text=Hola%2C%20me%20interesa%20conocer%20m%C3%A1s%20sobre%20los%20servicios%20de%20Allura%20Healthcare";
@@ -21,6 +22,8 @@ interface ServiceCategoryTemplateProps {
   categorySlug: string;
   heroImage: string;
   subServices: SubService[];
+  sanityData?: ServiceCategoryData;
+  locale?: string;
 }
 
 export async function ServiceCategoryTemplate({
@@ -31,8 +34,26 @@ export async function ServiceCategoryTemplate({
   categorySlug,
   heroImage,
   subServices,
+  sanityData,
+  locale = "es",
 }: ServiceCategoryTemplateProps) {
   const t = await getTranslations("serviceTemplate");
+  const loc = locale as "es" | "en";
+
+  const resolvedTitle = sanityData?.title?.[loc] || title;
+  const resolvedDescription = sanityData?.description?.[loc] || description;
+
+  const resolvedHeroImage =
+    sanityData?.coverImage?.asset?.url || heroImage;
+
+  const resolvedSubServices: SubService[] =
+    sanityData?.services && sanityData.services.length > 0
+      ? sanityData.services.map((s) => ({
+          slug: s.slug.current,
+          name: s.title?.[loc] || s.slug.current,
+          description: s.shortDescription?.[loc] || "",
+        }))
+      : subServices;
 
   return (
     <>
@@ -40,13 +61,13 @@ export async function ServiceCategoryTemplate({
       <section className="relative pt-40 pb-24 overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url('${heroImage}')` }}
+          style={{ backgroundImage: `url('${resolvedHeroImage}')` }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-brand-navy/80 via-brand-navy/60 to-brand-navy/85" />
         <div className="relative z-10 container-allura px-6 md:px-12 text-center">
           <p className="font-body text-xs tracking-[0.25em] uppercase text-brand-blue mb-4">{eyebrow}</p>
           <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl text-white leading-tight mb-6 max-w-3xl mx-auto">
-            {title}
+            {resolvedTitle}
           </h1>
           <p className="font-body text-base md:text-lg text-white/75 max-w-2xl mx-auto mb-10 leading-relaxed">
             {subtitle}
@@ -65,7 +86,7 @@ export async function ServiceCategoryTemplate({
       {/* Description */}
       <section className="section-padding bg-white">
         <div className="container-allura max-w-3xl">
-          <p className="font-body text-lg text-brand-silver leading-relaxed">{description}</p>
+          <p className="font-body text-lg text-brand-silver leading-relaxed">{resolvedDescription}</p>
         </div>
       </section>
 
@@ -79,7 +100,7 @@ export async function ServiceCategoryTemplate({
             centered
           />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
-            {subServices.map(({ slug, name, description: desc }, i) => (
+            {resolvedSubServices.map(({ slug, name, description: desc }, i) => (
               <Link
                 key={slug}
                 href={`/servicios/${categorySlug}/${slug}`}
