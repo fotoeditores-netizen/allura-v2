@@ -75,6 +75,9 @@ export function ProcessSection({
 
   const displayCtaHref = sanityData?.cta?.url || "/contacto";
 
+  // Determine once if we're using Sanity steps
+  const usingSanitySteps = !!(sanityData?.steps && sanityData.steps.length > 0);
+
   return (
     <section className="section-padding bg-brand-light/30">
       <div className="container-allura">
@@ -94,12 +97,7 @@ export function ProcessSection({
             let stepTitle: string;
             let stepDescription: string;
 
-            const isFromSanity =
-              sanityData?.steps &&
-              sanityData.steps.length > 0 &&
-              "stepNumber" in step;
-
-            if (isFromSanity) {
+            if (usingSanitySteps) {
               // From Sanity — type-guarded
               const sanityStep = step as {
                 stepNumber?: number
@@ -110,10 +108,12 @@ export function ProcessSection({
               stepTitle =
                 sanityStep.title?.[locale as keyof LocaleString] ||
                 sanityStep.title?.es ||
+                fallbackSteps[i]?.title ||
                 "";
               stepDescription =
                 sanityStep.description?.[locale as keyof LocaleString] ||
                 sanityStep.description?.es ||
+                fallbackSteps[i]?.description ||
                 "";
             } else {
               // From i18n fallback
