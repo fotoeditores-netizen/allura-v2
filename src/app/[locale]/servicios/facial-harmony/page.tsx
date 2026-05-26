@@ -1,25 +1,18 @@
 import type { Metadata } from "next";
+import { client } from "@/sanity/lib/client";
+import { serviceCategoryBySlugQuery, type ServiceCategoryData } from "@/sanity/lib/queries";
 import { ServiceCategoryTemplate } from "@/components/templates/ServiceCategoryTemplate";
 
-export async function generateMetadata({
-  params: { locale },
-}: {
-  params: { locale: string };
-}): Promise<Metadata> {
-  const isEn = locale === "en";
-  return {
-    title: "Allura Facial Harmony™ — Allura Healthcare",
-    description: isEn
-      ? "Precision facial aesthetic medicine to enhance your features naturally. Minimally invasive procedures in Medellín."
-      : "Medicina facial estética de precisión para realzar tus rasgos con naturalidad. Procedimientos mínimamente invasivos en Medellín.",
-  };
-}
+export const revalidate = process.env.NODE_ENV === "development" ? 0 : 3600;
+
+const CATEGORY_SLUG = "facial-harmony";
 
 const contentEs = {
   title: "Allura Facial Harmony™",
   eyebrow: "Medicina Facial Estética",
   subtitle: "Medicina facial estética de precisión para realzar tus rasgos con naturalidad.",
   description: "Nuestro equipo de especialistas trabaja con técnicas mínimamente invasivas y protocolos internacionales para resultados que se ven auténticos y duraderos. Cada plan facial se diseña tras una evaluación estructural de tus proporciones, tipo de piel y objetivos personales.",
+  heroImage: "/images/imagenes_web/cirugia-estetica-facial-allurahealthcare.png",
   subServices: [
     { slug: "evaluacion-facial", name: "Evaluación Facial Estructural", description: "Análisis detallado de proporciones, volúmenes y dinámica facial para diseñar un plan personalizado y natural." },
     { slug: "toxina-botulinica", name: "Toxina Botulínica y Rellenos", description: "Protocolos de aplicación precisa para suavizar líneas de expresión y restaurar volúmenes faciales con aspecto natural." },
@@ -37,6 +30,7 @@ const contentEn = {
   eyebrow: "Facial Aesthetic Medicine",
   subtitle: "Precision facial aesthetic medicine to enhance your features naturally.",
   description: "Our team of specialists works with minimally invasive techniques and international protocols for results that look authentic and lasting. Each facial plan is designed after structural evaluation of your proportions, skin type and personal goals.",
+  heroImage: "/images/imagenes_web/cirugia-estetica-facial-allurahealthcare.png",
   subServices: [
     { slug: "evaluacion-facial", name: "Structural Facial Assessment", description: "Detailed analysis of proportions, volumes and facial dynamics to design a personalized and natural plan." },
     { slug: "toxina-botulinica", name: "Botulinum Toxin and Fillers", description: "Precise application protocols for softening expression lines and restoring facial volumes with a natural look." },
@@ -49,17 +43,33 @@ const contentEn = {
   ],
 };
 
-export default function FacialHarmonyPage({
-  params: { locale },
-}: {
-  params: { locale: string };
-}) {
+export async function generateMetadata({ params: { locale } }: { params: { locale: string } }): Promise<Metadata> {
+  const sanityData = await client.fetch<ServiceCategoryData | null>(
+    serviceCategoryBySlugQuery,
+    { slug: CATEGORY_SLUG },
+    { next: { revalidate } }
+  );
+  const loc = locale as "es" | "en";
+  const content = loc === "en" ? contentEn : contentEs;
+  return {
+    title: sanityData?.seo?.metaTitle?.[loc] ?? `${content.title} — Allura Healthcare`,
+    description: sanityData?.seo?.metaDescription?.[loc] ?? content.subtitle,
+  };
+}
+
+export default async function FacialHarmonyPage({ params: { locale } }: { params: { locale: string } }) {
+  const sanityData = await client.fetch<ServiceCategoryData | null>(
+    serviceCategoryBySlugQuery,
+    { slug: CATEGORY_SLUG },
+    { next: { revalidate } }
+  );
   const content = locale === "en" ? contentEn : contentEs;
   return (
     <ServiceCategoryTemplate
       {...content}
-      categorySlug="facial-harmony"
-      heroImage="/images/imagenes_web/cirugia-estetica-facial-allurahealthcare.png"
+      categorySlug={CATEGORY_SLUG}
+      sanityData={sanityData ?? undefined}
+      locale={locale}
     />
   );
 }
