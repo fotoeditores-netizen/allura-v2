@@ -26,6 +26,7 @@ const gallery = [
 ];
 
 interface MedellinSectionProps {
+  locale?: string;
   sanityData?: {
     eyebrow?: LocaleString;
     title?: LocaleString;
@@ -55,9 +56,10 @@ function getLocalizedText(
   return fallbackValue;
 }
 
-export function MedellinSection({ sanityData }: MedellinSectionProps) {
+export function MedellinSection({ locale: localeProp, sanityData }: MedellinSectionProps) {
   const t = useTranslations("medellin");
-  const locale = useLocale();
+  const intlLocale = useLocale();
+  const locale = localeProp ?? intlLocale;
   const benefits = t.raw("benefits") as Array<{ title: string; description: string }>;
 
   return (
