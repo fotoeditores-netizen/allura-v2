@@ -63,7 +63,21 @@ export type SanityImage = {
       }
     }
   }
-  alt?: string | LocaleString
+  alt?: string
+}
+
+export type SanityImageLocaleAlt = {
+  asset: {
+    _id: string
+    url: string
+    metadata?: {
+      dimensions?: {
+        width: number
+        height: number
+      }
+    }
+  }
+  alt?: LocaleString
 }
 
 export type CtaField = {
@@ -97,7 +111,7 @@ export interface HomePage {
     title?: LocaleString
     body?: LocaleString
     cta?: CtaField
-    image?: SanityImage
+    image?: SanityImageLocaleAlt
   }
   medellinSection?: {
     eyebrow?: LocaleString
