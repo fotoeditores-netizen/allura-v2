@@ -7,9 +7,7 @@ import type { PortableTextBlock } from '@portabletext/types'
 import { getTranslations } from 'next-intl/server'
 import type { TestimonialItem, FaqItem, VideoItem } from '@/sanity/lib/queries'
 import { VideoCard } from '@/components/ui/VideoCard'
-
-const WHATSAPP_URL =
-  'https://wa.me/17862087572?text=Hola%2C%20me%20interesa%20conocer%20m%C3%A1s%20sobre%20los%20servicios%20de%20Allura%20Healthcare'
+import { getSiteSettings, buildWhatsAppUrl } from '@/lib/getSiteSettings'
 
 const stepImages = [
   '/images/imagenes_web/allura-healthcare-contacto-inicial-turismo-en-salud-premium.png',
@@ -61,6 +59,8 @@ export async function ComoFuncionaTemplate({
 }: ComoFuncionaTemplateProps) {
   const t = await getTranslations('comoFunciona')
   const loc = locale as 'es' | 'en'
+  const settings = await getSiteSettings()
+  const whatsappUrl = buildWhatsAppUrl(settings, loc)
 
   const steps = t.raw('steps') as Array<{ number: string; title: string; description: string }>
   const hardcodedFaqs = t.raw('faqs') as Array<{ q: string; a: string }>
@@ -202,7 +202,7 @@ export async function ComoFuncionaTemplate({
           />
           <div className="flex flex-col sm:flex-row gap-3 justify-center mt-10">
             <a
-              href={WHATSAPP_URL}
+              href={whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 px-7 py-3 bg-[#25D366] text-white rounded-full font-body font-bold text-sm hover:bg-[#22c55e] transition-colors"
