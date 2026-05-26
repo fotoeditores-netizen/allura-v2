@@ -36,11 +36,12 @@ export function HeroSection({ sanityData, locale = "es" }: HeroSectionProps) {
   // Helper to get CTA data with fallbacks
   const getCtaData = (
     sanityCta: CtaField | undefined,
-    defaultUrl: string
+    defaultUrl: string,
+    fallbackKey: string
   ): { label: string; href: string } => {
     const label = sanityCta?.label?.[locale as keyof LocaleString];
     return {
-      label: label && typeof label === "string" && label.trim() ? label : t("ctaPrimary"),
+      label: label && typeof label === "string" && label.trim() ? label : t(fallbackKey),
       href: sanityCta?.url || defaultUrl,
     };
   };
@@ -104,7 +105,7 @@ export function HeroSection({ sanityData, locale = "es" }: HeroSectionProps) {
           className="flex flex-col sm:flex-row gap-3 justify-center"
         >
           {(() => {
-            const primaryCta = getCtaData(sanityData?.ctaPrimary, "/servicios");
+            const primaryCta = getCtaData(sanityData?.ctaPrimary, "/servicios", "ctaPrimary");
             return (
               <Button href={primaryCta.href} variant="secondary">
                 {primaryCta.label}
@@ -112,7 +113,7 @@ export function HeroSection({ sanityData, locale = "es" }: HeroSectionProps) {
             );
           })()}
           {(() => {
-            const secondaryCta = getCtaData(sanityData?.ctaSecondary, "/como-funciona");
+            const secondaryCta = getCtaData(sanityData?.ctaSecondary, "/como-funciona", "ctaSecondary");
             return (
               <Button href={secondaryCta.href} variant="outline" className="border-white/50 hover:border-white">
                 {secondaryCta.label}
