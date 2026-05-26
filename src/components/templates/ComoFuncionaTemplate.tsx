@@ -5,7 +5,8 @@ import { TestimonialsCarousel } from '@/components/ui/TestimonialsCarousel'
 import { PortableText } from '@portabletext/react'
 import type { PortableTextBlock } from '@portabletext/types'
 import { getTranslations } from 'next-intl/server'
-import type { TestimonialItem, FaqItem } from '@/sanity/lib/queries'
+import type { TestimonialItem, FaqItem, VideoItem } from '@/sanity/lib/queries'
+import { VideoCard } from '@/components/ui/VideoCard'
 
 const WHATSAPP_URL =
   'https://wa.me/17862087572?text=Hola%2C%20me%20interesa%20conocer%20m%C3%A1s%20sobre%20los%20servicios%20de%20Allura%20Healthcare'
@@ -48,12 +49,14 @@ const faqPortableTextComponents = {
 interface ComoFuncionaTemplateProps {
   testimonials: TestimonialItem[]
   faqs: FaqItem[]
+  videos: VideoItem[]
   locale: string
 }
 
 export async function ComoFuncionaTemplate({
   testimonials,
   faqs,
+  videos,
   locale,
 }: ComoFuncionaTemplateProps) {
   const t = await getTranslations('comoFunciona')
@@ -64,6 +67,7 @@ export async function ComoFuncionaTemplate({
 
   const hasSanityFaqs = faqs.length > 0
   const hasTestimonials = testimonials.length > 0
+  const hasVideos = videos.length > 0
 
   return (
     <>
@@ -164,6 +168,24 @@ export async function ComoFuncionaTemplate({
             />
             <div className="mt-12">
               <TestimonialsCarousel testimonials={testimonials} locale={locale} />
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Videos */}
+      {hasVideos && (
+        <section className="section-padding bg-brand-light">
+          <div className="container-allura">
+            <SectionHeading
+              eyebrow={locale === 'en' ? 'Watch' : 'Ver'}
+              title={locale === 'en' ? 'Videos' : 'Videos'}
+              centered
+            />
+            <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {videos.map((video) => (
+                <VideoCard key={video._id} video={video} locale={locale} />
+              ))}
             </div>
           </div>
         </section>

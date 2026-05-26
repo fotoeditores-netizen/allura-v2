@@ -4,8 +4,10 @@ import { client } from '@/sanity/lib/client'
 import {
   testimonialsQuery,
   faqsQuery,
+  videosQuery,
   type TestimonialItem,
   type FaqItem,
+  type VideoItem,
 } from '@/sanity/lib/queries'
 import { ComoFuncionaTemplate } from '@/components/templates/ComoFuncionaTemplate'
 
@@ -28,15 +30,17 @@ export default async function ComoFuncionaPage({
 }: {
   params: { locale: string }
 }) {
-  const [testimonials, faqs] = await Promise.all([
+  const [testimonials, faqs, videos] = await Promise.all([
     client.fetch<TestimonialItem[]>(testimonialsQuery, {}, { next: { revalidate } }),
     client.fetch<FaqItem[]>(faqsQuery, {}, { next: { revalidate } }),
+    client.fetch<VideoItem[]>(videosQuery, {}, { next: { revalidate } }),
   ])
 
   return (
     <ComoFuncionaTemplate
       testimonials={testimonials ?? []}
       faqs={faqs ?? []}
+      videos={videos ?? []}
       locale={locale}
     />
   )
