@@ -445,5 +445,19 @@
         "readTime": "4 min"
       }
     ]
+  },
+  "galeria": {
+    "metaTitle": "Gallery — Allura Healthcare",
+    "metaDesc": "See our clinic, team, and patient results in Medellín.",
+    "heroEyebrow": "Gallery",
+    "heroTitle": "Our clinic and results",
+    "heroSubtitle": "Real images of our clinic, team, and patient results in Medellín.",
+    "all": "All",
+    "clinic": "Clinic",
+    "team": "Team",
+    "results": "Results",
+    "medellin": "Medellín",
+    "events": "Events",
+    "empty": "Coming soon"
   }
 }

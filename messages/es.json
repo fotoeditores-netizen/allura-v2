@@ -445,5 +445,19 @@
         "readTime": "4 min"
       }
     ]
+  },
+  "galeria": {
+    "metaTitle": "Galería — Allura Healthcare",
+    "metaDesc": "Conoce nuestra clínica, nuestro equipo y los resultados de nuestros pacientes en Medellín.",
+    "heroEyebrow": "Galería",
+    "heroTitle": "Nuestra clínica y resultados",
+    "heroSubtitle": "Imágenes reales de nuestra clínica, nuestro equipo y los resultados de nuestros pacientes en Medellín.",
+    "all": "Todos",
+    "clinic": "Clínica",
+    "team": "Equipo",
+    "results": "Resultados",
+    "medellin": "Medellín",
+    "events": "Eventos",
+    "empty": "Próximamente"
   }
 }
