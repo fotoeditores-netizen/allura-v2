@@ -3,6 +3,7 @@ import { ChevronRight } from "lucide-react";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { CTABanner } from "@/components/sections/CTABanner";
 import { getTranslations } from "next-intl/server";
+import type { ServiceDetailData } from "@/sanity/lib/queries";
 
 const WHATSAPP_URL =
   "https://wa.me/17862087572?text=Hola%2C%20me%20interesa%20conocer%20m%C3%A1s%20sobre%20los%20servicios%20de%20Allura%20Healthcare";
@@ -22,6 +23,8 @@ interface ServiceDetailTemplateProps {
   candidates: string[];
   timeline: string;
   specialty: "odontologia" | "facial";
+  sanityData?: ServiceDetailData;
+  locale?: string;
 }
 
 export async function ServiceDetailTemplate({
@@ -33,8 +36,31 @@ export async function ServiceDetailTemplate({
   steps,
   candidates,
   timeline,
+  sanityData,
+  locale = "es",
 }: ServiceDetailTemplateProps) {
   const t = await getTranslations("serviceDetail");
+  const loc = locale as "es" | "en";
+
+  const resolvedTitle = sanityData?.title?.[loc] || title;
+  const resolvedDescription = sanityData?.shortDescription?.[loc] || description;
+  const resolvedCategory =
+    sanityData?.category?.title?.[loc] || category;
+  const resolvedCategorySlug =
+    sanityData?.category?.slug?.current || categorySlug;
+
+  const resolvedBenefits: string[] =
+    sanityData?.benefits && sanityData.benefits.length > 0
+      ? sanityData.benefits.map((b) => b.title?.[loc] || "")
+      : benefits;
+
+  const resolvedSteps: Step[] =
+    sanityData?.process && sanityData.process.length > 0
+      ? sanityData.process.map((s) => ({
+          title: s.title?.[loc] || "",
+          description: s.description?.[loc] || "",
+        }))
+      : steps;
 
   return (
     <>
@@ -45,15 +71,15 @@ export async function ServiceDetailTemplate({
           <nav className="flex items-center gap-2 font-body text-xs text-white/50 mb-8">
             <Link href="/servicios" className="hover:text-white transition-colors">{t("breadcrumbServices")}</Link>
             <ChevronRight size={12} />
-            <Link href={`/servicios/${categorySlug}`} className="hover:text-white transition-colors">{category}</Link>
+            <Link href={`/servicios/${resolvedCategorySlug}`} className="hover:text-white transition-colors">{resolvedCategory}</Link>
             <ChevronRight size={12} />
-            <span className="text-white/70">{title}</span>
+            <span className="text-white/70">{resolvedTitle}</span>
           </nav>
 
           <div className="max-w-2xl">
-            <p className="font-body text-xs tracking-[0.2em] uppercase text-brand-blue mb-4">{category}</p>
-            <h1 className="font-heading text-4xl md:text-5xl text-white leading-tight mb-6">{title}</h1>
-            <p className="font-body text-base text-white/70 leading-relaxed mb-10">{description}</p>
+            <p className="font-body text-xs tracking-[0.2em] uppercase text-brand-blue mb-4">{resolvedCategory}</p>
+            <h1 className="font-heading text-4xl md:text-5xl text-white leading-tight mb-6">{resolvedTitle}</h1>
+            <p className="font-body text-base text-white/70 leading-relaxed mb-10">{resolvedDescription}</p>
             <a
               href={WHATSAPP_URL}
               target="_blank"
@@ -71,8 +97,8 @@ export async function ServiceDetailTemplate({
         <div className="container-allura">
           <SectionHeading eyebrow={t("benefitsLabel")} title={t("benefitsTitle")} />
           <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-10">
-            {benefits.map((benefit) => (
-              <li key={benefit} className="flex items-start gap-3">
+            {resolvedBenefits.map((benefit, i) => (
+              <li key={i} className="flex items-start gap-3">
                 <span className="mt-1.5 w-2 h-2 rounded-full bg-brand-blue flex-shrink-0" />
                 <p className="font-body text-sm text-brand-navy leading-relaxed">{benefit}</p>
               </li>
@@ -86,8 +112,8 @@ export async function ServiceDetailTemplate({
         <div className="container-allura">
           <SectionHeading eyebrow={t("processLabel")} title={t("processTitle")} centered />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
-            {steps.map(({ title: stepTitle, description: stepDesc }, i) => (
-              <div key={stepTitle} className="bg-white rounded-2xl p-7 shadow-sm border border-brand-light">
+            {resolvedSteps.map(({ title: stepTitle, description: stepDesc }, i) => (
+              <div key={i} className="bg-white rounded-2xl p-7 shadow-sm border border-brand-light">
                 <p className="font-heading text-3xl text-brand-blue/25 mb-3">0{i + 1}</p>
                 <h3 className="font-heading text-lg text-brand-navy mb-2">{stepTitle}</h3>
                 <p className="font-body text-sm text-brand-silver leading-relaxed">{stepDesc}</p>
@@ -103,8 +129,8 @@ export async function ServiceDetailTemplate({
           <div>
             <SectionHeading eyebrow={t("candidatesLabel")} title={t("candidatesTitle")} />
             <ul className="mt-8 space-y-3">
-              {candidates.map((c) => (
-                <li key={c} className="flex items-start gap-3">
+              {candidates.map((c, i) => (
+                <li key={i} className="flex items-start gap-3">
                   <span className="mt-1.5 w-2 h-2 rounded-full bg-brand-blue flex-shrink-0" />
                   <p className="font-body text-sm text-brand-navy">{c}</p>
                 </li>
