@@ -158,12 +158,8 @@ export async function ComoFuncionaTemplate({
         <section className="section-padding bg-white">
           <div className="container-allura">
             <SectionHeading
-              eyebrow={loc === 'en' ? 'Patient Stories' : 'Lo que dicen nuestros pacientes'}
-              title={
-                loc === 'en'
-                  ? 'Real experiences, real results'
-                  : 'Experiencias reales, resultados reales'
-              }
+              eyebrow={t('testimonialsEyebrow')}
+              title={t('testimonialsTitle')}
               centered
             />
             <div className="mt-12">
