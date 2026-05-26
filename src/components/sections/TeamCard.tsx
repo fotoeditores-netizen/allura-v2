@@ -2,6 +2,8 @@
 import { useState } from 'react';
 import { X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { Link } from '@/navigation';
+import type { TeamMemberListItem } from '@/sanity/lib/queries';
 
 interface TeamCardProps {
   name: string;
@@ -11,11 +13,38 @@ interface TeamCardProps {
   reconocimiento?: string[];
   enfoque: string[];
   bgLight?: boolean;
+  sanityMember?: TeamMemberListItem;
+  locale?: string;
+  slug?: string;
 }
 
-export function TeamCard({ name, specialty, image, formacion, reconocimiento, enfoque, bgLight = false }: TeamCardProps) {
+export function TeamCard({
+  name,
+  specialty,
+  image,
+  formacion,
+  reconocimiento,
+  enfoque,
+  bgLight = false,
+  sanityMember,
+  locale = 'es',
+  slug,
+}: TeamCardProps) {
   const [active, setActive] = useState(false);
   const t = useTranslations('teamCard');
+  const loc = locale as 'es' | 'en';
+
+  const resolvedSpecialty = sanityMember?.role?.[loc] || specialty;
+  const resolvedImage = sanityMember?.photo?.asset?.url || image;
+  const resolvedFormacion =
+    sanityMember?.credentials && sanityMember.credentials.length > 0
+      ? sanityMember.credentials
+      : formacion;
+  const resolvedEnfoque =
+    sanityMember?.specialties && sanityMember.specialties.length > 0
+      ? sanityMember.specialties.map((s) => s[loc] || s.es)
+      : enfoque;
+  const hasSanityData = !!sanityMember;
 
   const handleClick = () => {
     if (typeof window !== 'undefined' && window.matchMedia('(hover: none)').matches) {
@@ -35,7 +64,7 @@ export function TeamCard({ name, specialty, image, formacion, reconocimiento, en
       >
         <div
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url('${image}')` }}
+          style={{ backgroundImage: `url('${resolvedImage}')` }}
         />
 
         <div
@@ -59,7 +88,7 @@ export function TeamCard({ name, specialty, image, formacion, reconocimiento, en
               {t('formacion')}
             </p>
             <ul className="space-y-1">
-              {formacion.map((item) => (
+              {resolvedFormacion.map((item) => (
                 <li key={item} className="font-body text-[11px] text-white/85 leading-snug flex gap-1.5">
                   <span className="text-brand-blue flex-shrink-0">—</span>
                   <span>{item}</span>
@@ -68,7 +97,7 @@ export function TeamCard({ name, specialty, image, formacion, reconocimiento, en
             </ul>
           </div>
 
-          {reconocimiento && reconocimiento.length > 0 && (
+          {!hasSanityData && reconocimiento && reconocimiento.length > 0 && (
             <div>
               <p className="font-body text-[9px] tracking-[0.18em] uppercase text-brand-blue mb-1.5">
                 {t('reconocimiento')}
@@ -89,7 +118,7 @@ export function TeamCard({ name, specialty, image, formacion, reconocimiento, en
               {t('enfoque')}
             </p>
             <ul className="space-y-1">
-              {enfoque.map((item) => (
+              {resolvedEnfoque.map((item) => (
                 <li key={item} className="font-body text-[11px] text-white/85 leading-snug flex gap-1.5">
                   <span className="text-brand-blue flex-shrink-0">—</span>
                   <span>{item}</span>
@@ -101,8 +130,16 @@ export function TeamCard({ name, specialty, image, formacion, reconocimiento, en
       </div>
 
       <div className={`p-6 ${bgLight ? 'bg-brand-light' : 'bg-white'}`}>
-        <h3 className="font-heading text-lg text-brand-navy mb-1">{name}</h3>
-        <p className="font-body text-xs text-brand-blue tracking-wide leading-relaxed">{specialty}</p>
+        {slug ? (
+          <Link href={`/equipo/${slug}`}>
+            <h3 className="font-heading text-lg text-brand-navy mb-1 hover:text-brand-blue transition-colors">
+              {name}
+            </h3>
+          </Link>
+        ) : (
+          <h3 className="font-heading text-lg text-brand-navy mb-1">{name}</h3>
+        )}
+        <p className="font-body text-xs text-brand-blue tracking-wide leading-relaxed">{resolvedSpecialty}</p>
       </div>
     </div>
   );
