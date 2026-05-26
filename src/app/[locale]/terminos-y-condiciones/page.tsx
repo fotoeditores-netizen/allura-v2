@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getSiteSettings } from "@/lib/getSiteSettings";
 
 export async function generateMetadata({
   params: { locale },
@@ -16,12 +17,14 @@ export async function generateMetadata({
   };
 }
 
-export default function TerminosYCondicionesPage({
+export default async function TerminosYCondicionesPage({
   params: { locale },
 }: {
   params: { locale: string };
 }) {
   const isEn = locale === "en";
+  const settings = await getSiteSettings();
+  const contactEmail = settings?.contactEmail || "contact@allurahealthcare.com";
 
   return (
     <>
@@ -151,8 +154,8 @@ export default function TerminosYCondicionesPage({
               </h2>
               <p>
                 {isEn ? "For questions about these Terms and Conditions, write to us at " : "Para preguntas sobre estos Términos y Condiciones, escríbenos a "}
-                <a href="mailto:contact@allurahealthcare.com" className="text-brand-blue hover:underline">
-                  contact@allurahealthcare.com
+                <a href={`mailto:${contactEmail}`} className="text-brand-blue hover:underline">
+                  {contactEmail}
                 </a>.
               </p>
             </div>

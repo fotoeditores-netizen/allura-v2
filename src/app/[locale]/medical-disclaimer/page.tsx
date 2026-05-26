@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getSiteSettings } from "@/lib/getSiteSettings";
 
 export async function generateMetadata({
   params: { locale },
@@ -16,12 +17,14 @@ export async function generateMetadata({
   };
 }
 
-export default function MedicalDisclaimerPage({
+export default async function MedicalDisclaimerPage({
   params: { locale },
 }: {
   params: { locale: string };
 }) {
   const isEn = locale === "en";
+  const settings = await getSiteSettings();
+  const contactEmail = settings?.contactEmail || "contact@allurahealthcare.com";
 
   return (
     <>
@@ -127,8 +130,8 @@ export default function MedicalDisclaimerPage({
                 {isEn
                   ? "For questions about treatments or to schedule a virtual consultation with one of our specialists, contact us at "
                   : "Para preguntas sobre tratamientos o para agendar una consulta virtual con uno de nuestros especialistas, contáctanos en "}
-                <a href="mailto:contact@allurahealthcare.com" className="text-brand-blue hover:underline">
-                  contact@allurahealthcare.com
+                <a href={`mailto:${contactEmail}`} className="text-brand-blue hover:underline">
+                  {contactEmail}
                 </a>
                 {isEn ? " or via WhatsApp." : " o por WhatsApp."}
               </p>

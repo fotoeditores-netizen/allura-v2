@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getSiteSettings } from "@/lib/getSiteSettings";
 
 export async function generateMetadata({
   params: { locale },
@@ -14,12 +15,14 @@ export async function generateMetadata({
   };
 }
 
-export default function AccesibilidadPage({
+export default async function AccesibilidadPage({
   params: { locale },
 }: {
   params: { locale: string };
 }) {
   const isEn = locale === "en";
+  const settings = await getSiteSettings();
+  const contactEmail = settings?.contactEmail || "contact@allurahealthcare.com";
 
   return (
     <>
@@ -116,7 +119,7 @@ export default function AccesibilidadPage({
               <ul className="list-disc pl-6 mt-3 space-y-1">
                 <li>
                   {isEn ? "Email: " : "Correo electrónico: "}
-                  <a href="mailto:contact@allurahealthcare.com" className="text-brand-blue hover:underline">contact@allurahealthcare.com</a>
+                  <a href={`mailto:${contactEmail}`} className="text-brand-blue hover:underline">{contactEmail}</a>
                 </li>
                 <li>{isEn ? "Response time: maximum 2 business days" : "Tiempo de respuesta: máximo 2 días hábiles"}</li>
               </ul>

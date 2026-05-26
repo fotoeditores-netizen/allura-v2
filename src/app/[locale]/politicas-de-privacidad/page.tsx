@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getSiteSettings } from "@/lib/getSiteSettings";
 
 export async function generateMetadata({
   params: { locale },
@@ -14,12 +15,14 @@ export async function generateMetadata({
   };
 }
 
-export default function PoliticasPrivacidadPage({
+export default async function PoliticasPrivacidadPage({
   params: { locale },
 }: {
   params: { locale: string };
 }) {
   const isEn = locale === "en";
+  const settings = await getSiteSettings();
+  const contactEmail = settings?.contactEmail || "contact@allurahealthcare.com";
 
   return (
     <>
@@ -198,8 +201,8 @@ export default function PoliticasPrivacidadPage({
                 <>
                   <p>
                     You may request access, correction, or deletion of your data by writing to{" "}
-                    <a href="mailto:contact@allurahealthcare.com" className="text-brand-blue hover:underline">
-                      contact@allurahealthcare.com
+                    <a href={`mailto:${contactEmail}`} className="text-brand-blue hover:underline">
+                      {contactEmail}
                     </a>.
                   </p>
                 </>
@@ -267,8 +270,8 @@ export default function PoliticasPrivacidadPage({
               {isEn ? (
                 <p>
                   For privacy inquiries:{" "}
-                  <a href="mailto:contact@allurahealthcare.com" className="text-brand-blue hover:underline">
-                    contact@allurahealthcare.com
+                  <a href={`mailto:${contactEmail}`} className="text-brand-blue hover:underline">
+                    {contactEmail}
                   </a>
                 </p>
               ) : (
@@ -277,8 +280,8 @@ export default function PoliticasPrivacidadPage({
                   <ul className="list-disc pl-6 mt-3 space-y-1">
                     <li>
                       Correo electrónico:{" "}
-                      <a href="mailto:contact@allurahealthcare.com" className="text-brand-blue hover:underline">
-                        contact@allurahealthcare.com
+                      <a href={`mailto:${contactEmail}`} className="text-brand-blue hover:underline">
+                        {contactEmail}
                       </a>
                     </li>
                     <li>
