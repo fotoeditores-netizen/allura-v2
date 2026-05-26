@@ -1,4 +1,5 @@
 import { groq } from 'next-sanity'
+import type { PortableTextBlock } from '@portabletext/types'
 
 export const siteSettingsQuery = groq`
   *[_type == "siteSettings"][0] {
@@ -272,7 +273,7 @@ export interface ServiceDetailData {
   title: LocaleString
   slug: { current: string }
   shortDescription: LocaleString
-  body?: import('@portabletext/types').PortableTextBlock[]
+  body?: PortableTextBlock[]
   benefits?: ServiceBenefit[]
   process?: ServiceProcessStep[]
   coverImage?: SanityImageLocaleAlt
@@ -393,8 +394,8 @@ export interface BlogPostDetail {
   publishedAt: string
   featuredImage?: SanityImageLocaleAlt
   body?: {
-    es: import('@portabletext/types').PortableTextBlock[]
-    en: import('@portabletext/types').PortableTextBlock[]
+    es: PortableTextBlock[]
+    en: PortableTextBlock[]
   }
   categories?: BlogCategory[]
   author?: {
@@ -517,8 +518,8 @@ export interface FaqItem {
   _id: string
   question: LocaleString
   answer?: {
-    es: import('@portabletext/types').PortableTextBlock[]
-    en: import('@portabletext/types').PortableTextBlock[]
+    es: PortableTextBlock[]
+    en: PortableTextBlock[]
   }
 }
 
@@ -571,8 +572,8 @@ export interface TeamMemberDetail {
   }
   shortBio?: LocaleString
   fullBio?: {
-    es: import('@portabletext/types').PortableTextBlock[]
-    en: import('@portabletext/types').PortableTextBlock[]
+    es: PortableTextBlock[]
+    en: PortableTextBlock[]
   }
   specialties?: Array<{ es: string; en: string }>
   credentials?: string[]
@@ -692,8 +693,8 @@ export interface ActivePopup {
   _id: string
   title: { es: string; en: string }
   body?: {
-    es: import('@portabletext/types').PortableTextBlock[]
-    en: import('@portabletext/types').PortableTextBlock[]
+    es: PortableTextBlock[]
+    en: PortableTextBlock[]
   }
   image?: { asset: { url: string }; alt?: { es?: string; en?: string } }
   cta?: {
