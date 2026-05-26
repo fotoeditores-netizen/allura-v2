@@ -483,3 +483,64 @@ export const blogPostSlugsQuery = groq`
     "slug": slug.current
   }
 `
+
+// ─── Testimonials ─────────────────────────────────────────────────────────────
+
+export interface TestimonialItem {
+  _id: string
+  patientName: string
+  patientOrigin?: { es?: string; en?: string }
+  quote: { es: string; en: string }
+  rating: number
+  photo?: {
+    asset: { url: string }
+    alt?: string
+  }
+  service?: { title: LocaleString }
+}
+
+export const testimonialsQuery = groq`
+  *[_type == "testimonial" && isApproved == true] | order(publishedAt desc) {
+    _id,
+    patientName,
+    patientOrigin,
+    quote,
+    rating,
+    photo { asset->{ url }, alt },
+    "service": service->{ title }
+  }
+`
+
+// ─── FAQs ─────────────────────────────────────────────────────────────────────
+
+export interface FaqItem {
+  _id: string
+  question: LocaleString
+  answer?: {
+    es: import('@portabletext/types').PortableTextBlock[]
+    en: import('@portabletext/types').PortableTextBlock[]
+  }
+}
+
+export const faqsQuery = groq`
+  *[_type == "faq" && isActive == true] | order(order asc) {
+    _id,
+    question,
+    answer {
+      es[] {
+        ...,
+        markDefs[] {
+          ...,
+          _type == "link" => { "href": href }
+        }
+      },
+      en[] {
+        ...,
+        markDefs[] {
+          ...,
+          _type == "link" => { "href": href }
+        }
+      }
+    }
+  }
+`
