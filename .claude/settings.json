@@ -48,10 +48,23 @@
       "PowerShell(Start-Process -NoNewWindow -FilePath \"cmd.exe\" -ArgumentList \"/c cd /d c:\\\\Users\\\\publi\\\\Desktop\\\\ALLURA && npx next dev --port 3000 > C:\\\\Temp\\\\nextdev.log 2>&1\")",
       "PowerShell(Stop-Process -Name node -Force -ErrorAction SilentlyContinue)",
       "Bash(Test-Path \"c:\\\\Users\\\\publi\\\\Desktop\\\\ALLURA\\\\src\\\\sanity\\\\schemaTypes\\\\objects\" -PathType Container)",
-      "Bash(node -e \"const icons = require\\('@sanity/icons'\\); const names = ['UsersIcon','TagIcon','StarIcon','HelpCircleIcon','SparklesIcon','DocumentIcon','EditIcon','ImageIcon','PlayIcon','TrendUpwardIcon','BellIcon']; names.forEach\\(n => console.log\\(n, n in icons ? 'OK' : 'MISSING'\\)\\);\")"
+      "Bash(node -e \"const icons = require\\('@sanity/icons'\\); const names = ['UsersIcon','TagIcon','StarIcon','HelpCircleIcon','SparklesIcon','DocumentIcon','EditIcon','ImageIcon','PlayIcon','TrendUpwardIcon','BellIcon']; names.forEach\\(n => console.log\\(n, n in icons ? 'OK' : 'MISSING'\\)\\);\")",
+      "Bash(npx tsx -e ' *)",
+      "Bash(node --import tsx/esm -e ' *)",
+      "Bash(./node_modules/.bin/tsx -e ' *)",
+      "Bash(npx --yes tsx@latest -e \"import { createSchema } from 'sanity'; import { schemaTypes } from './src/sanity/schemaTypes/index'; try { const s = createSchema\\({ name:'test', types: schemaTypes }\\); console.log\\('OK'\\); } catch\\(e\\) { console.log\\('ERR', e.message\\); if\\(e.errors\\) e.errors.forEach\\(x => console.log\\(' -', JSON.stringify\\(x\\)\\)\\); }\")",
+      "Bash(npx --yes tsx@latest -e \"import { createSchema } from 'sanity'; import { schemaTypes } from './src/sanity/schemaTypes/index'; try { const s = createSchema\\({ name: 'test', types: schemaTypes }\\); console.log\\('Schema OK, types:', s.getTypeNames\\(\\).length\\); } catch\\(e\\) { console.log\\('ERR', e.message\\); if\\(e.errors\\) e.errors.forEach\\(x => console.log\\(' -', JSON.stringify\\(x\\)\\)\\); }\")",
+      "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\publi\\\\Desktop\\\\ALLURA\" -Recurse -Directory -Filter \"src\")",
+      "Bash(Select-Object -First 5)",
+      "Bash(Get-ChildItem -Path 'c:\\\\Users\\\\publi\\\\Desktop\\\\ALLURA\\\\src' -Recurse -Filter 'messages' -Directory)",
+      "Bash(npm run dev > /tmp/dev.log 2>&1 & *)",
+      "Bash(curl -s http://localhost:3000/es)",
+      "Bash(curl -s http://localhost:3000/es --max-time 5)",
+      "Bash(pkill -f \"next dev\")"
     ],
     "additionalDirectories": [
-      "C:\\Temp"
+      "C:\\Temp",
+      "\\tmp"
     ]
   },
   "enabledPlugins": {

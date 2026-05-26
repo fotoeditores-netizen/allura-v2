@@ -107,7 +107,7 @@ export const homePage = defineType({
         {
           name: 'blocks', title: 'Bloques de beneficios', type: 'array',
           of: [{
-            type: 'object', name: 'block',
+            type: 'object', name: 'medellinBlock',
             fields: [
               { name: 'title', title: 'Título', type: 'object', fields: [{ name: 'es', type: 'string', title: 'Español', validation: (Rule) => Rule.required() }, { name: 'en', type: 'string', title: 'English', validation: (Rule) => Rule.required() }] },
               { name: 'text', title: 'Texto', type: 'object', fields: [{ name: 'es', type: 'string', title: 'Español', validation: (Rule) => Rule.required() }, { name: 'en', type: 'string', title: 'English', validation: (Rule) => Rule.required() }] },

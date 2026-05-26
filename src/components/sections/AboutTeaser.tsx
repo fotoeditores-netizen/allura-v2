@@ -4,9 +4,38 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { useTranslations } from "next-intl";
+import type { LocaleString, SanityImageLocaleAlt, CtaField } from "@/sanity/lib/queries";
 
-export function AboutTeaser() {
+interface AboutTeaserProps {
+  sanityData?: {
+    eyebrow?: LocaleString
+    title?: LocaleString
+    body?: LocaleString
+    cta?: CtaField
+    image?: SanityImageLocaleAlt
+  }
+  locale?: string
+}
+
+export function AboutTeaser({ sanityData, locale = "es" }: AboutTeaserProps = {}) {
   const t = useTranslations("aboutTeaser");
+
+  // Helper to get locale-specific value with fallback to next-intl
+  const getTextValue = (sanityValue: LocaleString | undefined, fallbackKey: string): string => {
+    if (sanityValue?.[locale as keyof LocaleString]) {
+      return sanityValue[locale as keyof LocaleString];
+    }
+    return t(fallbackKey);
+  };
+
+  // Determine image URL: Sanity if available, otherwise hardcoded default
+  const imageUrl = sanityData?.image?.asset?.url
+    || '/images/imagenes_web/allura-healthcare-medico-paciente.jpg';
+
+  // CTA button logic: use Sanity cta if available, otherwise fallback to next-intl
+  const ctaLabel = sanityData?.cta?.label?.[locale as keyof LocaleString] || t("cta");
+  const ctaUrl = sanityData?.cta?.url || "/nosotros";
+  const ctaNewTab = sanityData?.cta?.openInNewTab || false;
 
   return (
     <section className="section-padding bg-brand-light overflow-hidden">
@@ -20,18 +49,23 @@ export function AboutTeaser() {
             transition={{ duration: 0.6 }}
           >
             <SectionHeading
-              eyebrow={t("eyebrow")}
-              title={t("title")}
-              subtitle={t("subtitle")}
+              eyebrow={getTextValue(sanityData?.eyebrow, "eyebrow")}
+              title={getTextValue(sanityData?.title, "title")}
+              subtitle={getTextValue(sanityData?.body, "subtitle")}
             />
             <div className="mt-8">
-              <Button href="/nosotros" variant="primary">
-                {t("cta")}
+              <Button
+                href={ctaUrl}
+                variant="primary"
+                target={ctaNewTab ? "_blank" : undefined}
+                rel={ctaNewTab ? "noopener noreferrer" : undefined}
+              >
+                {ctaLabel}
               </Button>
             </div>
           </motion.div>
 
-          {/* Image — src unchanged, locale-agnostic */}
+          {/* Image — renders Sanity image if available, otherwise hardcoded default */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -42,8 +76,7 @@ export function AboutTeaser() {
             <div
               className="absolute inset-0 bg-cover bg-center"
               style={{
-                backgroundImage:
-                  "url('/images/imagenes_web/allura-healthcare-medico-paciente.jpg')",
+                backgroundImage: `url('${imageUrl}')`,
               }}
             />
           </motion.div>

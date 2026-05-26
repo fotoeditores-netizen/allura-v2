@@ -66,6 +66,35 @@ export const localeText = defineType({
   preview: { select: { title: 'es' } },
 })
 
+const portableTextBlock = {
+  type: 'block',
+  styles: [
+    { title: 'Normal', value: 'normal' },
+    { title: 'H2', value: 'h2' },
+    { title: 'H3', value: 'h3' },
+    { title: 'H4', value: 'h4' },
+    { title: 'Quote', value: 'blockquote' },
+  ],
+  marks: {
+    decorators: [
+      { title: 'Bold', value: 'strong' },
+      { title: 'Italic', value: 'em' },
+      { title: 'Underline', value: 'underline' },
+    ],
+    annotations: [
+      {
+        name: 'link',
+        type: 'object',
+        title: 'Link',
+        fields: [
+          { name: 'href', type: 'url', title: 'URL' },
+          { name: 'blank', type: 'boolean', title: 'Open in new tab' },
+        ],
+      },
+    ],
+  },
+}
+
 export const localePortableText = defineType({
   name: 'localePortableText',
   title: 'Contenido enriquecido bilingüe',
@@ -75,73 +104,13 @@ export const localePortableText = defineType({
       name: 'es',
       title: 'Español',
       type: 'array',
-      of: [
-        {
-          type: 'block',
-          styles: [
-            { title: 'Normal', value: 'normal' },
-            { title: 'H2', value: 'h2' },
-            { title: 'H3', value: 'h3' },
-            { title: 'H4', value: 'h4' },
-            { title: 'Cita', value: 'blockquote' },
-          ],
-          marks: {
-            decorators: [
-              { title: 'Negrita', value: 'strong' },
-              { title: 'Cursiva', value: 'em' },
-              { title: 'Subrayado', value: 'underline' },
-            ],
-            annotations: [
-              {
-                name: 'link',
-                type: 'object',
-                title: 'Enlace',
-                fields: [
-                  { name: 'href', type: 'url', title: 'URL' },
-                  { name: 'blank', type: 'boolean', title: 'Abrir en nueva pestaña' },
-                ],
-              },
-            ],
-          },
-        },
-        { type: 'image', options: { hotspot: true } },
-      ],
+      of: [portableTextBlock, { type: 'image', options: { hotspot: true } }],
     }),
     defineField({
       name: 'en',
       title: 'English',
       type: 'array',
-      of: [
-        {
-          type: 'block',
-          styles: [
-            { title: 'Normal', value: 'normal' },
-            { title: 'H2', value: 'h2' },
-            { title: 'H3', value: 'h3' },
-            { title: 'H4', value: 'h4' },
-            { title: 'Quote', value: 'blockquote' },
-          ],
-          marks: {
-            decorators: [
-              { title: 'Bold', value: 'strong' },
-              { title: 'Italic', value: 'em' },
-              { title: 'Underline', value: 'underline' },
-            ],
-            annotations: [
-              {
-                name: 'link',
-                type: 'object',
-                title: 'Link',
-                fields: [
-                  { name: 'href', type: 'url', title: 'URL' },
-                  { name: 'blank', type: 'boolean', title: 'Open in new tab' },
-                ],
-              },
-            ],
-          },
-        },
-        { type: 'image', options: { hotspot: true } },
-      ],
+      of: [portableTextBlock, { type: 'image', options: { hotspot: true } }],
     }),
   ],
 })
