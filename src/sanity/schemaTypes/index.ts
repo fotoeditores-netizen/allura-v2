@@ -24,6 +24,7 @@ import { video } from './documents/video'
 import { caseStudy } from './documents/caseStudy'
 import { teamMember } from './documents/teamMember'
 import { popup } from './documents/popup'
+import { promotion } from './documents/promotion'
 
 export const schemaTypes = [
   // Objects first
@@ -53,4 +54,5 @@ export const schemaTypes = [
   caseStudy,
   teamMember,
   popup,
+  promotion,
 ]
