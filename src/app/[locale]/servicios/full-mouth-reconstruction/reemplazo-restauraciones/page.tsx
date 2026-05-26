@@ -1,20 +1,11 @@
 import type { Metadata } from "next";
+import { client } from "@/sanity/lib/client";
+import { serviceBySlugQuery, type ServiceDetailData } from "@/sanity/lib/queries";
 import { ServiceDetailTemplate } from "@/components/templates/ServiceDetailTemplate";
 
-export async function generateMetadata({
-  params: { locale },
-}: {
-  params: { locale: string };
-}): Promise<Metadata> {
-  return {
-    title: locale === "en"
-      ? "Replacement of Failed Restorations — Allura Full Mouth Reconstruction™"
-      : "Reemplazo de Restauraciones Fallidas — Allura Full Mouth Reconstruction™",
-    description: locale === "en"
-      ? "Evaluation and replacement of old, fractured or infiltrated restorations in Medellín. Starting over on a healthy foundation."
-      : "Evaluación y sustitución de restauraciones antiguas, fracturadas o con infiltración en Medellín. Volvemos a empezar sobre una base sana.",
-  };
-}
+export const revalidate = process.env.NODE_ENV === "development" ? 0 : 3600;
+
+const SERVICE_SLUG = "reemplazo-restauraciones";
 
 const contentEs = {
   category: "Full Mouth Reconstruction",
@@ -74,11 +65,26 @@ const contentEn = {
   specialty: "odontologia" as const,
 };
 
-export default function ReemplazoCRestauracionesPage({
-  params: { locale },
-}: {
-  params: { locale: string };
-}) {
+export async function generateMetadata({ params: { locale } }: { params: { locale: string } }): Promise<Metadata> {
+  const sanityData = await client.fetch<ServiceDetailData | null>(
+    serviceBySlugQuery,
+    { slug: SERVICE_SLUG },
+    { next: { revalidate } }
+  );
+  const loc = locale as "es" | "en";
+  const content = loc === "en" ? contentEn : contentEs;
+  return {
+    title: sanityData?.seo?.metaTitle?.[loc] ?? `${content.title} — Allura Healthcare`,
+    description: sanityData?.seo?.metaDescription?.[loc] ?? content.description,
+  };
+}
+
+export default async function ReemplazoRestauracionesPage({ params: { locale } }: { params: { locale: string } }) {
+  const sanityData = await client.fetch<ServiceDetailData | null>(
+    serviceBySlugQuery,
+    { slug: SERVICE_SLUG },
+    { next: { revalidate } }
+  );
   const content = locale === "en" ? contentEn : contentEs;
-  return <ServiceDetailTemplate {...content} />;
+  return <ServiceDetailTemplate {...content} sanityData={sanityData ?? undefined} locale={locale} />;
 }
