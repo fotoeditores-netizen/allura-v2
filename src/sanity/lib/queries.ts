@@ -378,7 +378,7 @@ export interface BlogPostListItem {
   _id: string
   title: LocaleString
   slug: { current: string }
-  excerpt: LocaleString
+  excerpt?: LocaleString
   publishedAt: string
   featuredImage?: SanityImageLocaleAlt
   categories?: BlogCategory[]
@@ -389,7 +389,7 @@ export interface BlogPostDetail {
   _id: string
   title: LocaleString
   slug: { current: string }
-  excerpt: LocaleString
+  excerpt?: LocaleString
   publishedAt: string
   featuredImage?: SanityImageLocaleAlt
   body?: {
