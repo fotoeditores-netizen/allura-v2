@@ -6,14 +6,24 @@ export async function generateMetadata({
 }: {
   params: { locale: string };
 }): Promise<Metadata> {
+  const settings = await getSiteSettings();
   const isEn = locale === "en";
+  const siteName = settings?.siteName || "Allura Healthcare";
+  const ogImageUrl = settings?.seo?.ogImage?.asset?.url;
+  const title = isEn
+    ? `Medical Disclaimer | ${siteName}`
+    : `Aviso médico | ${siteName}`;
+  const description = isEn
+    ? "Medical disclaimer and limitations of liability for Allura Healthcare."
+    : "Aviso médico y limitaciones de responsabilidad de Allura Healthcare.";
   return {
-    title: isEn
-      ? "Medical Disclaimer — Allura Healthcare"
-      : "Aviso Médico Legal — Allura Healthcare",
-    description: isEn
-      ? "Medical disclaimer and important notices for international patients of Allura Healthcare in Medellín."
-      : "Aviso médico legal y avisos importantes para pacientes internacionales de Allura Healthcare en Medellín.",
+    title,
+    description,
+    robots: { index: false, follow: false },
+    openGraph: {
+      title,
+      ...(ogImageUrl && { images: [{ url: ogImageUrl, width: 1200, height: 630 }] }),
+    },
   };
 }
 

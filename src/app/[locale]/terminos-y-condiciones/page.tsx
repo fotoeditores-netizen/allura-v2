@@ -6,14 +6,24 @@ export async function generateMetadata({
 }: {
   params: { locale: string };
 }): Promise<Metadata> {
+  const settings = await getSiteSettings();
   const isEn = locale === "en";
+  const siteName = settings?.siteName || "Allura Healthcare";
+  const ogImageUrl = settings?.seo?.ogImage?.asset?.url;
+  const title = isEn
+    ? `Terms and Conditions | ${siteName}`
+    : `Términos y condiciones | ${siteName}`;
+  const description = isEn
+    ? "Terms and conditions of use for Allura Healthcare services."
+    : "Términos y condiciones de uso de los servicios de Allura Healthcare.";
   return {
-    title: isEn
-      ? "Terms & Conditions — Allura Healthcare"
-      : "Términos y Condiciones — Allura Healthcare",
-    description: isEn
-      ? "Terms and conditions for use of Allura Healthcare services and website."
-      : "Términos y condiciones de uso de los servicios y el sitio web de Allura Healthcare.",
+    title,
+    description,
+    robots: { index: false, follow: false },
+    openGraph: {
+      title,
+      ...(ogImageUrl && { images: [{ url: ogImageUrl, width: 1200, height: 630 }] }),
+    },
   };
 }
 
