@@ -17,59 +17,98 @@ export const sanityConfig = defineConfig({
         S.list()
           .title('Contenido')
           .items([
-            // ── CONFIGURACIÓN GLOBAL ──────────────────────────
-            S.listItem()
-              .title('⚙️ Configuración del sitio')
-              .id('siteSettings')
-              .child(S.document().schemaType('siteSettings').documentId('siteSettings')),
-            S.listItem()
-              .title('🗂 Navegación')
-              .id('navigation')
-              .child(S.document().schemaType('navigation').documentId('navigation')),
-            S.listItem()
-              .title('📊 Scripts y analítica')
-              .id('trackingScripts')
-              .child(S.document().schemaType('trackingScripts').documentId('trackingScripts')),
-
-            S.divider(),
-
-            // ── PÁGINAS ──────────────────────────────────────
+            // ── HOME ─────────────────────────────────────────────
             S.listItem()
               .title('🏠 Página de inicio')
               .id('homePage')
               .child(S.document().schemaType('homePage').documentId('homePage')),
+
+            S.divider(),
+
+            // ── CONFIGURACIÓN ────────────────────────────────────
+            S.listItem()
+              .title('⚙️ Configuración global')
+              .child(
+                S.list()
+                  .title('Configuración global')
+                  .items([
+                    S.listItem()
+                      .title('Datos del sitio')
+                      .id('siteSettings')
+                      .child(S.document().schemaType('siteSettings').documentId('siteSettings')),
+                    S.listItem()
+                      .title('Navegación')
+                      .id('navigation')
+                      .child(S.document().schemaType('navigation').documentId('navigation')),
+                  ])
+              ),
+            S.listItem()
+              .title('🔍 SEO y medición')
+              .child(
+                S.list()
+                  .title('SEO y medición')
+                  .items([
+                    S.listItem()
+                      .title('SEO global')
+                      .id('siteSettings-seo')
+                      .child(S.document().schemaType('siteSettings').documentId('siteSettings')),
+                    S.listItem()
+                      .title('Scripts y analítica')
+                      .id('trackingScripts')
+                      .child(S.document().schemaType('trackingScripts').documentId('trackingScripts')),
+                  ])
+              ),
+
+            S.divider(),
+
+            // ── CONTENIDO PRINCIPAL ───────────────────────────────
             S.documentTypeListItem('page').title('📄 Páginas'),
+            S.listItem()
+              .title('🦷 Servicios')
+              .child(
+                S.list()
+                  .title('Servicios')
+                  .items([
+                    S.documentTypeListItem('serviceCategory').title('Categorías'),
+                    S.documentTypeListItem('service').title('Servicios'),
+                  ])
+              ),
+            S.listItem()
+              .title('📝 Blog')
+              .child(
+                S.list()
+                  .title('Blog')
+                  .items([
+                    S.documentTypeListItem('blogPost').title('Entradas'),
+                    S.documentTypeListItem('category').title('Categorías'),
+                  ])
+              ),
 
             S.divider(),
 
-            // ── SERVICIOS ────────────────────────────────────
-            S.documentTypeListItem('serviceCategory').title('📂 Categorías de servicio'),
-            S.documentTypeListItem('service').title('🦷 Servicios'),
-
-            S.divider(),
-
-            // ── BLOG ─────────────────────────────────────────
-            S.documentTypeListItem('blogPost').title('✍️ Blog / Noticias'),
-            S.documentTypeListItem('category').title('🏷 Categorías de blog'),
-
-            S.divider(),
-
-            // ── SOCIAL PROOF ──────────────────────────────────
+            // ── SOCIAL PROOF Y MEDIA ──────────────────────────────
             S.documentTypeListItem('testimonial').title('⭐ Testimonios'),
-            S.documentTypeListItem('caseStudy').title('📈 Casos de éxito'),
+            S.documentTypeListItem('faq').title('❓ Preguntas frecuentes'),
+            S.documentTypeListItem('galleryItem').title('🖼️ Galería'),
+            S.documentTypeListItem('video').title('🎬 Videos'),
+            S.documentTypeListItem('caseStudy').title('🏆 Casos de éxito'),
             S.documentTypeListItem('teamMember').title('👥 Equipo'),
 
             S.divider(),
 
-            // ── MEDIA ─────────────────────────────────────────
-            S.documentTypeListItem('galleryItem').title('🖼 Galería'),
-            S.documentTypeListItem('video').title('▶️ Videos'),
+            // ── MARKETING ─────────────────────────────────────────
+            S.listItem()
+              .title('🎯 Promociones y popups')
+              .child(
+                S.list()
+                  .title('Promociones y popups')
+                  .items([
+                    S.documentTypeListItem('promotion').title('Promociones'),
+                    S.documentTypeListItem('popup').title('Popups'),
+                  ])
+              ),
 
             S.divider(),
-
-            // ── CONTENIDO AUXILIAR ─────────────────────────────
-            S.documentTypeListItem('faq').title('❓ Preguntas frecuentes'),
-            S.documentTypeListItem('popup').title('💬 Popups'),
           ]),
     }),
     visionTool(),
