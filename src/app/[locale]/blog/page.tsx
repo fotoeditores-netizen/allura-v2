@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { getBlogPosts } from "@/lib/supabase/blog";
-import type { BlogPostListItem, BlogCategory } from "@/sanity/lib/queries";
+import type { BlogPostListItem, BlogCategory } from "@/types/cms";
 import { BlogListTemplate } from "@/components/templates/BlogListTemplate";
 import { getSiteSettings } from "@/lib/getSiteSettings";
 

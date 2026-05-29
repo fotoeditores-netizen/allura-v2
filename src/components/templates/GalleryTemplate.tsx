@@ -2,7 +2,7 @@ import Image from 'next/image'
 import { Link } from '@/navigation'
 import { SectionHeading } from '@/components/ui/SectionHeading'
 import { getTranslations } from 'next-intl/server'
-import type { GalleryItemData } from '@/sanity/lib/queries'
+import type { GalleryItemData } from '@/types/cms'
 
 interface GalleryTemplateProps {
   items: GalleryItemData[]

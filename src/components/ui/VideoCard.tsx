@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import type { VideoItem } from '@/sanity/lib/queries'
+import type { VideoItem } from '@/types/cms'
 
 interface VideoCardProps {
   video: VideoItem

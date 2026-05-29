@@ -1,5 +1,5 @@
 import { Link } from '@/navigation'
-import type { ActivePromotion } from '@/sanity/lib/queries'
+import type { ActivePromotion } from '@/types/cms'
 
 interface PromoBannerProps {
   promotion: ActivePromotion | null

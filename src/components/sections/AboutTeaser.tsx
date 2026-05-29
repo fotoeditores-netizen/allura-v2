@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { useTranslations } from "next-intl";
-import type { LocaleString, SanityImageLocaleAlt, CtaField } from "@/sanity/lib/queries";
+import type { LocaleString, SanityImageLocaleAlt, CtaField } from "@/types/cms";
 
 interface AboutTeaserProps {
   sanityData?: {

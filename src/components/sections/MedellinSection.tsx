@@ -6,7 +6,7 @@ import { Stethoscope, Leaf, Plane, Sparkles, type LucideIcon } from "lucide-reac
 import { useLocale, useTranslations } from "next-intl";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Button } from "@/components/ui/Button";
-import type { LocaleString, CtaField } from "@/sanity/lib/queries";
+import type { LocaleString, CtaField } from "@/types/cms";
 
 const icons: LucideIcon[] = [Stethoscope, Leaf, Plane, Sparkles];
 

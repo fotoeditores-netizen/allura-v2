@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { useTranslations } from "next-intl";
-import type { LocaleString, SanityImage, CtaField } from "@/sanity/lib/queries";
+import type { LocaleString, SanityImage, CtaField } from "@/types/cms";
 
 interface HeroSectionProps {
   sanityData?: {

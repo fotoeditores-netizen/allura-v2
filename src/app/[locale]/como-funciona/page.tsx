@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 import { getTestimonials, getFaqs, getVideos } from '@/lib/supabase/content'
-import type { TestimonialItem, FaqItem, VideoItem } from '@/sanity/lib/queries'
+import type { TestimonialItem, FaqItem, VideoItem } from '@/types/cms'
 import { ComoFuncionaTemplate } from '@/components/templates/ComoFuncionaTemplate'
 import { getSiteSettings } from '@/lib/getSiteSettings'
 

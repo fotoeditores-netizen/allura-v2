@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getTeamMembers, getTeamMemberBySlug } from '@/lib/supabase/team'
-import type { TeamMemberDetail } from '@/sanity/lib/queries'
+import type { TeamMemberDetail } from '@/types/cms'
 import { TeamMemberTemplate } from '@/components/templates/TeamMemberTemplate'
 
 export const revalidate = process.env.NODE_ENV === 'development' ? 0 : 3600

@@ -1,5 +1,5 @@
 import { getGalleryItems } from '@/lib/supabase/content'
-import type { GalleryItemData } from '@/sanity/lib/queries'
+import type { GalleryItemData } from '@/types/cms'
 import { GalleryTemplate } from '@/components/templates/GalleryTemplate'
 import { getTranslations } from 'next-intl/server'
 import type { Metadata } from 'next'

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getBlogPosts, getBlogPostBySlug } from "@/lib/supabase/blog";
-import type { BlogPostDetail } from "@/sanity/lib/queries";
+import type { BlogPostDetail } from "@/types/cms";
 import { BlogPostTemplate } from "@/components/templates/BlogPostTemplate";
 
 export const revalidate = process.env.NODE_ENV === "development" ? 0 : 3600;

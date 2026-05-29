@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import type { TestimonialItem } from '@/sanity/lib/queries'
+import type { TestimonialItem } from '@/types/cms'
 
 interface TestimonialsCarouselProps {
   testimonials: TestimonialItem[]

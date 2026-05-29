@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/navigation';
-import type { TeamMemberListItem } from '@/sanity/lib/queries';
+import type { TeamMemberListItem } from '@/types/cms';
 
 interface TeamCardProps {
   name: string;

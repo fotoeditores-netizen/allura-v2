@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { useTranslations } from "next-intl";
-import type { LocaleString } from "@/sanity/lib/queries";
+import type { LocaleString } from "@/types/cms";
 
 interface BenefitsSectionProps {
   sanityData?: {

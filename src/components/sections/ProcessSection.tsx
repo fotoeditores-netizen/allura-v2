@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Button } from "@/components/ui/Button";
 import { useTranslations } from "next-intl";
-import type { LocaleString, CtaField } from "@/sanity/lib/queries";
+import type { LocaleString, CtaField } from "@/types/cms";
 
 const stepsMeta = [
   {

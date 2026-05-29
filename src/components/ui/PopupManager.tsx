@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation'
 import Image from 'next/image'
 import { PortableText } from '@portabletext/react'
 import type { PortableTextBlock } from '@portabletext/types'
-import type { ActivePopup } from '@/sanity/lib/queries'
+import type { ActivePopup } from '@/types/cms'
 
 interface PopupManagerProps {
   popup: ActivePopup | null

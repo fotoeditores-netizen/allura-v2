@@ -3,8 +3,7 @@ import { Instagram, Facebook, Linkedin, MessageCircle } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/navigation";
 import { QualitySlider } from "./QualitySlider";
-import { client } from "@/sanity/lib/client";
-import { globalConfigQuery, type GlobalConfig } from "@/sanity/lib/queries";
+import { getSiteSettings } from "@/lib/getSiteSettings";
 
 const WHATSAPP_FALLBACK =
   "https://wa.me/17862087572?text=Hola%2C%20me%20interesa%20conocer%20m%C3%A1s%20sobre%20los%20servicios%20de%20Allura%20Healthcare";
@@ -20,9 +19,7 @@ const serviceLinks = [
 export async function Footer() {
   const [t, config] = await Promise.all([
     getTranslations("footer"),
-    client.fetch<GlobalConfig | null>(globalConfigQuery, {}, {
-      next: { revalidate: process.env.NODE_ENV === "development" ? 0 : 3600 },
-    }),
+    getSiteSettings(),
   ]);
 
   const whatsappUrl = config?.whatsappNumber

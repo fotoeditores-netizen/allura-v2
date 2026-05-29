@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 import { getTeamMembers } from '@/lib/supabase/team'
-import type { TeamMemberListItem } from '@/sanity/lib/queries'
+import type { TeamMemberListItem } from '@/types/cms'
 import { TeamListTemplate } from '@/components/templates/TeamListTemplate'
 import { getSiteSettings } from '@/lib/getSiteSettings'
 

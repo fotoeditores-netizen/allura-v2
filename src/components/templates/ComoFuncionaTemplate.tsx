@@ -5,7 +5,7 @@ import { TestimonialsCarousel } from '@/components/ui/TestimonialsCarousel'
 import { PortableText } from '@portabletext/react'
 import type { PortableTextBlock } from '@portabletext/types'
 import { getTranslations } from 'next-intl/server'
-import type { TestimonialItem, FaqItem, VideoItem } from '@/sanity/lib/queries'
+import type { TestimonialItem, FaqItem, VideoItem } from '@/types/cms'
 import { VideoCard } from '@/components/ui/VideoCard'
 import { getSiteSettings, buildWhatsAppUrl } from '@/lib/getSiteSettings'
 

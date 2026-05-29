@@ -2,7 +2,7 @@ import { SectionHeading } from '@/components/ui/SectionHeading'
 import { CTABanner } from '@/components/sections/CTABanner'
 import { TeamCard } from '@/components/sections/TeamCard'
 import { getTranslations } from 'next-intl/server'
-import type { TeamMemberListItem } from '@/sanity/lib/queries'
+import type { TeamMemberListItem } from '@/types/cms'
 
 const teamImages = [
   '/images/equipo/Dra-Johanna-Jaramillo-Allura.avif',

@@ -3,7 +3,7 @@ import { Link } from "@/navigation";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { CTABanner } from "@/components/sections/CTABanner";
 import { getTranslations } from "next-intl/server";
-import type { BlogPostListItem, BlogCategory } from "@/sanity/lib/queries";
+import type { BlogPostListItem, BlogCategory } from "@/types/cms";
 
 interface BlogListTemplateProps {
   posts: BlogPostListItem[];

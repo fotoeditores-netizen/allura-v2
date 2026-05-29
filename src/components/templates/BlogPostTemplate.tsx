@@ -4,7 +4,7 @@ import { CTABanner } from "@/components/sections/CTABanner";
 import { PortableText } from "@portabletext/react";
 import type { PortableTextBlock } from "@portabletext/types";
 import { ChevronLeft } from "lucide-react";
-import type { BlogPostDetail } from "@/sanity/lib/queries";
+import type { BlogPostDetail } from "@/types/cms";
 
 interface BlogPostTemplateProps {
   post: BlogPostDetail;

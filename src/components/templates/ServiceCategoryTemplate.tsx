@@ -3,7 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { CTABanner } from "@/components/sections/CTABanner";
 import { getTranslations } from "next-intl/server";
-import type { ServiceCategoryData } from "@/sanity/lib/queries";
+import type { ServiceCategoryData } from "@/types/cms";
 import { getSiteSettings, buildWhatsAppUrl } from "@/lib/getSiteSettings";
 
 export interface SubService {

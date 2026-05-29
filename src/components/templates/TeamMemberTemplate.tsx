@@ -4,7 +4,7 @@ import { CTABanner } from '@/components/sections/CTABanner'
 import { PortableText } from '@portabletext/react'
 import type { PortableTextBlock } from '@portabletext/types'
 import { ChevronLeft, Linkedin } from 'lucide-react'
-import type { TeamMemberDetail } from '@/sanity/lib/queries'
+import type { TeamMemberDetail } from '@/types/cms'
 
 interface TeamMemberTemplateProps {
   member: TeamMemberDetail
