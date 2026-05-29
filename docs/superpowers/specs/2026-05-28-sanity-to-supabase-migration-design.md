@@ -71,6 +71,17 @@ El objetivo es reemplazar Sanity por Supabase para convertir Allura en el primer
 | `caseStudy` | `case_studies` |
 | `page` | `pages` |
 
+### Tablas de estructura de contenido
+
+| Tabla | Propósito |
+|-------|-----------|
+| `sections` | Secciones dentro de una página (type, sort_order, is_visible, settings JSONB) |
+| `blocks` | Bloques de contenido dentro de una sección (ej: cada servicio en una grid, cada testimonio) |
+
+Tipos de sección soportados: `hero`, `text_image`, `services_grid`, `testimonials`, `gallery`, `faq`, `cta`, `contact_form`, `metrics`, `logos`, `team`, `map`.
+
+Cada nuevo tipo de sección requiere: componente público + componente de edición en admin + schema Zod + registro en el renderizador.
+
 ### Tablas nuevas (no existían en Sanity)
 
 | Tabla | Propósito |
@@ -80,6 +91,7 @@ El objetivo es reemplazar Sanity por Supabase para convertir Allura en el primer
 | `site_users` | Relación usuario ↔ sitio + rol |
 | `form_submissions` | Leads del formulario de contacto |
 | `media_assets` | Registro de archivos subidos a Storage |
+| `redirects` | Redirecciones SEO (from_path → to_path, status_code 301/302) |
 
 ### Campos bilingües
 
@@ -112,17 +124,19 @@ Los permisos se validan en dos niveles:
 ### Rutas
 
 ```
-/admin                    → Dashboard
+/admin                    → Dashboard (estado general, páginas publicadas, leads recientes)
 /admin/login              → Login con Supabase Auth
-/admin/paginas            → Listado y editor de páginas
+/admin/paginas            → Listado y editor de páginas + secciones + bloques
 /admin/servicios          → CRUD servicios y categorías
 /admin/blog               → CRUD artículos del blog
 /admin/equipo             → CRUD miembros del equipo
 /admin/testimonios        → CRUD testimonios
-/admin/galeria            → Galería de imágenes
+/admin/galeria            → Galería de imágenes y videos
+/admin/medios             → Biblioteca de medios: subir, buscar, editar alt_text, eliminar
 /admin/faq                → Preguntas frecuentes
 /admin/formularios        → Leads recibidos (nuevo/revisado/archivado)
-/admin/configuracion      → siteSettings (logo, colores, contacto, redes)
+/admin/redirects          → Redirecciones SEO (from → to, código 301/302)
+/admin/configuracion      → siteSettings: logo, colores, contacto, redes sociales, analytics
 /admin/usuarios           → Gestión de usuarios y roles (owner/admin only)
 ```
 
@@ -154,6 +168,9 @@ src/lib/supabase/
   siteSettings.ts    → getSiteSettings()
   homePage.ts        → getHomePage()
   navigation.ts      → getNavigation()
+  sections.ts        → getSectionsByPage(), reorderSections(), toggleSectionVisibility()
+  blocks.ts          → getBlocksBySection(), reorderBlocks()
+  redirects.ts       → getRedirects() — usado en middleware para redirecciones SEO
   storage.ts         → uploadImage(), getPublicUrl(), deleteImage()
 ```
 
@@ -188,10 +205,18 @@ allura-media/
   site/     → logo, favicon, og-images
 ```
 
+### Tipos de archivo permitidos
+
+- JPG, PNG, WebP, SVG (con sanitización), PDF
+- **Prohibidos:** archivos ejecutables (.exe, .sh, .js, .php, etc.)
+- Peso máximo por archivo: 10 MB
+- Validación de tipo en frontend (Zod) y en política de Storage
+
 ### Políticas de Storage
 
 - Lectura pública para todos los buckets
 - Escritura solo para usuarios autenticados con rol editor o superior
+- Organización por `site_id` para aislar archivos entre clientes
 
 ### Componentes nuevos en el panel
 
@@ -200,6 +225,22 @@ src/components/admin/
   ImageUploader.tsx   → drag & drop para subir imágenes
   MediaLibrary.tsx    → galería de archivos subidos
 ```
+
+---
+
+## Analítica — configuración desde panel
+
+Los IDs de analytics se guardan en `site_settings` como keys individuales y se editan desde `/admin/configuracion`:
+
+| Key | Descripción |
+|-----|-------------|
+| `ga_measurement_id` | Google Analytics 4 |
+| `gtm_container_id` | Google Tag Manager |
+| `meta_pixel_id` | Meta (Facebook) Pixel |
+| `tiktok_pixel_id` | TikTok Pixel |
+| `google_search_console` | Meta tag de verificación |
+
+El componente `AnalyticsScripts.tsx` existente se actualiza para leer estos valores desde Supabase en vez de Sanity `trackingScripts`.
 
 ---
 
@@ -267,14 +308,70 @@ Las variables de Sanity (`NEXT_PUBLIC_SANITY_PROJECT_ID`, etc.) se eliminan en l
 
 ---
 
+## Checklist de entrega al cliente
+
+Antes de considerar la migración completa y entregar al cliente:
+
+**Sitio público:**
+- [ ] Todas las páginas cargan sin errores
+- [ ] Sitio responsive en móvil, tablet y escritorio
+- [ ] SEO básico por página funcionando
+- [ ] Formularios de contacto funcionando y guardando en Supabase
+- [ ] Imágenes cargando desde Supabase Storage
+- [ ] Analytics configurados y activos
+
+**Panel administrativo:**
+- [ ] Login y logout funcionando
+- [ ] Dashboard con estado general del sitio
+- [ ] Edición de páginas, secciones y bloques funcionando
+- [ ] Subida de imágenes desde `/admin/medios`
+- [ ] Leads visibles en `/admin/formularios`
+- [ ] Roles y permisos probados por cada rol
+- [ ] `/admin/configuracion` permite editar logo, colores, contacto, redes, analytics
+
+**Seguridad:**
+- [ ] RLS activado en todas las tablas
+- [ ] `SUPABASE_SERVICE_ROLE_KEY` no expuesta en cliente
+- [ ] Usuario sin sesión no accede a `/admin`
+- [ ] Editor no puede administrar usuarios ni configuración
+- [ ] Datos de prueba eliminados o reemplazados
+
+**Entrega:**
+- [ ] Usuario administrador creado para el cliente
+- [ ] Accesos entregados de forma segura
+- [ ] Manual de uso entregado (ver sección Manual)
+- [ ] Variables de entorno configuradas en Vercel
+- [ ] Dominio configurado y SSL activo
+
+---
+
+## Manual para cliente final
+
+El panel administrativo debe entregarse con un manual en español que cubra:
+
+1. Cómo iniciar y cerrar sesión
+2. Cómo editar textos e imágenes de una página
+3. Cómo crear una página nueva
+4. Cómo ocultar o mostrar una sección
+5. Cómo subir imágenes desde Medios
+6. Cómo revisar formularios recibidos
+7. Cómo actualizar datos de contacto y redes sociales
+8. Qué NO hacer (borrar páginas sin verificar, subir imágenes sin derechos, etc.)
+
+El manual se genera como documento Markdown en `docs/manual-cliente.md` al final del proyecto.
+
+---
+
 ## Criterios de éxito
 
 1. `pnpm build` sin errores en la rama de migración
 2. Todas las páginas públicas cargan con datos reales desde Supabase
 3. El panel `/admin` permite editar cualquier contenido del sitio
 4. Un usuario sin sesión no puede acceder a `/admin`
-5. Un editor no puede administrar usuarios ni configuración
+5. Un editor no puede administrar usuarios ni configuración del sitio
 6. Las imágenes cargan desde Supabase Storage
-7. El formulario de contacto guarda leads en Supabase
-8. No hay ninguna importación de `@sanity` en el proyecto
-9. El sitio visualmente es idéntico al prototipo aprobado por el cliente
+7. El formulario de contacto guarda leads en Supabase y son visibles en el panel
+8. Los redirects configurados en `/admin/redirects` funcionan en el sitio público
+9. No hay ninguna importación de `@sanity` en el proyecto
+10. El sitio visualmente es idéntico al prototipo aprobado por el cliente
+11. RLS activo — un usuario no puede acceder a datos de otro sitio
