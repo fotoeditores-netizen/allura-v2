@@ -32,17 +32,26 @@ const servicesMeta = [
   },
 ];
 
-export function ServicesPreview() {
+interface ServicesPreviewProps {
+  locale?: string;
+  settings?: Record<string, unknown>;
+}
+
+export function ServicesPreview({ locale = "es", settings }: ServicesPreviewProps = {}) {
   const t = useTranslations("servicesPreview");
   const services = t.raw("services") as Array<{ title: string; description: string }>;
+
+  const eyebrow = (settings?.eyebrow as { es?: string; en?: string })?.[locale as 'es' | 'en'] || t("eyebrow");
+  const title = (settings?.title as { es?: string; en?: string })?.[locale as 'es' | 'en'] || t("title");
+  const subtitle = (settings?.subtitle as { es?: string; en?: string })?.[locale as 'es' | 'en'] || t("subtitle");
 
   return (
     <section className="section-padding bg-white">
       <div className="container-allura">
         <SectionHeading
-          eyebrow={t("eyebrow")}
-          title={t("title")}
-          subtitle={t("subtitle")}
+          eyebrow={eyebrow}
+          title={title}
+          subtitle={subtitle}
         />
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-12">

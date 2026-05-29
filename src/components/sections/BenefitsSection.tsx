@@ -30,6 +30,7 @@ interface BenefitsSectionProps {
     }>;
   };
   locale?: string;
+  settings?: Record<string, unknown>;
 }
 
 // Icon lookup map: Lucide icon name string → component
@@ -70,23 +71,30 @@ function getLocaleValue(
   return locale === "en" ? localeString.en || fallback : localeString.es || fallback;
 }
 
-export function BenefitsSection({ sanityData, locale = "es" }: BenefitsSectionProps) {
+export function BenefitsSection({ sanityData, locale = "es", settings }: BenefitsSectionProps) {
   const t = useTranslations("benefits");
   const fallbackItems = t.raw("items") as Array<{ title: string; description: string }>;
 
-  // Determine which benefits to render
-  const benefits = sanityData?.benefits && sanityData.benefits.length > 0
-    ? sanityData.benefits
-    : fallbackItems.map((item) => ({
-        icon: undefined,
-        title: { es: item.title, en: item.title } as LocaleString,
-        description: { es: item.description, en: item.description } as LocaleString,
-      }));
+  // Determine which benefits to render — settings.items > sanityData.benefits > i18n
+  const settingsItems = settings?.items as Array<{ icon?: string; title?: { es?: string; en?: string }; description?: { es?: string; en?: string } }> | undefined;
+  const benefits = settingsItems && settingsItems.length > 0
+    ? settingsItems.map(item => ({
+        icon: item.icon,
+        title: item.title as LocaleString | undefined,
+        description: item.description as LocaleString | undefined,
+      }))
+    : sanityData?.benefits && sanityData.benefits.length > 0
+      ? sanityData.benefits
+      : fallbackItems.map((item) => ({
+          icon: undefined,
+          title: { es: item.title, en: item.title } as LocaleString,
+          description: { es: item.description, en: item.description } as LocaleString,
+        }));
 
-  // Determine heading values with Sanity → i18n fallback
-  const eyebrow = getLocaleValue(sanityData?.eyebrow, locale, t("eyebrow"));
-  const title = getLocaleValue(sanityData?.title, locale, t("title"));
-  const subtitle = getLocaleValue(sanityData?.subtitle, locale, t("subtitle"));
+  // Determine heading values with settings → Sanity → i18n fallback
+  const eyebrow = (settings?.eyebrow as { es?: string; en?: string })?.[locale as 'es' | 'en'] || getLocaleValue(sanityData?.eyebrow, locale, t("eyebrow"));
+  const title = (settings?.title as { es?: string; en?: string })?.[locale as 'es' | 'en'] || getLocaleValue(sanityData?.title, locale, t("title"));
+  const subtitle = (settings?.subtitle as { es?: string; en?: string })?.[locale as 'es' | 'en'] || getLocaleValue(sanityData?.subtitle, locale, t("subtitle"));
 
   return (
     <section className="bg-brand-light section-padding">

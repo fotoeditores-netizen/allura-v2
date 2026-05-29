@@ -15,25 +15,31 @@ interface AboutTeaserProps {
     image?: SanityImageLocaleAlt
   }
   locale?: string
+  settings?: Record<string, unknown>
 }
 
-export function AboutTeaser({ sanityData, locale = "es" }: AboutTeaserProps = {}) {
+export function AboutTeaser({ sanityData, locale = "es", settings }: AboutTeaserProps = {}) {
   const t = useTranslations("aboutTeaser");
 
-  // Helper to get locale-specific value with fallback to next-intl
-  const getTextValue = (sanityValue: LocaleString | undefined, fallbackKey: string): string => {
+  // Helper to get locale-specific value with settings → Sanity → i18n fallback
+  const getTextValue = (sanityValue: LocaleString | undefined, fallbackKey: string, settingsKey: string): string => {
+    const fromSettings = (settings?.[settingsKey] as { es?: string; en?: string })?.[locale as 'es' | 'en'];
+    if (fromSettings && fromSettings.trim()) return fromSettings;
     if (sanityValue?.[locale as keyof LocaleString]) {
       return sanityValue[locale as keyof LocaleString];
     }
     return t(fallbackKey);
   };
 
-  // Determine image URL: Sanity if available, otherwise hardcoded default
-  const imageUrl = sanityData?.image?.asset?.url
+  // Determine image URL: settings > Sanity > hardcoded default
+  const imageUrl = (settings?.imageUrl as string)
+    || sanityData?.image?.asset?.url
     || '/images/imagenes_web/allura-healthcare-medico-paciente.jpg';
 
-  // CTA button logic: use Sanity cta if available, otherwise fallback to next-intl
-  const ctaLabel = sanityData?.cta?.label?.[locale as keyof LocaleString] || t("cta");
+  // CTA button logic
+  const ctaLabel = (settings?.ctaLabel as { es?: string; en?: string })?.[locale as 'es' | 'en']
+    || sanityData?.cta?.label?.[locale as keyof LocaleString]
+    || t("cta");
   const ctaUrl = sanityData?.cta?.url || "/nosotros";
   const ctaNewTab = sanityData?.cta?.openInNewTab || false;
 
@@ -49,9 +55,9 @@ export function AboutTeaser({ sanityData, locale = "es" }: AboutTeaserProps = {}
             transition={{ duration: 0.6 }}
           >
             <SectionHeading
-              eyebrow={getTextValue(sanityData?.eyebrow, "eyebrow")}
-              title={getTextValue(sanityData?.title, "title")}
-              subtitle={getTextValue(sanityData?.body, "subtitle")}
+              eyebrow={getTextValue(sanityData?.eyebrow, "eyebrow", "eyebrow")}
+              title={getTextValue(sanityData?.title, "title", "title")}
+              subtitle={getTextValue(sanityData?.body, "subtitle", "subtitle")}
             />
             <div className="mt-8">
               <Button

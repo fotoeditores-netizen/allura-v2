@@ -14,13 +14,16 @@ export interface CTABannerProps {
     backgroundImage?: SanityImage;
   };
   locale?: string;
+  settings?: Record<string, unknown>;
 }
 
-export function CTABanner({ sanityData, locale = "es" }: CTABannerProps = {}) {
+export function CTABanner({ sanityData, locale = "es", settings }: CTABannerProps = {}) {
   const t = useTranslations("cta");
 
-  // Helper to get locale-aware text with Sanity fallback
-  const getText = (sanityValue: LocaleString | undefined, i18nKey: string): string => {
+  // Helper to get locale-aware text with settings → Sanity → i18n fallback
+  const getText = (sanityValue: LocaleString | undefined, i18nKey: string, settingsKey: string): string => {
+    const fromSettings = (settings?.[settingsKey] as { es?: string; en?: string })?.[locale as 'es' | 'en'];
+    if (fromSettings && fromSettings.trim()) return fromSettings;
     if (sanityValue && sanityValue[locale as keyof LocaleString]) {
       const value = sanityValue[locale as keyof LocaleString];
       if (value?.trim()) {
@@ -31,9 +34,10 @@ export function CTABanner({ sanityData, locale = "es" }: CTABannerProps = {}) {
   };
 
   // Get CTA text and href
-  const ctaLabel = sanityData?.cta?.label
-    ? sanityData.cta.label[locale as keyof LocaleString] || t("button")
-    : t("button");
+  const ctaLabel = (settings?.buttonLabel as { es?: string; en?: string })?.[locale as 'es' | 'en']
+    || (sanityData?.cta?.label
+      ? sanityData.cta.label[locale as keyof LocaleString] || t("button")
+      : t("button"));
   const ctaHref = sanityData?.cta?.url || "/contacto";
   const ctaNewTab = sanityData?.cta?.openInNewTab ?? false;
 
@@ -47,13 +51,13 @@ export function CTABanner({ sanityData, locale = "es" }: CTABannerProps = {}) {
           transition={{ duration: 0.6 }}
         >
           <p className="font-body text-xs tracking-[0.2em] uppercase text-brand-blue mb-4">
-            {getText(sanityData?.eyebrow, "eyebrow")}
+            {getText(sanityData?.eyebrow, "eyebrow", "eyebrow")}
           </p>
           <h2 className="font-heading text-4xl md:text-5xl text-white mb-6 max-w-2xl mx-auto leading-tight">
-            {getText(sanityData?.title, "title")}
+            {getText(sanityData?.title, "title", "title")}
           </h2>
           <p className="font-body text-brand-light/70 text-base mb-10 max-w-lg mx-auto">
-            {getText(sanityData?.body, "body")}
+            {getText(sanityData?.body, "body", "subtitle")}
           </p>
           <Button href={ctaHref} variant="secondary" target={ctaNewTab ? "_blank" : undefined}>
             {ctaLabel}

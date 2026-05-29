@@ -37,6 +37,7 @@ interface MedellinSectionProps {
     }>;
     cta?: CtaField;
   };
+  settings?: Record<string, unknown>;
 }
 
 /**
@@ -56,7 +57,7 @@ function getLocalizedText(
   return fallbackValue;
 }
 
-export function MedellinSection({ locale: localeProp, sanityData }: MedellinSectionProps) {
+export function MedellinSection({ locale: localeProp, sanityData, settings }: MedellinSectionProps) {
   const t = useTranslations("medellin");
   const intlLocale = useLocale();
   const locale = localeProp ?? intlLocale;
@@ -74,9 +75,9 @@ export function MedellinSection({ locale: localeProp, sanityData }: MedellinSect
           transition={{ duration: 0.6 }}
         >
           <SectionHeading
-            eyebrow={getLocalizedText(sanityData?.eyebrow, t("eyebrow"), locale)}
-            title={getLocalizedText(sanityData?.title, t("title"), locale)}
-            subtitle={getLocalizedText(sanityData?.subtitle, t("subtitle"), locale)}
+            eyebrow={(settings?.eyebrow as { es?: string; en?: string })?.[locale as 'es' | 'en'] || getLocalizedText(sanityData?.eyebrow, t("eyebrow"), locale)}
+            title={(settings?.title as { es?: string; en?: string })?.[locale as 'es' | 'en'] || getLocalizedText(sanityData?.title, t("title"), locale)}
+            subtitle={(settings?.subtitle as { es?: string; en?: string })?.[locale as 'es' | 'en'] || getLocalizedText(sanityData?.subtitle, t("subtitle"), locale)}
             centered
           />
         </motion.div>
@@ -84,9 +85,12 @@ export function MedellinSection({ locale: localeProp, sanityData }: MedellinSect
         {/* Benefit Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-14">
           {(() => {
-            const blocks = sanityData?.blocks && sanityData.blocks.length > 0
-              ? sanityData.blocks
-              : benefits;
+            const settingsItems = settings?.items as Array<{ icon?: string; title?: { es?: string; en?: string }; description?: { es?: string; en?: string } }> | undefined;
+            const blocks = settingsItems && settingsItems.length > 0
+              ? settingsItems.map(item => ({ title: item.title as LocaleString | undefined, text: item.description as LocaleString | undefined, icon: item.icon }))
+              : sanityData?.blocks && sanityData.blocks.length > 0
+                ? sanityData.blocks
+                : benefits;
 
             return blocks.map((block, i) => {
               const Icon = icons[i];

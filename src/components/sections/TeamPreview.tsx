@@ -14,7 +14,12 @@ const teamMeta = [
   { name: "Dr. Alejandro Cifuentes",image: "/images/equipo/Dr-Alejandro-Cifuentes-Allura.avif" },
 ];
 
-export function TeamPreview() {
+interface TeamPreviewProps {
+  locale?: string;
+  settings?: Record<string, unknown>;
+}
+
+export function TeamPreview({ locale = "es", settings }: TeamPreviewProps = {}) {
   const t = useTranslations("teamPreview");
   const members = t.raw("members") as Array<{ specialty: string }>;
 
@@ -28,9 +33,9 @@ export function TeamPreview() {
           transition={{ duration: 0.6 }}
         >
           <SectionHeading
-            eyebrow={t("eyebrow")}
-            title={t("title")}
-            subtitle={t("subtitle")}
+            eyebrow={(settings?.eyebrow as { es?: string; en?: string })?.[locale as 'es' | 'en'] || t("eyebrow")}
+            title={(settings?.title as { es?: string; en?: string })?.[locale as 'es' | 'en'] || t("title")}
+            subtitle={(settings?.subtitle as { es?: string; en?: string })?.[locale as 'es' | 'en'] || t("subtitle")}
             centered
           />
         </motion.div>

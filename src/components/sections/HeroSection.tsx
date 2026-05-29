@@ -17,13 +17,16 @@ interface HeroSectionProps {
     backgroundImage?: SanityImage;
   };
   locale?: string;
+  settings?: Record<string, unknown>;
 }
 
-export function HeroSection({ sanityData, locale = "es" }: HeroSectionProps) {
+export function HeroSection({ sanityData, locale = "es", settings }: HeroSectionProps) {
   const t = useTranslations("hero");
 
-  // Helper to get text from Sanity data or fall back to next-intl
-  const getText = (sanityValue: LocaleString | undefined, i18nKey: string): string => {
+  // Helper to get text from settings, then Sanity data, then fall back to next-intl
+  const getText = (sanityValue: LocaleString | undefined, i18nKey: string, settingsKey: string): string => {
+    const fromSettings = (settings?.[settingsKey] as { es?: string; en?: string })?.[locale as 'es' | 'en'];
+    if (fromSettings && fromSettings.trim()) return fromSettings;
     if (sanityValue?.[locale as keyof LocaleString]) {
       const value = sanityValue[locale as keyof LocaleString];
       if (value && typeof value === "string" && value.trim()) {
@@ -37,14 +40,21 @@ export function HeroSection({ sanityData, locale = "es" }: HeroSectionProps) {
   const getCtaData = (
     sanityCta: CtaField | undefined,
     defaultUrl: string,
-    fallbackKey: string
+    fallbackKey: string,
+    settingsKey: string
   ): { label: string; href: string } => {
+    const fromSettings = (settings?.[settingsKey] as { es?: string; en?: string })?.[locale as 'es' | 'en'];
+    if (fromSettings && fromSettings.trim()) {
+      return { label: fromSettings, href: sanityCta?.url || defaultUrl };
+    }
     const label = sanityCta?.label?.[locale as keyof LocaleString];
     return {
       label: label && typeof label === "string" && label.trim() ? label : t(fallbackKey),
       href: sanityCta?.url || defaultUrl,
     };
   };
+
+  const posterUrl = (settings?.imageUrl as string) || "/images/imagenes_web/allura-healthcare-medellin-salud-bienestar.png";
 
   return (
     <section className="relative h-screen min-h-[640px] flex items-center justify-center overflow-hidden">
@@ -55,7 +65,7 @@ export function HeroSection({ sanityData, locale = "es" }: HeroSectionProps) {
         muted
         loop
         playsInline
-        poster="/images/imagenes_web/allura-healthcare-medellin-salud-bienestar.png"
+        poster={posterUrl}
         aria-hidden="true"
       >
         <source
@@ -75,7 +85,7 @@ export function HeroSection({ sanityData, locale = "es" }: HeroSectionProps) {
           transition={{ duration: 0.6 }}
           className="font-body text-xs tracking-[0.25em] uppercase text-white/60 mb-6"
         >
-          {getText(sanityData?.eyebrow, "eyebrow")}
+          {getText(sanityData?.eyebrow, "eyebrow", "eyebrow")}
         </motion.p>
 
         <motion.h1
@@ -84,9 +94,9 @@ export function HeroSection({ sanityData, locale = "es" }: HeroSectionProps) {
           transition={{ duration: 0.7, delay: 0.1 }}
           className="font-heading text-5xl md:text-6xl lg:text-7xl text-white leading-tight tracking-tight mb-6 max-w-4xl mx-auto"
         >
-          {getText(sanityData?.headlinePart1, "headlinePart1")}
+          {getText(sanityData?.headlinePart1, "headlinePart1", "headline1")}
           <br className="hidden sm:block" />
-          {" "}{getText(sanityData?.headlinePart2, "headlinePart2")}
+          {" "}{getText(sanityData?.headlinePart2, "headlinePart2", "headline2")}
         </motion.h1>
 
         <motion.p
@@ -95,7 +105,7 @@ export function HeroSection({ sanityData, locale = "es" }: HeroSectionProps) {
           transition={{ duration: 0.7, delay: 0.2 }}
           className="font-body text-base md:text-lg text-white/75 leading-relaxed max-w-2xl mx-auto mb-10"
         >
-          {getText(sanityData?.subtext, "subtext")}
+          {getText(sanityData?.subtext, "subtext", "subtitle")}
         </motion.p>
 
         <motion.div
@@ -105,7 +115,7 @@ export function HeroSection({ sanityData, locale = "es" }: HeroSectionProps) {
           className="flex flex-col sm:flex-row gap-3 justify-center"
         >
           {(() => {
-            const primaryCta = getCtaData(sanityData?.ctaPrimary, "/servicios", "ctaPrimary");
+            const primaryCta = getCtaData(sanityData?.ctaPrimary, "/servicios", "ctaPrimary", "ctaPrimary");
             return (
               <Button href={primaryCta.href} variant="secondary">
                 {primaryCta.label}
@@ -113,7 +123,7 @@ export function HeroSection({ sanityData, locale = "es" }: HeroSectionProps) {
             );
           })()}
           {(() => {
-            const secondaryCta = getCtaData(sanityData?.ctaSecondary, "/como-funciona", "ctaSecondary");
+            const secondaryCta = getCtaData(sanityData?.ctaSecondary, "/como-funciona", "ctaSecondary", "ctaSecondary");
             return (
               <Button href={secondaryCta.href} variant="outline" className="border-white/50 hover:border-white">
                 {secondaryCta.label}

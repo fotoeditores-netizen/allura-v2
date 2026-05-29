@@ -38,11 +38,13 @@ interface ProcessSectionProps {
     cta?: CtaField
   }
   locale?: string
+  settings?: Record<string, unknown>
 }
 
 export function ProcessSection({
   sanityData,
   locale = "es",
+  settings,
 }: ProcessSectionProps = {}) {
   const t = useTranslations("process");
   const fallbackSteps = t.raw("steps") as Array<{
@@ -51,22 +53,26 @@ export function ProcessSection({
     description: string
   }>;
 
-  // Determine which values to use (Sanity or fallback)
+  // Determine which values to use (settings > Sanity > fallback)
   const displayEyebrow =
-    sanityData?.eyebrow && Object.values(sanityData.eyebrow).some(v => v?.trim())
-      ? sanityData.eyebrow[locale as keyof LocaleString] ||
-        sanityData.eyebrow.es
-      : t("eyebrow");
+    (settings?.eyebrow as { es?: string; en?: string })?.[locale as 'es' | 'en'] ||
+    (sanityData?.eyebrow && Object.values(sanityData.eyebrow).some(v => v?.trim())
+      ? sanityData.eyebrow[locale as keyof LocaleString] || sanityData.eyebrow.es
+      : t("eyebrow"));
 
   const displayTitle =
-    sanityData?.title && Object.values(sanityData.title).some(v => v?.trim())
+    (settings?.title as { es?: string; en?: string })?.[locale as 'es' | 'en'] ||
+    (sanityData?.title && Object.values(sanityData.title).some(v => v?.trim())
       ? sanityData.title[locale as keyof LocaleString] || sanityData.title.es
-      : t("title");
+      : t("title"));
 
+  const settingsSteps = settings?.steps as Array<{ number?: number; title?: { es?: string; en?: string }; description?: { es?: string; en?: string } }> | undefined;
   const displaySteps =
-    sanityData?.steps && sanityData.steps.length > 0
-      ? sanityData.steps
-      : fallbackSteps;
+    settingsSteps && settingsSteps.length > 0
+      ? settingsSteps
+      : sanityData?.steps && sanityData.steps.length > 0
+        ? sanityData.steps
+        : fallbackSteps;
 
   const displayCtaLabel = sanityData?.cta?.label
     ? sanityData.cta.label[locale as keyof LocaleString] ||
@@ -75,8 +81,9 @@ export function ProcessSection({
 
   const displayCtaHref = sanityData?.cta?.url || "/contacto";
 
-  // Determine once if we're using Sanity steps
-  const usingSanitySteps = !!(sanityData?.steps && sanityData.steps.length > 0);
+  // Determine once if we're using structured (settings/Sanity) steps
+  const usingSettingsSteps = !!(settingsSteps && settingsSteps.length > 0);
+  const usingSanitySteps = !usingSettingsSteps && !!(sanityData?.steps && sanityData.steps.length > 0);
 
   return (
     <section className="section-padding bg-brand-light/30">
@@ -97,7 +104,13 @@ export function ProcessSection({
             let stepTitle: string;
             let stepDescription: string;
 
-            if (usingSanitySteps) {
+            if (usingSettingsSteps) {
+              // From settings
+              const sStep = step as { number?: number; title?: { es?: string; en?: string }; description?: { es?: string; en?: string } };
+              stepLabel = String(sStep.number ?? i + 1).padStart(2, "0");
+              stepTitle = sStep.title?.[locale as 'es' | 'en'] || fallbackSteps[i]?.title || "";
+              stepDescription = sStep.description?.[locale as 'es' | 'en'] || fallbackSteps[i]?.description || "";
+            } else if (usingSanitySteps) {
               // From Sanity — type-guarded
               const sanityStep = step as {
                 stepNumber?: number
