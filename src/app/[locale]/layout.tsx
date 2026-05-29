@@ -30,18 +30,18 @@ export async function generateMetadata({
   const loc = locale as 'es' | 'en'
 
   const title =
-    settings?.seo?.metaTitle?.[loc] ||
+    settings?.seoTitle?.[loc] ||
     (isEs
       ? 'Allura Healthcare — Turismo Médico en Medellín'
       : 'Allura Healthcare — Medical Tourism in Medellín')
 
   const description =
-    settings?.seo?.metaDescription?.[loc] ||
+    settings?.seoDescription?.[loc] ||
     (isEs
       ? 'Allura es una marca colombiana de turismo médico en Medellín que integra tratamientos médicos, estéticos y odontológicos con la calidez y el disfrute de Colombia.'
       : 'Allura is a Colombian medical tourism brand in Medellín integrating premium dental and aesthetic treatments with the warmth of Colombia.')
 
-  const ogImageUrl = settings?.seo?.ogImage?.asset?.url
+  const ogImageUrl = settings?.seoImageUrl
 
   return {
     title,
@@ -60,7 +60,7 @@ export async function generateMetadata({
             url: ogImageUrl,
             width: 1200,
             height: 630,
-            alt: settings?.seo?.ogImage?.alt || 'Allura Healthcare',
+            alt: settings?.logoAlt || 'Allura Healthcare',
           },
         ],
       }),

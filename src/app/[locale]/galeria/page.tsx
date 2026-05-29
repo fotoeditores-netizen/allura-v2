@@ -17,7 +17,7 @@ export async function generateMetadata({
     getTranslations({ locale, namespace: 'galeria' }),
     getSiteSettings(),
   ])
-  const ogImageUrl = settings?.seo?.ogImage?.asset?.url
+  const ogImageUrl = settings?.seoImageUrl
   const title = t('metaTitle')
   const description = t('metaDesc')
   return {

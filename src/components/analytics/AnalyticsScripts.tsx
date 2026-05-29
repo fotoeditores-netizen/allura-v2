@@ -17,7 +17,7 @@ function valid(value: string | undefined, re: RegExp): string | null {
 export async function AnalyticsScripts() {
   const tracking = await getTrackingScripts()
 
-  if (!tracking || tracking.environment === 'development') return null
+  if (!tracking || process.env.NODE_ENV === 'development') return null
 
   const gtm = valid(tracking.gtmContainerId, GTM_RE)
   const ga = valid(tracking.googleAnalyticsId, GA_RE)

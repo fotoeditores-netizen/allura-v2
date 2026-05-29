@@ -9,7 +9,7 @@ export async function generateMetadata({
   const settings = await getSiteSettings();
   const isEn = locale === "en";
   const siteName = settings?.siteName || "Allura Healthcare";
-  const ogImageUrl = settings?.seo?.ogImage?.asset?.url;
+  const ogImageUrl = settings?.seoImageUrl;
   const title = isEn
     ? `Privacy Policy | ${siteName}`
     : `Políticas de privacidad | ${siteName}`;
