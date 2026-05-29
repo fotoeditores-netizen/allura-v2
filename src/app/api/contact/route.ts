@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import nodemailer from 'nodemailer'
 import { z } from 'zod'
 import { getSiteSettings } from '@/lib/getSiteSettings'
+import { createServiceClient } from '@/lib/supabase/client'
 
 const contactSchema = z.object({
   nombre: z.string().min(2).max(100),
@@ -55,6 +56,23 @@ export async function POST(request: Request) {
   const result = contactSchema.safeParse(body)
   if (!result.success) {
     return NextResponse.json({ error: 'Datos inválidos' }, { status: 400 })
+  }
+
+  // Guardar lead en Supabase (no bloquea si falla)
+  try {
+    const supabase = createServiceClient()
+    await supabase.from('form_submissions').insert({
+      site_id: '00000000-0000-0000-0000-000000000001',
+      nombre: result.data.nombre,
+      email: result.data.email,
+      telefono: result.data.telefono,
+      servicio: result.data.servicio,
+      mensaje: result.data.mensaje,
+      source_page: request.headers.get('referer') ?? '',
+      status: 'nuevo',
+    })
+  } catch (e) {
+    console.error('Failed to save lead to Supabase:', e)
   }
 
   const settings = await getSiteSettings()
