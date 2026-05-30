@@ -97,14 +97,12 @@ export async function getActivePopup(): Promise<Popup | null> {
 }
 
 export async function getActivePromotions(): Promise<Promotion[]> {
-  const now = new Date().toISOString()
   const supabase = createClient()
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from('promotions')
     .select('*')
     .eq('site_id', SITE_ID)
     .eq('is_active', true)
-    .or(`valid_until.is.null,valid_until.gte.${now}`)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (data ?? []).map((row: any) => ({
     id: row.id,

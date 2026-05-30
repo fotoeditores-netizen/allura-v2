@@ -29,6 +29,12 @@ export default async function PaginasPage() {
             Edita el contenido y las secciones de cada página del sitio.
           </p>
         </div>
+        <Link
+          href="/admin/paginas/nueva"
+          className="px-4 py-2 bg-[#051c33] text-white text-sm font-medium rounded-lg hover:bg-[#051c33]/90 transition-colors"
+        >
+          + Nueva página
+        </Link>
       </div>
 
       <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">

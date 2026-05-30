@@ -17,7 +17,7 @@ const serviceItems = [
   { href: "/servicios/facial-harmony",            label: "Allura Facial Harmony" },
 ];
 
-export function Header() {
+export function Header({ hasPromo = false }: { hasPromo?: boolean }) {
   const [scrolled,      setScrolled]      = useState(false);
   const [menuOpen,      setMenuOpen]      = useState(false);
   const [servicesOpen,  setServicesOpen]  = useState(false);
@@ -39,7 +39,7 @@ export function Header() {
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50">
+    <header className={`fixed left-0 right-0 z-50 ${hasPromo ? 'top-9' : 'top-0'}`}>
       {/* ── TOP BAR (desktop only) ── */}
       <div className="hidden md:flex bg-brand-light border-b border-brand-silver/30">
         <div className="container-allura px-6 md:px-12 flex items-center justify-end gap-4 py-1.5 w-full">

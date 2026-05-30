@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import { ImageUploader } from '@/components/admin/ImageUploader'
 type I18n = { es: string; en: string }
 
 export function TextImageForm({ settings, onChange }: { settings: Record<string, unknown>; onChange: (s: Record<string, unknown>) => void }) {
@@ -26,9 +27,13 @@ export function TextImageForm({ settings, onChange }: { settings: Record<string,
           rows={4} className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#051c33]" />
       </div>
       <div>
-        <label className="block text-xs font-medium text-gray-500 mb-1">URL imagen</label>
-        <input value={s.imageUrl ?? ''} onChange={e => onChange({ ...settings, imageUrl: e.target.value })}
-          className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#051c33]" placeholder="/images/..." />
+        <label className="block text-xs font-medium text-gray-500 mb-1">Imagen</label>
+        <ImageUploader
+          folder="site"
+          currentUrl={s.imageUrl ?? ''}
+          onUpload={(url) => onChange({ ...settings, imageUrl: url })}
+          label="Subir imagen"
+        />
       </div>
       <div>
         <label className="block text-xs font-medium text-gray-500 mb-1">Posición imagen</label>

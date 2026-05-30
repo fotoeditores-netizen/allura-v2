@@ -22,7 +22,7 @@ export function PromoBanner({ promotion, locale }: PromoBannerProps) {
   const ctaLabel = promotion.cta?.label?.[loc] || promotion.cta?.label?.es
 
   return (
-    <div className={`py-2 px-4 text-center text-sm font-body ${bg}`}>
+    <div className={`fixed top-0 left-0 right-0 z-[60] py-2 px-4 text-center text-sm font-body ${bg}`}>
       <span className="font-semibold">{title}</span>
       {description && <span className="mx-2 opacity-90">{description}</span>}
       {promotion.cta?.url && ctaLabel && (

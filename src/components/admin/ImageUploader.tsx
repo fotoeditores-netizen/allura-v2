@@ -1,12 +1,11 @@
 'use client'
 
 import { useState, useRef } from 'react'
-import { uploadImage } from '@/lib/supabase/storage'
 import { Upload, X, Loader2 } from 'lucide-react'
 import Image from 'next/image'
 
 interface ImageUploaderProps {
-  folder: 'services' | 'blog' | 'team' | 'gallery' | 'site'
+  folder: 'services' | 'blog' | 'team' | 'gallery' | 'site' | 'popups'
   currentUrl?: string
   onUpload: (url: string, path: string) => void
   label?: string
@@ -27,10 +26,14 @@ export function ImageUploader({
     setError(null)
     setLoading(true)
     try {
-      const result = await uploadImage(file, folder)
-      if (!result) throw new Error('No se pudo subir la imagen')
-      setPreview(result.url)
-      onUpload(result.url, result.path)
+      const form = new FormData()
+      form.append('file', file)
+      form.append('folder', folder)
+      const res = await fetch('/api/admin/upload', { method: 'POST', body: form })
+      const json = await res.json()
+      if (!res.ok) throw new Error(json.error ?? 'Error al subir imagen')
+      setPreview(json.url)
+      onUpload(json.url, json.path)
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Error al subir imagen')
     } finally {

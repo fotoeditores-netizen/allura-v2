@@ -14,7 +14,7 @@ export function getPublicUrl(path: string): string {
 
 export async function uploadImage(
   file: File,
-  folder: 'services' | 'blog' | 'team' | 'gallery' | 'site'
+  folder: 'services' | 'blog' | 'team' | 'gallery' | 'site' | 'popups'
 ): Promise<{ url: string; path: string } | null> {
   if (!ALLOWED_TYPES.includes(file.type)) {
     throw new Error(`Tipo de archivo no permitido. Usa: JPG, PNG, WebP, SVG o PDF`)

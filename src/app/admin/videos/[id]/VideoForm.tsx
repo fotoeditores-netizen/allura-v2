@@ -5,12 +5,12 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { createBrowserSupabaseClient } from '@/lib/supabase/browser-client'
+import { ImageUploader } from '@/components/admin/ImageUploader'
 
 const schema = z.object({
   title_es: z.string().min(2, 'Requerido'),
   title_en: z.string().optional(),
   url: z.string().url('Debe ser una URL válida (YouTube, Vimeo, Instagram)'),
-  thumbnail_url: z.string().optional(),
   sort_order: z.coerce.number().min(0),
   is_visible: z.boolean(),
 })
@@ -23,6 +23,7 @@ export function VideoForm({ video, siteId }: { video: any; siteId: string }) {
   const router = useRouter()
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [thumbnailUrl, setThumbnailUrl] = useState<string>(video?.thumbnail_url ?? '')
 
   const { register, handleSubmit, watch, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -30,7 +31,6 @@ export function VideoForm({ video, siteId }: { video: any; siteId: string }) {
       title_es: video?.title_i18n?.es ?? '',
       title_en: video?.title_i18n?.en ?? '',
       url: video?.url ?? '',
-      thumbnail_url: video?.thumbnail_url ?? '',
       sort_order: video?.sort_order ?? 0,
       is_visible: video?.is_visible ?? true,
     },
@@ -60,7 +60,7 @@ export function VideoForm({ video, siteId }: { video: any; siteId: string }) {
       site_id: siteId,
       title_i18n: { es: data.title_es, en: data.title_en ?? '' },
       url: data.url,
-      thumbnail_url: data.thumbnail_url || null,
+      thumbnail_url: thumbnailUrl || null,
       sort_order: data.sort_order,
       is_visible: data.is_visible,
     }
@@ -116,11 +116,12 @@ export function VideoForm({ video, siteId }: { video: any; siteId: string }) {
 
         {/* Thumbnail opcional */}
         <div>
-          <label className={labelCls}>URL de miniatura (opcional)</label>
-          <input
-            {...register('thumbnail_url')}
-            className={inputCls}
-            placeholder="https://... (se usa si el video no carga embed)"
+          <label className={labelCls}>Miniatura (opcional)</label>
+          <ImageUploader
+            folder="site"
+            currentUrl={thumbnailUrl}
+            onUpload={(url) => setThumbnailUrl(url)}
+            label="Subir miniatura del video"
           />
         </div>
 

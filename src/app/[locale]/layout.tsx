@@ -100,7 +100,7 @@ export default async function LocaleLayout({
         cta: supabasePromo.ctaUrl
           ? { label: supabasePromo.ctaLabel as { es: string; en: string }, url: supabasePromo.ctaUrl }
           : undefined,
-        bgColor: 'navy',
+        bgColor: (supabasePromo as any).bgColor ?? 'navy',
       }
     : null
 
@@ -109,6 +109,8 @@ export default async function LocaleLayout({
     ? {
         _id: supabasePopup.id,
         title: supabasePopup.title as { es: string; en: string },
+        body: supabasePopup.body as { es: string; en: string } | undefined,
+        imageUrl: supabasePopup.imageUrl,
         cta: supabasePopup.ctaUrl
           ? {
               label: supabasePopup.ctaLabel as { es: string; en: string },
@@ -117,7 +119,7 @@ export default async function LocaleLayout({
           : undefined,
         trigger: 'timed',
         delaySeconds: supabasePopup.delaySeconds,
-      }
+      } as any
     : null
 
   return (
@@ -125,8 +127,8 @@ export default async function LocaleLayout({
       <body>
         <NextIntlClientProvider messages={messages}>
           <PromoBanner promotion={promotion ?? null} locale={locale} />
-          <Header />
-          <main>{children}</main>
+          <Header hasPromo={!!promotion} />
+          <main className={promotion ? 'pt-9' : ''}>{children}</main>
           <Footer />
           <PopupManager popup={popup ?? null} locale={locale} />
         </NextIntlClientProvider>
