@@ -11,6 +11,7 @@ import { TestimonialsForm } from './section-forms/TestimonialsForm'
 import { FaqForm } from './section-forms/FaqForm'
 import { ContactFormSectionForm } from './section-forms/ContactFormSectionForm'
 import { TextImageForm } from './section-forms/TextImageForm'
+import { CustomSectionForm } from './section-forms/CustomSectionForm'
 
 interface SectionFormRouterProps {
   type: string
@@ -33,6 +34,7 @@ export function SectionFormRouter({ type, settings, onChange }: SectionFormRoute
     case 'faq': return <FaqForm {...props} />
     case 'contact_form': return <ContactFormSectionForm {...props} />
     case 'text_image': return <TextImageForm {...props} />
+    case 'custom': return <CustomSectionForm {...props} />
     default: return <p className="text-sm text-gray-400 italic">Tipo no reconocido: {type}</p>
   }
 }

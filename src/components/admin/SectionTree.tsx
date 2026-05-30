@@ -69,7 +69,9 @@ function SortableItem({
       </span>
       <span className="text-base">{def?.icon ?? '📄'}</span>
       <span className={`flex-1 font-medium truncate ${isActive ? 'text-[#051c33]' : 'text-gray-700'}`}>
-        {def?.label ?? section.type}
+        {section.type === 'custom' && (section.settings as Record<string, unknown>)?.internalName
+          ? String((section.settings as Record<string, unknown>).internalName)
+          : def?.label ?? section.type}
       </span>
       <button
         onClick={e => {

@@ -1,7 +1,5 @@
 import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
-import { getPageBySlug, getSectionsByPage } from '@/lib/supabase/pages'
-import { SectionRenderer } from '@/components/sections/SectionRenderer'
 import { getTestimonials, getFaqs, getVideos } from '@/lib/supabase/content'
 import type { TestimonialItem, FaqItem, VideoItem } from '@/types/cms'
 import { ComoFuncionaTemplate } from '@/components/templates/ComoFuncionaTemplate'
@@ -53,19 +51,6 @@ export default async function ComoFuncionaPage({
 }: {
   params: { locale: string }
 }) {
-  const dbPage = await getPageBySlug('/como-funciona')
-  const sections = dbPage ? await getSectionsByPage(dbPage.id) : []
-
-  if (sections.length > 0) {
-    return (
-      <>
-        {sections.map(section => (
-          <SectionRenderer key={section.id} section={section} locale={locale} />
-        ))}
-      </>
-    )
-  }
-
   const [testimonials, faqs, videos] = await Promise.all([
     getTestimonials(),
     getFaqs(),

@@ -142,6 +142,9 @@ export function ProcessSection({
 
             // Use the last stepsMeta entry if we exceed length
             const metaIdx = i < stepsMeta.length ? i : stepsMeta.length - 1;
+            const stepImage = usingSettingsSteps
+              ? (step as { imageUrl?: string }).imageUrl || stepsMeta[metaIdx].image
+              : stepsMeta[metaIdx].image;
 
             return (
               <motion.div
@@ -154,8 +157,9 @@ export function ProcessSection({
               >
                 <div className="relative w-full aspect-[4/5] overflow-hidden">
                   <Image
-                    src={stepsMeta[metaIdx].image}
+                    src={stepImage}
                     alt={stepsMeta[metaIdx].alt}
+                    unoptimized={stepImage.startsWith('http')}
                     fill
                     className="object-cover object-top transition-transform duration-500 hover:scale-105"
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"

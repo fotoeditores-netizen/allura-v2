@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ServiceCategoryTemplate } from "@/components/templates/ServiceCategoryTemplate";
+import { getServiceCategories, getServices } from "@/lib/supabase/services";
 
 export const revalidate = process.env.NODE_ENV === "development" ? 0 : 3600;
 
@@ -45,12 +46,32 @@ export async function generateMetadata({ params: { locale } }: { params: { local
 }
 
 export default async function AlignersPage({ params: { locale } }: { params: { locale: string } }) {
-  const content = locale === "en" ? contentEn : contentEs;
+  const loc = locale as "es" | "en";
+  const hardcode = loc === "en" ? contentEn : contentEs;
+
+  const [categories, services] = await Promise.all([getServiceCategories(), getServices()])
+  const cat = categories.find(c => c.slug === CATEGORY_SLUG)
+  const catServices = cat ? services.filter(s => s.categoryId === cat.id) : []
+
+  const content = {
+    ...hardcode,
+    ...(cat && {
+      title: (cat.title as { es: string; en: string })[loc] || hardcode.title,
+      subtitle: (cat.description as { es: string; en: string })[loc] || hardcode.subtitle,
+    }),
+    subServices: catServices.length > 0
+      ? catServices.map(s => ({
+          slug: s.slug,
+          name: (s.title as { es: string; en: string })[loc] || s.slug,
+          description: (s.description as { es: string; en: string })[loc] || '',
+        }))
+      : hardcode.subServices,
+  }
+
   return (
     <ServiceCategoryTemplate
       {...content}
       categorySlug={CATEGORY_SLUG}
-      sanityData={undefined}
       locale={locale}
     />
   );

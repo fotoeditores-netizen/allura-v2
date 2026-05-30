@@ -8,6 +8,11 @@ import { MedellinSection } from '@/components/sections/MedellinSection'
 import { TeamPreview } from '@/components/sections/TeamPreview'
 import { ProcessSection } from '@/components/sections/ProcessSection'
 import { CTABanner } from '@/components/sections/CTABanner'
+import { TextImageSection } from '@/components/sections/TextImageSection'
+import { TestimonialsSection } from '@/components/sections/TestimonialsSection'
+import { FaqSection } from '@/components/sections/FaqSection'
+import { ContactFormSection } from '@/components/sections/ContactFormSection'
+import { CustomSection } from '@/components/sections/CustomSection'
 
 export const revalidate = process.env.NODE_ENV === 'development' ? 0 : 3600
 
@@ -23,6 +28,11 @@ function renderSection(section: SectionRow, locale: string) {
     case 'team_preview':  return <TeamPreview key={section.id} locale={locale} settings={s} />
     case 'process':       return <ProcessSection key={section.id} locale={locale} settings={s} />
     case 'cta':           return <CTABanner key={section.id} locale={locale} settings={s} />
+    case 'text_image':    return <TextImageSection key={section.id} locale={locale} settings={s} />
+    case 'testimonials':  return <TestimonialsSection key={section.id} locale={locale} settings={s} />
+    case 'faq':           return <FaqSection key={section.id} locale={locale} settings={s} />
+    case 'contact_form':  return <ContactFormSection key={section.id} locale={locale} settings={s} />
+    case 'custom':        return <CustomSection key={section.id} locale={locale} settings={s} />
     default:              return null
   }
 }
@@ -46,5 +56,9 @@ export default async function CustomPage({
 
   if (rendered.length === 0) notFound()
 
-  return <>{rendered}</>
+  return (
+    <div className="pt-24">
+      {rendered}
+    </div>
+  )
 }

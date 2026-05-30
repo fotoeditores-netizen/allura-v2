@@ -149,6 +149,27 @@ export const SECTION_REGISTRY: SectionDefinition[] = [
       imagePosition: 'right',
     },
   },
+  {
+    type: 'custom',
+    label: 'Sección personalizada',
+    icon: '🎨',
+    defaultSettings: {
+      internalName: 'Mi sección',
+      layout: 'text-center',
+      bg: 'white',
+      padding: 'normal',
+      align: 'center',
+      eyebrow: { es: '', en: '' },
+      title: { es: '', en: '' },
+      subtitle: { es: '', en: '' },
+      body: { es: '', en: '' },
+      imageUrl: '',
+      imagePosition: 'right',
+      ctaLabel: { es: '', en: '' },
+      ctaUrl: '',
+      ctaStyle: 'primary',
+    },
+  },
 ]
 
 export function getSectionDef(type: string): SectionDefinition | undefined {

@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
-import { getPageBySlug, getSectionsByPage } from '@/lib/supabase/pages'
-import { SectionRenderer } from '@/components/sections/SectionRenderer'
 import { getBlogPosts } from "@/lib/supabase/blog";
 import type { BlogPostListItem, BlogCategory } from "@/types/cms";
 import { BlogListTemplate } from "@/components/templates/BlogListTemplate";
@@ -37,19 +35,6 @@ export default async function BlogPage({
 }: {
   params: { locale: string };
 }) {
-  const dbPage = await getPageBySlug('/blog')
-  const sections = dbPage ? await getSectionsByPage(dbPage.id) : []
-
-  if (sections.length > 0) {
-    return (
-      <>
-        {sections.map(section => (
-          <SectionRenderer key={section.id} section={section} locale={locale} />
-        ))}
-      </>
-    )
-  }
-
   const loc = locale as "es" | "en";
   const posts = await getBlogPosts();
 

@@ -6,7 +6,7 @@ import type { PageRow, SectionRow } from '@/lib/supabase/pages'
 import { SECTION_REGISTRY } from '@/lib/section-registry'
 import { SectionTree } from './SectionTree'
 import { SectionFormRouter } from './SectionFormRouter'
-import { RotateCw } from 'lucide-react'
+import { RotateCw, Pencil, Check, X } from 'lucide-react'
 
 interface PageEditorProps {
   page: PageRow
@@ -22,6 +22,15 @@ export function PageEditor({ page, initialSections }: PageEditorProps) {
   const [publishing, setPublishing] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
   const [showAddModal, setShowAddModal] = useState(false)
+  const [editingTitle, setEditingTitle] = useState(false)
+  const [titleDraft, setTitleDraft] = useState(page.title_i18n?.es ?? page.slug)
+  const [savingTitle, setSavingTitle] = useState(false)
+  const [editingSlug, setEditingSlug] = useState(false)
+  const [slugDraft, setSlugDraft] = useState(page.slug.replace(/^\//, ''))
+  const [savingSlug, setSavingSlug] = useState(false)
+
+  const PROTECTED_SLUGS = ['/', '/nosotros', '/servicios', '/contacto', '/blog', '/equipo', '/galeria', '/como-funciona']
+  const isProtected = PROTECTED_SLUGS.includes(page.slug)
   const iframeRef = useRef<HTMLIFrameElement>(null)
 
   const previewUrl = `/es${page.slug === '/' ? '' : page.slug}?preview=true`
@@ -31,6 +40,35 @@ export function PageEditor({ page, initialSections }: PageEditorProps) {
       iframeRef.current.contentWindow.location.reload()
     }
   }, [])
+
+  async function handleSaveSlug() {
+    const newSlug = '/' + slugDraft.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+    if (!newSlug || newSlug === '/') return
+    setSavingSlug(true)
+    await fetch(`/api/admin/pages/${page.id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ slug: newSlug }),
+    })
+    setSavingSlug(false)
+    setEditingSlug(false)
+    // Navigate to new slug param
+    const newParam = slugDraft.replace(/\//g, '--')
+    router.push(`/admin/paginas/${newParam}`)
+  }
+
+  async function handleSaveTitle() {
+    if (!titleDraft.trim()) return
+    setSavingTitle(true)
+    await fetch(`/api/admin/pages/${page.id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title_i18n: { es: titleDraft, en: titleDraft } }),
+    })
+    setSavingTitle(false)
+    setEditingTitle(false)
+    router.refresh()
+  }
 
   function handleSelect(section: SectionRow) {
     setActiveSection(section)
@@ -141,16 +179,84 @@ export function PageEditor({ page, initialSections }: PageEditorProps) {
       {/* Left panel */}
       <div className="w-80 border-r border-gray-200 bg-white flex flex-col overflow-hidden flex-shrink-0">
         {/* Header */}
-        <div className="p-4 border-b border-gray-100 flex items-center gap-3">
-          <button
-            onClick={() => router.push('/admin/paginas')}
-            className="text-gray-400 hover:text-gray-700 text-sm flex-shrink-0"
-          >
-            ← Volver
-          </button>
-          <span className="text-sm font-semibold text-[#051c33] truncate">
-            {page.title_i18n?.es ?? page.slug}
-          </span>
+        <div className="p-4 border-b border-gray-100">
+          <div className="flex items-center gap-2 mb-2">
+            <button
+              onClick={() => router.push('/admin/paginas')}
+              className="text-gray-400 hover:text-gray-700 text-sm flex-shrink-0"
+            >
+              ← Volver
+            </button>
+          </div>
+          {editingTitle ? (
+            <div className="flex items-center gap-1">
+              <input
+                value={titleDraft}
+                onChange={e => setTitleDraft(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter') handleSaveTitle(); if (e.key === 'Escape') setEditingTitle(false) }}
+                className="flex-1 text-sm border border-[#051c33] rounded px-2 py-1 focus:outline-none"
+                autoFocus
+              />
+              <button onClick={handleSaveTitle} disabled={savingTitle} className="text-green-600 hover:text-green-700 p-1">
+                <Check size={14} />
+              </button>
+              <button onClick={() => setEditingTitle(false)} className="text-gray-400 hover:text-gray-600 p-1">
+                <X size={14} />
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-1 group">
+              <span className="text-sm font-semibold text-[#051c33] truncate flex-1">
+                {titleDraft}
+              </span>
+              <button
+                onClick={() => setEditingTitle(true)}
+                className="text-gray-300 hover:text-gray-500 p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                title="Editar nombre"
+              >
+                <Pencil size={12} />
+              </button>
+            </div>
+          )}
+          {!isProtected && (
+            <div className="mt-1">
+              {editingSlug ? (
+                <div className="space-y-1">
+                  <div className="flex items-center gap-1">
+                    <span className="text-xs text-gray-400">/</span>
+                    <input
+                      value={slugDraft}
+                      onChange={e => setSlugDraft(e.target.value.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''))}
+                      onKeyDown={e => { if (e.key === 'Enter') handleSaveSlug(); if (e.key === 'Escape') setEditingSlug(false) }}
+                      className="flex-1 text-xs border border-amber-400 rounded px-2 py-1 focus:outline-none font-mono"
+                      autoFocus
+                    />
+                    <button onClick={handleSaveSlug} disabled={savingSlug} className="text-green-600 hover:text-green-700 p-1">
+                      <Check size={12} />
+                    </button>
+                    <button onClick={() => setEditingSlug(false)} className="text-gray-400 hover:text-gray-600 p-1">
+                      <X size={12} />
+                    </button>
+                  </div>
+                  <p className="text-xs text-amber-600">⚠️ Cambia la URL pública de la página</p>
+                </div>
+              ) : (
+                <div className="flex items-center gap-1 group">
+                  <span className="text-xs text-gray-400 font-mono">{page.slug}</span>
+                  <button
+                    onClick={() => setEditingSlug(true)}
+                    className="text-gray-300 hover:text-gray-500 p-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
+                    title="Editar slug"
+                  >
+                    <Pencil size={10} />
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+          {isProtected && (
+            <p className="text-xs text-gray-400 font-mono mt-1">{page.slug}</p>
+          )}
         </div>
 
         {/* Section tree + form */}

@@ -3,38 +3,11 @@
 import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import Image from 'next/image'
-import { PortableText } from '@portabletext/react'
-import type { PortableTextBlock } from '@portabletext/types'
 import type { ActivePopup } from '@/types/cms'
 
 interface PopupManagerProps {
   popup: ActivePopup | null
   locale: string
-}
-
-const popupPortableTextComponents = {
-  block: {
-    normal: ({ children }: { children?: React.ReactNode }) => (
-      <p className="font-body text-sm text-brand-silver leading-relaxed mb-3 last:mb-0">
-        {children}
-      </p>
-    ),
-  },
-  marks: {
-    strong: ({ children }: { children?: React.ReactNode }) => (
-      <strong className="font-bold text-brand-navy">{children}</strong>
-    ),
-    link: ({ value, children }: { value?: { href?: string }; children?: React.ReactNode }) => (
-      <a
-        href={value?.href || '#'}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-brand-blue underline hover:text-brand-navy transition-colors"
-      >
-        {children}
-      </a>
-    ),
-  },
 }
 
 export function PopupManager({ popup, locale }: PopupManagerProps) {
@@ -44,18 +17,14 @@ export function PopupManager({ popup, locale }: PopupManagerProps) {
   useEffect(() => {
     if (!popup) return
 
-    // Validate date range
     const now = Date.now()
     if (popup.startDate && new Date(popup.startDate).getTime() > now) return
     if (popup.endDate && new Date(popup.endDate).getTime() < now) return
 
-    // Validate page targeting
     if (popup.showOnPages && popup.showOnPages.length > 0) {
-      const matches = popup.showOnPages.some((p) => pathname.includes(p))
-      if (!matches) return
+      if (!popup.showOnPages.some((p) => pathname.includes(p))) return
     }
 
-    // Validate frequency
     const storageKey = `popup_seen_${popup._id}`
     if (popup.frequency === 'once') {
       if (typeof window !== 'undefined' && localStorage.getItem(storageKey)) return
@@ -63,7 +32,6 @@ export function PopupManager({ popup, locale }: PopupManagerProps) {
       if (typeof window !== 'undefined' && sessionStorage.getItem(storageKey)) return
     }
 
-    // Trigger
     if (popup.trigger === 'timed' && popup.delaySeconds) {
       const timer = setTimeout(() => setVisible(true), popup.delaySeconds * 1000)
       return () => clearTimeout(timer)
@@ -76,20 +44,18 @@ export function PopupManager({ popup, locale }: PopupManagerProps) {
     setVisible(false)
     if (!popup) return
     const storageKey = `popup_seen_${popup._id}`
-    if (popup.frequency === 'once') {
-      localStorage.setItem(storageKey, '1')
-    } else if (popup.frequency === 'per-session') {
-      sessionStorage.setItem(storageKey, '1')
-    }
+    if (popup.frequency === 'once') localStorage.setItem(storageKey, '1')
+    else if (popup.frequency === 'per-session') sessionStorage.setItem(storageKey, '1')
   }
 
   if (!visible || !popup) return null
 
   const loc = locale as 'es' | 'en'
-  const title = popup.title[loc] || popup.title.es
-  const bodyBlocks = (popup.body?.[loc] ?? popup.body?.es ?? []) as PortableTextBlock[]
+  const title = (popup.title as { es: string; en: string })[loc] || (popup.title as { es: string; en: string }).es
+  const body = (popup.body as unknown as { es: string; en: string })?.[loc] || (popup.body as unknown as { es: string; en: string })?.es || ''
   const ctaLabel = popup.cta?.label?.[loc] || popup.cta?.label?.es
-  const altText = popup.image?.alt?.[loc] || popup.image?.alt?.es || ''
+  const imageUrl = (popup as any).imageUrl as string | undefined
+  const altText = title
 
   return (
     <div
@@ -99,7 +65,6 @@ export function PopupManager({ popup, locale }: PopupManagerProps) {
       aria-label={title}
     >
       <div className="relative bg-white rounded-2xl shadow-xl max-w-lg w-full p-8 max-h-[90vh] overflow-y-auto">
-        {/* Close button */}
         <button
           onClick={handleClose}
           aria-label="Cerrar popup"
@@ -108,14 +73,12 @@ export function PopupManager({ popup, locale }: PopupManagerProps) {
           ✕
         </button>
 
-        {/* Title */}
         <h2 className="font-heading text-2xl text-brand-navy mb-4 pr-6">{title}</h2>
 
-        {/* Optional image */}
-        {popup.image?.asset?.url && (
+        {imageUrl && (
           <div className="relative w-full aspect-video rounded-xl overflow-hidden mb-4">
             <Image
-              src={popup.image.asset.url}
+              src={imageUrl}
               alt={altText}
               fill
               className="object-cover"
@@ -124,14 +87,10 @@ export function PopupManager({ popup, locale }: PopupManagerProps) {
           </div>
         )}
 
-        {/* Body */}
-        {bodyBlocks.length > 0 && (
-          <div className="mb-6">
-            <PortableText value={bodyBlocks} components={popupPortableTextComponents} />
-          </div>
+        {body && (
+          <p className="font-body text-sm text-brand-silver leading-relaxed mb-6">{body}</p>
         )}
 
-        {/* CTA */}
         {popup.cta?.url && ctaLabel && (
           <a
             href={popup.cta.url}

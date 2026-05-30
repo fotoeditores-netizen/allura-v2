@@ -4,8 +4,6 @@ import { GalleryTemplate } from '@/components/templates/GalleryTemplate'
 import { getTranslations } from 'next-intl/server'
 import type { Metadata } from 'next'
 import { getSiteSettings } from '@/lib/getSiteSettings'
-import { getPageBySlug, getSectionsByPage } from '@/lib/supabase/pages'
-import { SectionRenderer } from '@/components/sections/SectionRenderer'
 
 export const revalidate = process.env.NODE_ENV === 'development' ? 0 : 3600
 
@@ -39,19 +37,6 @@ export default async function GaleriaPage({
   params: { locale: string }
   searchParams: { categoria?: string }
 }) {
-  const dbPage = await getPageBySlug('/galeria')
-  const sections = dbPage ? await getSectionsByPage(dbPage.id) : []
-
-  if (sections.length > 0) {
-    return (
-      <>
-        {sections.map(section => (
-          <SectionRenderer key={section.id} section={section} locale={locale} />
-        ))}
-      </>
-    )
-  }
-
   const activeCategory = searchParams.categoria ?? null
   const items = await getGalleryItems()
 

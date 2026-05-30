@@ -1,5 +1,6 @@
 import { getPages } from '@/lib/supabase/pages'
 import Link from 'next/link'
+import { DeletePageButton } from './DeletePageButton'
 
 export default async function PaginasPage() {
   const pages = await getPages()
@@ -70,12 +71,19 @@ export default async function PaginasPage() {
                   </span>
                 </td>
                 <td className="px-6 py-4 text-right">
-                  <Link
-                    href={`/admin/paginas/${pageToSlugParam(page.slug)}`}
-                    className="px-4 py-2 bg-[#051c33] text-white text-xs font-medium rounded-lg hover:bg-[#051c33]/90 transition-colors"
-                  >
-                    Editar
-                  </Link>
+                  <div className="flex items-center justify-end gap-2">
+                    <DeletePageButton
+                      pageId={page.id}
+                      slug={page.slug}
+                      title={page.title_i18n?.es ?? page.slug}
+                    />
+                    <Link
+                      href={`/admin/paginas/${pageToSlugParam(page.slug)}`}
+                      className="px-4 py-2 bg-[#051c33] text-white text-xs font-medium rounded-lg hover:bg-[#051c33]/90 transition-colors"
+                    >
+                      Editar
+                    </Link>
+                  </div>
                 </td>
               </tr>
             ))}
