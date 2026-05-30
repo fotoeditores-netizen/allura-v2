@@ -1,11 +1,12 @@
 // src/components/admin/PageEditor.tsx
 'use client'
-import { useState } from 'react'
+import { useState, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import type { PageRow, SectionRow } from '@/lib/supabase/pages'
 import { SECTION_REGISTRY } from '@/lib/section-registry'
 import { SectionTree } from './SectionTree'
 import { SectionFormRouter } from './SectionFormRouter'
+import { RotateCw } from 'lucide-react'
 
 interface PageEditorProps {
   page: PageRow
@@ -20,10 +21,16 @@ export function PageEditor({ page, initialSections }: PageEditorProps) {
   const [saving, setSaving] = useState(false)
   const [publishing, setPublishing] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
-  const [previewKey, setPreviewKey] = useState(0)
   const [showAddModal, setShowAddModal] = useState(false)
+  const iframeRef = useRef<HTMLIFrameElement>(null)
 
-  const previewUrl = `http://localhost:3000/es${page.slug === '/' ? '' : page.slug}?preview=true`
+  const previewUrl = `/es${page.slug === '/' ? '' : page.slug}?preview=true`
+
+  const reloadIframe = useCallback(() => {
+    if (iframeRef.current?.contentWindow) {
+      iframeRef.current.contentWindow.location.reload()
+    }
+  }, [])
 
   function handleSelect(section: SectionRow) {
     setActiveSection(section)
@@ -45,7 +52,7 @@ export function PageEditor({ page, initialSections }: PageEditorProps) {
       const updated: SectionRow = await res.json()
       setSections(prev => prev.map(s => s.id === updated.id ? updated : s))
       setActiveSection(updated)
-      setPreviewKey(k => k + 1)
+      reloadIframe()
       setMessage('✅ Guardado correctamente')
     } catch {
       setMessage('❌ Error al guardar. Intenta de nuevo.')
@@ -65,7 +72,7 @@ export function PageEditor({ page, initialSections }: PageEditorProps) {
     if (res.ok) {
       setSections(prev => prev.map(s => s.id === id ? { ...s, is_visible: visible } : s))
       if (activeSection?.id === id) setActiveSection(prev => prev ? { ...prev, is_visible: visible } : prev)
-      setPreviewKey(k => k + 1)
+      reloadIframe()
     }
   }
 
@@ -77,7 +84,7 @@ export function PageEditor({ page, initialSections }: PageEditorProps) {
         setActiveSection(null)
         setActiveSettings({})
       }
-      setPreviewKey(k => k + 1)
+      reloadIframe()
     }
   }
 
@@ -88,7 +95,7 @@ export function PageEditor({ page, initialSections }: PageEditorProps) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(reordered.map(s => ({ id: s.id, sort_order: s.sort_order }))),
     })
-    setPreviewKey(k => k + 1)
+    reloadIframe()
   }
 
   async function handleAddSection(type: string) {
@@ -110,7 +117,7 @@ export function PageEditor({ page, initialSections }: PageEditorProps) {
       const newSection: SectionRow = await res.json()
       setSections(prev => [...prev, newSection])
       handleSelect(newSection)
-      setPreviewKey(k => k + 1)
+      reloadIframe()
     }
   }
 
@@ -199,11 +206,21 @@ export function PageEditor({ page, initialSections }: PageEditorProps) {
       </div>
 
       {/* Right panel — iframe preview */}
-      <div className="flex-1 bg-gray-100 overflow-hidden">
+      <div className="flex-1 bg-gray-100 overflow-hidden flex flex-col">
+        <div className="flex items-center gap-2 px-3 py-1.5 bg-white border-b border-gray-200">
+          <span className="text-xs text-gray-400 flex-1 truncate">{previewUrl}</span>
+          <button
+            onClick={reloadIframe}
+            className="text-gray-400 hover:text-[#051c33] transition-colors p-1 rounded"
+            title="Recargar vista previa"
+          >
+            <RotateCw size={14} />
+          </button>
+        </div>
         <iframe
-          key={previewKey}
+          ref={iframeRef}
           src={previewUrl}
-          className="w-full h-full border-0"
+          className="w-full flex-1 border-0"
           title={`Preview: ${page.slug}`}
         />
       </div>

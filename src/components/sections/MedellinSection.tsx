@@ -101,7 +101,12 @@ export function MedellinSection({ locale: localeProp, sanityData, settings }: Me
               let blockTitle = "";
               let blockDesc = "";
 
-              if (isSanityBlock && "title" in block && "text" in block) {
+              if (settingsItems && settingsItems.length > 0) {
+                // From settings: title/text are {es, en} objects
+                const sBlock = block as { title?: { es?: string; en?: string }; text?: { es?: string; en?: string } }
+                blockTitle = sBlock.title?.[locale as 'es' | 'en'] || benefits[i]?.title || ""
+                blockDesc = sBlock.text?.[locale as 'es' | 'en'] || benefits[i]?.description || ""
+              } else if (isSanityBlock && "title" in block && "text" in block) {
                 blockTitle = (
                   block.title && block.title[locale as keyof LocaleString]
                     ? block.title[locale as keyof LocaleString]
