@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils'
 import {
   LayoutDashboard, FileText, Stethoscope, BookOpen,
   Users, Star, Image, HelpCircle, Mail, ArrowLeftRight,
-  Settings, UserCog, LogOut, Video
+  Settings, UserCog, LogOut, Video, Megaphone, MousePointerClick
 } from 'lucide-react'
 
 const navItems = [
@@ -19,7 +19,10 @@ const navItems = [
   { href: '/admin/testimonios', label: 'Testimonios', icon: Star },
   { href: '/admin/galeria', label: 'Galería', icon: Image },
   { href: '/admin/medios', label: 'Medios', icon: Video },
+  { href: '/admin/videos', label: 'Videos', icon: Video },
   { href: '/admin/faq', label: 'Preguntas frecuentes', icon: HelpCircle },
+  { href: '/admin/promociones', label: 'Promociones', icon: Megaphone },
+  { href: '/admin/popups', label: 'Popups', icon: MousePointerClick },
   { href: '/admin/formularios', label: 'Formularios', icon: Mail },
   { href: '/admin/redirects', label: 'Redirecciones', icon: ArrowLeftRight },
   { href: '/admin/configuracion', label: 'Configuración', icon: Settings },
