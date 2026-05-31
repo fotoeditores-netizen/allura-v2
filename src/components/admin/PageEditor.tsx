@@ -1,6 +1,6 @@
 // src/components/admin/PageEditor.tsx
 'use client'
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import type { PageRow, SectionRow } from '@/lib/supabase/pages'
 import { SECTION_REGISTRY } from '@/lib/section-registry'
@@ -32,13 +32,32 @@ export function PageEditor({ page, initialSections }: PageEditorProps) {
   const PROTECTED_SLUGS = ['/', '/nosotros', '/servicios', '/contacto', '/blog', '/equipo', '/galeria', '/como-funciona']
   const isProtected = PROTECTED_SLUGS.includes(page.slug)
   const iframeRef = useRef<HTMLIFrameElement>(null)
+  const panelRef = useRef<HTMLDivElement>(null)
+  const panelScrollRef = useRef(0)
+
+  useEffect(() => {
+    if (panelRef.current) {
+      panelRef.current.scrollTop = panelScrollRef.current
+    }
+  }, [activeSettings])
+
+  function handleSettingsChange(newSettings: Record<string, unknown>) {
+    if (panelRef.current) panelScrollRef.current = panelRef.current.scrollTop
+    setActiveSettings(newSettings)
+  }
 
   const previewUrl = `/es${page.slug === '/' ? '' : page.slug}?preview=true`
 
   const reloadIframe = useCallback(() => {
-    if (iframeRef.current?.contentWindow) {
-      iframeRef.current.contentWindow.location.reload()
+    const iframe = iframeRef.current
+    if (!iframe?.contentWindow) return
+    const scrollY = iframe.contentWindow.scrollY ?? 0
+    iframe.contentWindow.location.reload()
+    const restore = () => {
+      iframe.contentWindow?.scrollTo(0, scrollY)
+      iframe.removeEventListener('load', restore)
     }
+    iframe.addEventListener('load', restore)
   }, [])
 
   async function handleSaveSlug() {
@@ -260,7 +279,7 @@ export function PageEditor({ page, initialSections }: PageEditorProps) {
         </div>
 
         {/* Section tree + form */}
-        <div className="flex-1 overflow-y-auto p-4">
+        <div ref={panelRef} className="flex-1 overflow-y-auto p-4">
           <SectionTree
             sections={sections}
             activeSectionId={activeSection?.id ?? null}
@@ -280,7 +299,7 @@ export function PageEditor({ page, initialSections }: PageEditorProps) {
               <SectionFormRouter
                 type={activeSection.type}
                 settings={activeSettings}
-                onChange={setActiveSettings}
+                onChange={handleSettingsChange}
               />
               {message && (
                 <p className="text-xs mt-2 py-1">{message}</p>

@@ -15,6 +15,8 @@ import { ContactFormSection } from '@/components/sections/ContactFormSection'
 import { CustomSection } from '@/components/sections/CustomSection'
 import { CardsGridSection } from '@/components/sections/CardsGridSection'
 import { CustomFormSection } from '@/components/sections/CustomFormSection'
+import { PageHeaderSection } from '@/components/sections/PageHeaderSection'
+import { SocialLinksSection } from '@/components/sections/SocialLinksSection'
 
 export const revalidate = process.env.NODE_ENV === 'development' ? 0 : 3600
 
@@ -36,6 +38,8 @@ function renderSection(section: SectionRow, locale: string) {
     case 'contact_form':  return <ContactFormSection key={section.id} locale={locale} settings={s} />
     case 'cards_grid':    return <CardsGridSection key={section.id} locale={locale} settings={s} />
     case 'custom_form':   return <CustomFormSection key={section.id} locale={locale} settings={s} />
+    case 'page_header':   return <PageHeaderSection key={section.id} locale={locale} settings={s} />
+    case 'social_links':  return <SocialLinksSection key={section.id} locale={locale} settings={s} />
     case 'custom':        return <CustomSection key={section.id} locale={locale} settings={s} />
     default:              return null
   }
