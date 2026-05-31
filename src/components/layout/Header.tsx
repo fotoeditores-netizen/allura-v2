@@ -9,18 +9,13 @@ import { Nav } from "./Nav";
 import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
 import { SearchModal } from "@/components/ui/SearchModal";
 import { cn } from "@/lib/utils";
+import type { MenuItem } from "@/lib/menu-defaults";
+import { defaultMenu } from "@/lib/menu-defaults";
 
-const serviceItems = [
-  { href: "/servicios/full-mouth-reconstruction", label: "Allura Full Mouth Reconstruction" },
-  { href: "/servicios/smile-makeover",            label: "Allura Smile Makeover" },
-  { href: "/servicios/aligners",                  label: "Allura Aligners" },
-  { href: "/servicios/facial-harmony",            label: "Allura Facial Harmony" },
-];
-
-export function Header({ hasPromo = false }: { hasPromo?: boolean }) {
+export function Header({ hasPromo = false, menuItems = defaultMenu }: { hasPromo?: boolean; menuItems?: MenuItem[] }) {
   const [scrolled,      setScrolled]      = useState(false);
   const [menuOpen,      setMenuOpen]      = useState(false);
-  const [servicesOpen,  setServicesOpen]  = useState(false);
+  const [openSubmenu,   setOpenSubmenu]   = useState<string | null>(null);
   const [searchOpen,    setSearchOpen]    = useState(false);
   const t = useTranslations("nav");
 
@@ -30,13 +25,6 @@ export function Header({ hasPromo = false }: { hasPromo?: boolean }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const mobileLinks = [
-    { href: "/como-funciona", label: t("howItWorks") },
-    { href: "/nosotros",      label: t("about") },
-    { href: "/equipo",        label: t("team") },
-    { href: "/contacto",      label: t("contact") },
-    { href: "/blog",          label: t("blog") },
-  ];
 
   return (
     <header className={`fixed left-0 right-0 z-50 ${hasPromo ? 'top-9' : 'top-0'}`}>
@@ -108,7 +96,7 @@ export function Header({ hasPromo = false }: { hasPromo?: boolean }) {
           </Link>
 
           {/* Desktop nav */}
-          <Nav dark={false} />
+          <Nav dark={false} items={menuItems} />
 
           {/* Mobile: search icon + hamburger */}
           <div className="md:hidden flex items-center gap-2">
@@ -133,55 +121,41 @@ export function Header({ hasPromo = false }: { hasPromo?: boolean }) {
       {/* Mobile menu */}
       {menuOpen && (
         <div className="md:hidden bg-white border-t border-brand-light px-6 py-5 flex flex-col gap-1">
-          {mobileLinks.slice(0, 3).map(({ href, label }) => (
-            <Link
-              key={href}
-              href={href}
-              className="text-brand-navy/80 font-body text-base py-2.5 hover:text-brand-navy transition-colors"
-              onClick={() => setMenuOpen(false)}
-            >
-              {label}
-            </Link>
-          ))}
-
-          {/* Servicios accordion */}
-          <div>
-            <button
-              className="w-full flex items-center justify-between text-brand-navy/80 font-body text-base py-2.5 hover:text-brand-navy transition-colors"
-              onClick={() => setServicesOpen(!servicesOpen)}
-            >
-              {t("services")}
-              <ChevronDown
-                size={16}
-                className={cn("transition-transform duration-200", servicesOpen && "rotate-180")}
-              />
-            </button>
-            {servicesOpen && (
-              <div className="pl-4 pb-2 flex flex-col gap-0.5">
-                {serviceItems.map(({ href, label }) => (
-                  <Link
-                    key={href}
-                    href={href}
-                    className="text-brand-navy/60 font-body text-sm py-2 hover:text-brand-navy transition-colors"
-                    onClick={() => { setMenuOpen(false); setServicesOpen(false); }}
-                  >
-                    {label}
-                  </Link>
-                ))}
+          {menuItems.map(item => {
+            const hasChildren = (item.children ?? []).length > 0
+            if (!hasChildren) {
+              return (
+                <Link key={item.id} href={item.href as `/${string}`}
+                  className="text-brand-navy/80 font-body text-base py-2.5 hover:text-brand-navy transition-colors"
+                  onClick={() => setMenuOpen(false)}>
+                  {item.label.es}
+                </Link>
+              )
+            }
+            const isOpen = openSubmenu === item.id
+            return (
+              <div key={item.id}>
+                <button
+                  className="w-full flex items-center justify-between text-brand-navy/80 font-body text-base py-2.5 hover:text-brand-navy transition-colors"
+                  onClick={() => setOpenSubmenu(isOpen ? null : item.id)}
+                >
+                  {item.label.es}
+                  <ChevronDown size={16} className={cn("transition-transform duration-200", isOpen && "rotate-180")} />
+                </button>
+                {isOpen && (
+                  <div className="pl-4 pb-2 flex flex-col gap-0.5">
+                    {(item.children ?? []).map(child => (
+                      <Link key={child.id} href={child.href as `/${string}`}
+                        className="text-brand-navy/60 font-body text-sm py-2 hover:text-brand-navy transition-colors"
+                        onClick={() => { setMenuOpen(false); setOpenSubmenu(null) }}>
+                        {child.label.es}
+                      </Link>
+                    ))}
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-
-          {mobileLinks.slice(3).map(({ href, label }) => (
-            <Link
-              key={href}
-              href={href}
-              className="text-brand-navy/80 font-body text-base py-2.5 hover:text-brand-navy transition-colors"
-              onClick={() => setMenuOpen(false)}
-            >
-              {label}
-            </Link>
-          ))}
+            )
+          })}
 
           {/* Language switcher — mobile */}
           <div className="py-2.5 border-t border-brand-light mt-1">

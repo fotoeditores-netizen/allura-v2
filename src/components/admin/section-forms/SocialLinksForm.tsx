@@ -151,10 +151,12 @@ export function SocialLinksForm({ settings, onChange }: { settings: Record<strin
                 <label className={labelCls}>Tipo de icono</label>
                 <div className="flex gap-2">
                   {([['preset','Red conocida'],['emoji','Emoji'],['image','Imagen']] as const).map(([val, lbl]) => (
-                    <label key={val} className={`flex-1 text-center px-2 py-1.5 rounded-lg border text-xs cursor-pointer transition-colors ${(links[activeLink].iconType ?? 'preset') === val ? 'border-[#051c33] bg-[#051c33]/5 text-[#051c33] font-medium' : 'border-gray-200 text-gray-500'}`}>
-                      <input type="radio" className="sr-only" checked={(links[activeLink].iconType ?? 'preset') === val} onChange={() => updLink(activeLink, 'iconType', val)} />
+                    <button key={val} type="button"
+                      onMouseDown={e => e.preventDefault()}
+                      onClick={() => updLink(activeLink, 'iconType', val)}
+                      className={`flex-1 text-center px-2 py-1.5 rounded-lg border text-xs cursor-pointer transition-colors ${(links[activeLink].iconType ?? 'preset') === val ? 'border-[#051c33] bg-[#051c33]/5 text-[#051c33] font-medium' : 'border-gray-200 text-gray-500'}`}>
                       {lbl}
-                    </label>
+                    </button>
                   ))}
                 </div>
               </div>
@@ -202,29 +204,38 @@ export function SocialLinksForm({ settings, onChange }: { settings: Record<strin
             <label className={labelCls}>Disposición</label>
             <div className="flex gap-2">
               {([['row','↔ Fila'],['grid','⊞ Grid']] as const).map(([val, lbl]) => (
-                <label key={val} className={`flex-1 text-center px-3 py-2 rounded-lg border text-xs cursor-pointer transition-colors ${s.layout === val ? 'border-[#051c33] bg-[#051c33]/5 text-[#051c33] font-medium' : 'border-gray-200 text-gray-500'}`}>
-                  <input type="radio" className="sr-only" checked={s.layout === val} onChange={() => upd('layout', val)} />
+                <button key={val} type="button"
+                  onMouseDown={e => e.preventDefault()}
+                  onClick={() => upd('layout', val)}
+                  className={`flex-1 text-center px-3 py-2 rounded-lg border text-xs cursor-pointer transition-colors ${s.layout === val ? 'border-[#051c33] bg-[#051c33]/5 text-[#051c33] font-medium' : 'border-gray-200 text-gray-500'}`}>
                   {lbl}
-                </label>
+                </button>
               ))}
             </div>
           </div>
           <div>
             <label className={labelCls}>Mostrar etiqueta</label>
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" checked={s.showLabel ?? true} onChange={e => upd('showLabel', e.target.checked)} className="w-4 h-4 accent-[#051c33]" />
+            <button type="button"
+              onMouseDown={e => e.preventDefault()}
+              onClick={() => upd('showLabel', !(s.showLabel ?? true))}
+              className="flex items-center gap-2 cursor-pointer">
+              <div className={`w-4 h-4 rounded border flex items-center justify-center ${s.showLabel !== false ? 'bg-[#051c33] border-[#051c33]' : 'border-gray-300'}`}>
+                {s.showLabel !== false && <span className="text-white text-xs">✓</span>}
+              </div>
               <span className="text-sm text-[#051c33]">Mostrar nombre de la red debajo del icono</span>
-            </label>
+            </button>
           </div>
           <div>
             <label className={labelCls}>Color de fondo</label>
             <div className="flex gap-3">
               {[{value:'white',label:'Blanco',cls:'bg-white border border-gray-200'},{value:'light',label:'Claro',cls:'bg-[#eaeeef]'},{value:'navy',label:'Oscuro',cls:'bg-[#051c33]'}].map(opt => (
-                <label key={opt.value} className="flex flex-col items-center gap-1 cursor-pointer">
-                  <input type="radio" className="sr-only" checked={s.bg === opt.value} onChange={() => upd('bg', opt.value)} />
+                <button key={opt.value} type="button"
+                  onMouseDown={e => e.preventDefault()}
+                  onClick={() => upd('bg', opt.value)}
+                  className="flex flex-col items-center gap-1 cursor-pointer">
                   <div className={`w-10 h-10 rounded-lg ${opt.cls} ${s.bg === opt.value ? 'ring-2 ring-[#051c33] ring-offset-2' : ''}`} />
                   <span className="text-xs text-gray-500">{opt.label}</span>
-                </label>
+                </button>
               ))}
             </div>
           </div>

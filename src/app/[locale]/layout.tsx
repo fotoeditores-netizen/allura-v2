@@ -10,6 +10,7 @@ import type { ActivePromotion, ActivePopup } from '@/types/cms'
 import { getActivePromotions, getActivePopup } from '@/lib/supabase/content'
 import { getSiteSettings } from '@/lib/getSiteSettings'
 import { getTrackingScripts } from '@/lib/getTrackingScripts'
+import { getMenuItems } from '@/lib/supabase/menu'
 import '@/styles/globals.css'
 
 export function generateStaticParams() {
@@ -84,10 +85,11 @@ export default async function LocaleLayout({
   children: React.ReactNode
   params: { locale: string }
 }) {
-  const [messages, promotions, supabasePopup] = await Promise.all([
+  const [messages, promotions, supabasePopup, menuItems] = await Promise.all([
     getMessages(),
     getActivePromotions(),
     getActivePopup(),
+    getMenuItems(),
   ])
 
   // Map Supabase Promotion to ActivePromotion shape for PromoBanner
@@ -127,7 +129,7 @@ export default async function LocaleLayout({
       <body>
         <NextIntlClientProvider messages={messages}>
           <PromoBanner promotion={promotion ?? null} locale={locale} />
-          <Header hasPromo={!!promotion} />
+          <Header hasPromo={!!promotion} menuItems={menuItems} />
           <main className={promotion ? 'pt-9' : ''}>{children}</main>
           <Footer />
           <PopupManager popup={popup ?? null} locale={locale} />

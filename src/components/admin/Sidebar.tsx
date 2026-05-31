@@ -7,12 +7,13 @@ import { cn } from '@/lib/utils'
 import {
   LayoutDashboard, FileText, Stethoscope, BookOpen,
   Users, Star, Image, HelpCircle, Mail, ArrowLeftRight,
-  Settings, UserCog, LogOut, Video, Megaphone, MousePointerClick
+  Settings, UserCog, LogOut, Video, Megaphone, MousePointerClick, Menu
 } from 'lucide-react'
 
 const navItems = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard, exact: true },
   { href: '/admin/paginas', label: 'Páginas', icon: FileText },
+  { href: '/admin/menu', label: 'Menú', icon: Menu },
   { href: '/admin/servicios', label: 'Servicios', icon: Stethoscope },
   { href: '/admin/blog', label: 'Blog', icon: BookOpen },
   { href: '/admin/equipo', label: 'Equipo', icon: Users },
