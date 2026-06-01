@@ -12,7 +12,16 @@ const nextConfig = {
         protocol: "https",
         hostname: "cdn.sanity.io",
       },
+      {
+        protocol: "https",
+        hostname: "fokazpfycsdzvogjlolf.supabase.co",
+      },
     ],
+  },
+  experimental: {
+    outputFileTracingExcludes: {
+      '/api/admin/images': ['./public/images/**/*'],
+    },
   },
 };
 
