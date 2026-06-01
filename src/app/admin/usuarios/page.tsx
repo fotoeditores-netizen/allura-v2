@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/client'
+import { CreateUserButton } from './CreateUserButton'
 
 const SITE_ID = '00000000-0000-0000-0000-000000000001'
 
@@ -12,7 +13,10 @@ export default async function UsuariosPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-[#051c33] mb-6">Usuarios</h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-bold text-[#051c33]">Usuarios</h1>
+        <CreateUserButton />
+      </div>
       <div className="bg-white rounded-xl shadow-sm overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-[#eaeeef] text-[#051c33]">
