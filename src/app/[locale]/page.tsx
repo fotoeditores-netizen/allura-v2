@@ -60,7 +60,7 @@ export default async function HomePage({
 
   // Try to render from Supabase CMS sections
   const page = await getPageBySlug('/')
-  if (page) {
+  if (page && page.status === 'published') {
     const sections = await getSectionsByPage(page.id)
     const visible = sections.filter(s => s.is_visible)
     if (visible.length > 0) {
