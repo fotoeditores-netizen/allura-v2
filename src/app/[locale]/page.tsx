@@ -1,4 +1,6 @@
 import { getSiteSettings } from "@/lib/getSiteSettings"
+import { getPageBySlug, getSectionsByPage } from "@/lib/supabase/pages"
+import { renderSection } from "@/lib/render-section"
 import { HeroSection }    from "@/components/sections/HeroSection"
 import { BenefitsSection } from "@/components/sections/BenefitsSection"
 import { ServicesPreview } from "@/components/sections/ServicesPreview"
@@ -7,6 +9,7 @@ import { MedellinSection } from "@/components/sections/MedellinSection"
 import { TeamPreview }    from "@/components/sections/TeamPreview"
 import { ProcessSection } from "@/components/sections/ProcessSection"
 import { CTABanner }      from "@/components/sections/CTABanner"
+
 export const revalidate = process.env.NODE_ENV === "development" ? 0 : 3600
 
 export async function generateMetadata({
@@ -55,7 +58,21 @@ export default async function HomePage({
 }) {
   const locale = params.locale as "es" | "en"
 
-  // Fallback: hardcoded sections
+  // Try to render from Supabase CMS sections
+  const page = await getPageBySlug('/')
+  if (page) {
+    const sections = await getSectionsByPage(page.id)
+    const visible = sections.filter(s => s.is_visible)
+    if (visible.length > 0) {
+      return (
+        <>
+          {visible.map(s => renderSection(s, locale))}
+        </>
+      )
+    }
+  }
+
+  // Fallback: hardcoded sections (used when no CMS sections exist yet)
   return (
     <>
       <HeroSection locale={locale} />
