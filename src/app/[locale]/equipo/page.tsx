@@ -4,6 +4,8 @@ import { getTeamMembers } from '@/lib/supabase/team'
 import type { TeamMemberListItem } from '@/types/cms'
 import { TeamListTemplate } from '@/components/templates/TeamListTemplate'
 import { getSiteSettings } from '@/lib/getSiteSettings'
+import { getPageBySlug, getSectionsByPage } from '@/lib/supabase/pages'
+import { renderSection } from '@/lib/render-section'
 
 export const revalidate = process.env.NODE_ENV === 'development' ? 0 : 3600
 
@@ -35,10 +37,22 @@ export default async function EquipoPage({
 }: {
   params: { locale: string }
 }) {
-  const members = await getTeamMembers()
+  // Try to render from Supabase CMS sections
+  const page = await getPageBySlug('/equipo')
+  if (page) {
+    const sections = await getSectionsByPage(page.id)
+    const visible = sections.filter(s => s.is_visible)
+    if (visible.length > 0) {
+      return (
+        <div className="pt-24">
+          {visible.map(s => renderSection(s, locale))}
+        </div>
+      )
+    }
+  }
 
-  // Map Supabase TeamMember[] to TeamMemberListItem[] (Sanity shape expected by template)
-  // photo intentionally omitted — TeamListTemplate uses its local teamImages[] array as fallback
+  // Fallback: original template with dynamic team data
+  const members = await getTeamMembers()
   const mappedMembers: TeamMemberListItem[] = members.map((m) => ({
     _id: m.id,
     name: m.name,
