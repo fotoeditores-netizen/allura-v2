@@ -4,6 +4,8 @@ import { getTestimonials, getFaqs, getVideos } from '@/lib/supabase/content'
 import type { TestimonialItem, FaqItem, VideoItem } from '@/types/cms'
 import { ComoFuncionaTemplate } from '@/components/templates/ComoFuncionaTemplate'
 import { getSiteSettings } from '@/lib/getSiteSettings'
+import { getPageBySlug, getSectionsByPage } from '@/lib/supabase/pages'
+import { renderSection } from '@/lib/render-section'
 
 export const revalidate = process.env.NODE_ENV === 'development' ? 0 : 3600
 
@@ -51,13 +53,27 @@ export default async function ComoFuncionaPage({
 }: {
   params: { locale: string }
 }) {
+  // Try to render from Supabase CMS sections
+  const page = await getPageBySlug('/como-funciona')
+  if (page) {
+    const sections = await getSectionsByPage(page.id)
+    const visible = sections.filter(s => s.is_visible)
+    if (visible.length > 0) {
+      return (
+        <div className="pt-24">
+          {visible.map(s => renderSection(s, locale))}
+        </div>
+      )
+    }
+  }
+
+  // Fallback: original template with dynamic data
   const [testimonials, faqs, videos] = await Promise.all([
     getTestimonials(),
     getFaqs(),
     getVideos(),
   ])
 
-  // Map Supabase Testimonial[] to TestimonialItem[]
   const mappedTestimonials: TestimonialItem[] = testimonials.map((t) => ({
     _id: t.id,
     patientName: t.authorName,
@@ -71,7 +87,6 @@ export default async function ComoFuncionaPage({
       : undefined,
   }))
 
-  // Map Supabase Faq[] to FaqItem[]
   const mappedFaqs: FaqItem[] = faqs.map((f) => ({
     _id: f.id,
     question: f.question as { es: string; en: string },
@@ -81,7 +96,6 @@ export default async function ComoFuncionaPage({
     },
   }))
 
-  // Map Supabase Video[] to VideoItem[]
   const mappedVideos: VideoItem[] = videos.map((v) => {
     const { platform, videoId } = extractVideoInfo(v.url)
     return {
