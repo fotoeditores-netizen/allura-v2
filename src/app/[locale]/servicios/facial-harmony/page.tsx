@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { ServiceCategoryTemplate } from "@/components/templates/ServiceCategoryTemplate";
 import { getServiceCategories, getServices } from "@/lib/supabase/services";
+import { getPageBySlug, getSectionsByPage } from "@/lib/supabase/pages";
+import { renderSection } from "@/lib/render-section";
 
 export const revalidate = process.env.NODE_ENV === "development" ? 0 : 3600;
 
@@ -53,8 +55,23 @@ export async function generateMetadata({ params: { locale } }: { params: { local
 
 export default async function FacialHarmonyPage({ params: { locale } }: { params: { locale: string } }) {
   const loc = locale as "es" | "en";
-  const hardcode = loc === "en" ? contentEn : contentEs;
 
+  // Try to render from Supabase CMS sections
+  const page = await getPageBySlug('/servicios/facial-harmony')
+  if (page) {
+    const sections = await getSectionsByPage(page.id)
+    const visible = sections.filter(s => s.is_visible)
+    if (visible.length > 0) {
+      return (
+        <div className="pt-24">
+          {visible.map(s => renderSection(s, locale))}
+        </div>
+      )
+    }
+  }
+
+  // Fallback: hardcoded template
+  const hardcode = loc === "en" ? contentEn : contentEs;
   const [categories, services] = await Promise.all([getServiceCategories(), getServices()])
   const cat = categories.find(c => c.slug === CATEGORY_SLUG)
   const catServices = cat ? services.filter(s => s.categoryId === cat.id) : []
@@ -73,11 +90,6 @@ export default async function FacialHarmonyPage({ params: { locale } }: { params
         }))
       : hardcode.subServices,
   }
-  return (
-    <ServiceCategoryTemplate
-      {...content}
-      categorySlug={CATEGORY_SLUG}
-      locale={locale}
-    />
-  );
+
+  return <ServiceCategoryTemplate {...content} categorySlug={CATEGORY_SLUG} locale={locale} />;
 }
