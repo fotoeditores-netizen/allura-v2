@@ -3,6 +3,10 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { CTABanner } from "@/components/sections/CTABanner";
 import { Award, HeartHandshake, ShieldCheck } from "lucide-react";
 import { getTranslations } from "next-intl/server";
+import { getPageBySlug, getSectionsByPage } from "@/lib/supabase/pages";
+import { renderSection } from "@/lib/render-section";
+
+export const revalidate = process.env.NODE_ENV === "development" ? 0 : 3600;
 
 const valueIcons = [Award, HeartHandshake, ShieldCheck];
 
@@ -23,6 +27,21 @@ export default async function NosotrosPage({
 }: {
   params: { locale: string }
 }) {
+  // Try to render from Supabase CMS sections
+  const page = await getPageBySlug('/nosotros')
+  if (page) {
+    const sections = await getSectionsByPage(page.id)
+    const visible = sections.filter(s => s.is_visible)
+    if (visible.length > 0) {
+      return (
+        <div className="pt-24">
+          {visible.map(s => renderSection(s, locale))}
+        </div>
+      )
+    }
+  }
+
+  // Fallback: hardcoded content
   const t = await getTranslations("nosotros");
   const pillars = t.raw("pillars") as Array<{ number: string; title: string; description: string }>;
   const values = t.raw("values") as Array<{ title: string; description: string }>;
