@@ -10,6 +10,7 @@ interface BlogListTemplateProps {
   categories: BlogCategory[];
   activeCategorySlug?: string;
   locale: string;
+  hideHero?: boolean;
 }
 
 function formatDate(isoString: string, locale: string): string {
@@ -29,22 +30,24 @@ export async function BlogListTemplate({
   categories,
   activeCategorySlug,
   locale,
+  hideHero = false,
 }: BlogListTemplateProps) {
   const t = await getTranslations("blog");
   const loc = locale as "es" | "en";
 
   return (
     <>
-      {/* Hero */}
-      <section className="bg-brand-navy pt-40 pb-20 px-6 md:px-12 text-center">
-        <SectionHeading
-          eyebrow={t("heroEyebrow")}
-          title={t("heroTitle")}
-          subtitle={t("heroSubtitle")}
-          centered
-          light
-        />
-      </section>
+      {!hideHero && (
+        <section className="bg-brand-navy pt-40 pb-20 px-6 md:px-12 text-center">
+          <SectionHeading
+            eyebrow={t("heroEyebrow")}
+            title={t("heroTitle")}
+            subtitle={t("heroSubtitle")}
+            centered
+            light
+          />
+        </section>
+      )}
 
       {/* Category filter */}
       <section className="bg-white border-b border-brand-light">

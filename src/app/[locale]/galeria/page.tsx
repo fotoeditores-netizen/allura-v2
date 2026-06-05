@@ -4,6 +4,8 @@ import { GalleryTemplate } from '@/components/templates/GalleryTemplate'
 import { getTranslations } from 'next-intl/server'
 import type { Metadata } from 'next'
 import { getSiteSettings } from '@/lib/getSiteSettings'
+import { getPageBySlug, getSectionsByPage } from '@/lib/supabase/pages'
+import { renderSection } from '@/lib/render-section'
 
 export const revalidate = process.env.NODE_ENV === 'development' ? 0 : 3600
 
@@ -38,29 +40,44 @@ export default async function GaleriaPage({
   searchParams: { categoria?: string }
 }) {
   const activeCategory = searchParams.categoria ?? null
+
+  // Try CMS sections: render header + gallery + cta
+  const cmsPage = await getPageBySlug('/galeria')
+  if (cmsPage) {
+    const sections = await getSectionsByPage(cmsPage.id)
+    const visible = sections.filter(s => s.is_visible)
+    if (visible.length > 0) {
+      const items = await getGalleryItems()
+      const filtered = activeCategory ? items.filter(item => item.category === activeCategory) : items
+      const mappedItems: GalleryItemData[] = filtered.map(item => ({
+        _id: item.id,
+        title: item.alt as { es?: string; en?: string } | undefined,
+        category: item.category,
+        image: { asset: { _id: item.id, url: item.imageUrl }, alt: item.alt as { es?: string; en?: string } },
+      }))
+
+      const headerSection = visible.find(s => s.type === 'page_header')
+      const ctaSection = visible.find(s => s.type === 'cta')
+
+      return (
+        <div className="pt-24">
+          {headerSection && renderSection(headerSection, locale)}
+          <GalleryTemplate items={mappedItems} locale={locale} activeCategory={activeCategory ?? undefined} hideHero />
+          {ctaSection && renderSection(ctaSection, locale)}
+        </div>
+      )
+    }
+  }
+
+  // Fallback: original template
   const items = await getGalleryItems()
-
-  // Filter by category if requested
-  const filtered = activeCategory
-    ? items.filter((item) => item.category === activeCategory)
-    : items
-
-  // Map Supabase GalleryItem[] to GalleryItemData[] (Sanity shape expected by template)
-  const mappedItems: GalleryItemData[] = filtered.map((item) => ({
+  const filtered = activeCategory ? items.filter(item => item.category === activeCategory) : items
+  const mappedItems: GalleryItemData[] = filtered.map(item => ({
     _id: item.id,
     title: item.alt as { es?: string; en?: string } | undefined,
     category: item.category,
-    image: {
-      asset: { _id: item.id, url: item.imageUrl },
-      alt: item.alt as { es?: string; en?: string },
-    },
+    image: { asset: { _id: item.id, url: item.imageUrl }, alt: item.alt as { es?: string; en?: string } },
   }))
 
-  return (
-    <GalleryTemplate
-      items={mappedItems}
-      locale={locale}
-      activeCategory={activeCategory ?? undefined}
-    />
-  )
+  return <GalleryTemplate items={mappedItems} locale={locale} activeCategory={activeCategory ?? undefined} />
 }

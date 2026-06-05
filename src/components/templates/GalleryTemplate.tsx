@@ -8,26 +8,28 @@ interface GalleryTemplateProps {
   items: GalleryItemData[]
   locale: string
   activeCategory?: string
+  hideHero?: boolean
 }
 
 const CATEGORIES = ['clinic', 'team', 'results', 'medellin', 'events'] as const
 
-export async function GalleryTemplate({ items, locale, activeCategory }: GalleryTemplateProps) {
+export async function GalleryTemplate({ items, locale, activeCategory, hideHero = false }: GalleryTemplateProps) {
   const t = await getTranslations('galeria')
   const loc = locale as 'es' | 'en'
 
   return (
     <>
-      {/* Hero */}
-      <section className="bg-brand-navy pt-40 pb-20 px-6 md:px-12 text-center">
-        <SectionHeading
-          eyebrow={t('heroEyebrow')}
-          title={t('heroTitle')}
-          subtitle={t('heroSubtitle')}
-          centered
-          light
-        />
-      </section>
+      {!hideHero && (
+        <section className="bg-brand-navy pt-40 pb-20 px-6 md:px-12 text-center">
+          <SectionHeading
+            eyebrow={t('heroEyebrow')}
+            title={t('heroTitle')}
+            subtitle={t('heroSubtitle')}
+            centered
+            light
+          />
+        </section>
+      )}
 
       {/* Category filter */}
       <section className="bg-white py-8 px-6 md:px-12 border-b border-brand-light">
