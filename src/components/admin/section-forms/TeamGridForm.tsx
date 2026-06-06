@@ -5,13 +5,18 @@ import { ImageUploader } from '@/components/admin/ImageUploader'
 
 type I18n = { es: string; en: string }
 
+interface HoverBlock {
+  id: string
+  title: I18n
+  items: string[]
+}
+
 interface TeamMember {
   id: string
   name: string
   role: I18n
   imageUrl: string
-  formacion: string[]
-  enfoque: string[]
+  hoverBlocks: HoverBlock[]
   slug?: string
 }
 
@@ -39,8 +44,7 @@ function emptyMember(): TeamMember {
     name: '',
     role: { es: '', en: '' },
     imageUrl: '',
-    formacion: [],
-    enfoque: [],
+    hoverBlocks: [],
     slug: '',
   }
 }
@@ -83,28 +87,69 @@ export function TeamGridForm({ settings, onChange }: { settings: Record<string, 
     setActiveMember(Math.min(activeMember, updated.length - 1))
   }
 
-  const updList = (memberIdx: number, field: 'formacion' | 'enfoque', itemIdx: number, value: string) => {
+  const addHoverBlock = (memberIdx: number) => {
     const updated = members.map((m, i) => {
       if (i !== memberIdx) return m
-      const list = [...(m[field] ?? [])]
-      list[itemIdx] = value
-      return { ...m, [field]: list }
+      const block: HoverBlock = { id: uid(), title: { es: '', en: '' }, items: [] }
+      return { ...m, hoverBlocks: [...(m.hoverBlocks ?? []), block] }
     })
     upd('members', updated)
   }
 
-  const addListItem = (memberIdx: number, field: 'formacion' | 'enfoque') => {
+  const removeHoverBlock = (memberIdx: number, blockIdx: number) => {
     const updated = members.map((m, i) => {
       if (i !== memberIdx) return m
-      return { ...m, [field]: [...(m[field] ?? []), ''] }
+      return { ...m, hoverBlocks: (m.hoverBlocks ?? []).filter((_, bi) => bi !== blockIdx) }
     })
     upd('members', updated)
   }
 
-  const removeListItem = (memberIdx: number, field: 'formacion' | 'enfoque', itemIdx: number) => {
+  const updHoverBlockTitle = (memberIdx: number, blockIdx: number, value: string) => {
     const updated = members.map((m, i) => {
       if (i !== memberIdx) return m
-      return { ...m, [field]: (m[field] ?? []).filter((_, li) => li !== itemIdx) }
+      const blocks = (m.hoverBlocks ?? []).map((b, bi) => {
+        if (bi !== blockIdx) return b
+        return { ...b, title: { ...b.title, [lang]: value } }
+      })
+      return { ...m, hoverBlocks: blocks }
+    })
+    upd('members', updated)
+  }
+
+  const updHoverBlockItem = (memberIdx: number, blockIdx: number, itemIdx: number, value: string) => {
+    const updated = members.map((m, i) => {
+      if (i !== memberIdx) return m
+      const blocks = (m.hoverBlocks ?? []).map((b, bi) => {
+        if (bi !== blockIdx) return b
+        const items = [...b.items]
+        items[itemIdx] = value
+        return { ...b, items }
+      })
+      return { ...m, hoverBlocks: blocks }
+    })
+    upd('members', updated)
+  }
+
+  const addHoverBlockItem = (memberIdx: number, blockIdx: number) => {
+    const updated = members.map((m, i) => {
+      if (i !== memberIdx) return m
+      const blocks = (m.hoverBlocks ?? []).map((b, bi) => {
+        if (bi !== blockIdx) return b
+        return { ...b, items: [...b.items, ''] }
+      })
+      return { ...m, hoverBlocks: blocks }
+    })
+    upd('members', updated)
+  }
+
+  const removeHoverBlockItem = (memberIdx: number, blockIdx: number, itemIdx: number) => {
+    const updated = members.map((m, i) => {
+      if (i !== memberIdx) return m
+      const blocks = (m.hoverBlocks ?? []).map((b, bi) => {
+        if (bi !== blockIdx) return b
+        return { ...b, items: b.items.filter((_, li) => li !== itemIdx) }
+      })
+      return { ...m, hoverBlocks: blocks }
     })
     upd('members', updated)
   }
@@ -235,70 +280,60 @@ export function TeamGridForm({ settings, onChange }: { settings: Record<string, 
                 />
               </div>
 
-              {/* Formación (hover) */}
-              <div>
-                <button
-                  type="button"
-                  onClick={() => toggleSection(`formacion-${activeMember}`)}
-                  className="w-full flex items-center justify-between text-xs font-semibold text-gray-500 uppercase py-1"
-                >
-                  <span>📚 Formación (hover)</span>
-                  {expandedSections[`formacion-${activeMember}`] ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
-                </button>
-                {expandedSections[`formacion-${activeMember}`] && (
-                  <div className="space-y-1 mt-1">
-                    {(cur.formacion ?? []).map((item, li) => (
-                      <div key={li} className="flex gap-1">
-                        <input
-                          value={item}
-                          onChange={e => updList(activeMember, 'formacion', li, e.target.value)}
-                          className={`${inputCls} flex-1`}
-                          placeholder="Ej: Universidad de Antioquia"
-                        />
-                        <button onClick={() => removeListItem(activeMember, 'formacion', li)} className="text-red-400 hover:text-red-600 p-1 flex-shrink-0">
+              {/* Bloques de información (hover) */}
+              <div className="space-y-2">
+                <p className="text-xs font-semibold text-gray-500 uppercase">💡 Bloques de información (hover)</p>
+                {(cur.hoverBlocks ?? []).map((block, bi) => {
+                  const key = `block-${activeMember}-${block.id}`
+                  return (
+                    <div key={block.id} className="border border-gray-100 rounded-lg p-2">
+                      <div className="flex items-center justify-between gap-1">
+                        <button
+                          type="button"
+                          onClick={() => toggleSection(key)}
+                          className="flex-1 flex items-center justify-between text-xs font-medium text-gray-600 py-1"
+                        >
+                          <span>{block.title?.[lang] || 'Bloque sin título'}</span>
+                          {expandedSections[key] ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+                        </button>
+                        <button onClick={() => removeHoverBlock(activeMember, bi)} className="text-red-400 hover:text-red-600 p-1 flex-shrink-0" title="Eliminar bloque">
                           <Trash2 size={12} />
                         </button>
                       </div>
-                    ))}
-                    <button onClick={() => addListItem(activeMember, 'formacion')}
-                      className="text-xs text-brand-blue hover:text-brand-navy flex items-center gap-1 py-1">
-                      <Plus size={10} /> Agregar título
-                    </button>
-                  </div>
-                )}
-              </div>
-
-              {/* Enfoque (hover) */}
-              <div>
-                <button
-                  type="button"
-                  onClick={() => toggleSection(`enfoque-${activeMember}`)}
-                  className="w-full flex items-center justify-between text-xs font-semibold text-gray-500 uppercase py-1"
-                >
-                  <span>🎯 Enfoque (hover)</span>
-                  {expandedSections[`enfoque-${activeMember}`] ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+                      {expandedSections[key] && (
+                        <div className="space-y-1 mt-1">
+                          <input
+                            value={block.title?.[lang] ?? ''}
+                            onChange={e => updHoverBlockTitle(activeMember, bi, e.target.value)}
+                            className={inputCls}
+                            placeholder="Ej: Idiomas, Certificaciones..."
+                          />
+                          {block.items.map((item, li) => (
+                            <div key={li} className="flex gap-1">
+                              <input
+                                value={item}
+                                onChange={e => updHoverBlockItem(activeMember, bi, li, e.target.value)}
+                                className={`${inputCls} flex-1`}
+                                placeholder="Ej: Inglés avanzado"
+                              />
+                              <button onClick={() => removeHoverBlockItem(activeMember, bi, li)} className="text-red-400 hover:text-red-600 p-1 flex-shrink-0">
+                                <Trash2 size={12} />
+                              </button>
+                            </div>
+                          ))}
+                          <button onClick={() => addHoverBlockItem(activeMember, bi)}
+                            className="text-xs text-brand-blue hover:text-brand-navy flex items-center gap-1 py-1">
+                            <Plus size={10} /> Agregar ítem
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
+                <button onClick={() => addHoverBlock(activeMember)}
+                  className="text-xs text-green-700 hover:text-green-800 flex items-center gap-1 py-1 px-2 bg-green-50 rounded-lg border border-green-200 w-fit">
+                  <Plus size={10} /> Agregar bloque
                 </button>
-                {expandedSections[`enfoque-${activeMember}`] && (
-                  <div className="space-y-1 mt-1">
-                    {(cur.enfoque ?? []).map((item, li) => (
-                      <div key={li} className="flex gap-1">
-                        <input
-                          value={item}
-                          onChange={e => updList(activeMember, 'enfoque', li, e.target.value)}
-                          className={`${inputCls} flex-1`}
-                          placeholder="Ej: Rehabilitación oral completa"
-                        />
-                        <button onClick={() => removeListItem(activeMember, 'enfoque', li)} className="text-red-400 hover:text-red-600 p-1 flex-shrink-0">
-                          <Trash2 size={12} />
-                        </button>
-                      </div>
-                    ))}
-                    <button onClick={() => addListItem(activeMember, 'enfoque')}
-                      className="text-xs text-brand-blue hover:text-brand-navy flex items-center gap-1 py-1">
-                      <Plus size={10} /> Agregar área
-                    </button>
-                  </div>
-                )}
               </div>
             </div>
           )}
@@ -312,7 +347,7 @@ export function TeamGridForm({ settings, onChange }: { settings: Record<string, 
           <div className="flex items-center justify-between p-3 border border-gray-200 rounded-xl">
             <div>
               <p className="text-sm font-medium text-[#051c33]">Mostrar hover informativo</p>
-              <p className="text-xs text-gray-400 mt-0.5">Muestra formación y enfoque al pasar el cursor</p>
+              <p className="text-xs text-gray-400 mt-0.5">Muestra los bloques de información al pasar el cursor</p>
             </div>
             <label className="relative inline-flex items-center cursor-pointer">
               <input
