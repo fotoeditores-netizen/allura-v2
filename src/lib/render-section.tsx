@@ -5,6 +5,7 @@ import { ServicesPreview } from '@/components/sections/ServicesPreview'
 import { AboutTeaser } from '@/components/sections/AboutTeaser'
 import { MedellinSection } from '@/components/sections/MedellinSection'
 import { TeamPreview } from '@/components/sections/TeamPreview'
+import { TeamGridSection } from '@/components/sections/TeamGridSection'
 import { ProcessSection } from '@/components/sections/ProcessSection'
 import { CTABanner } from '@/components/sections/CTABanner'
 import { TextImageSection } from '@/components/sections/TextImageSection'
@@ -28,6 +29,7 @@ export function renderSection(section: SectionRow, locale: string) {
     case 'about_teaser':  return <AboutTeaser key={section.id} locale={locale} settings={s} />
     case 'medellin':      return <MedellinSection key={section.id} locale={locale} settings={s} />
     case 'team_preview':  return <TeamPreview key={section.id} locale={locale} settings={s} />
+    case 'team_grid':     return <TeamGridSection key={section.id} locale={locale} settings={s} />
     case 'process':       return <ProcessSection key={section.id} locale={locale} settings={s} />
     case 'cta':           return <CTABanner key={section.id} locale={locale} settings={s} />
     case 'text_image':    return <TextImageSection key={section.id} locale={locale} settings={s} />

@@ -5,6 +5,7 @@ import { ServicesGridForm } from './section-forms/ServicesGridForm'
 import { AboutTeaserForm } from './section-forms/AboutTeaserForm'
 import { MedellinForm } from './section-forms/MedellinForm'
 import { TeamPreviewForm } from './section-forms/TeamPreviewForm'
+import { TeamGridForm } from './section-forms/TeamGridForm'
 import { ProcessForm } from './section-forms/ProcessForm'
 import { CtaForm } from './section-forms/CtaForm'
 import { TestimonialsForm } from './section-forms/TestimonialsForm'
@@ -32,6 +33,7 @@ export function SectionFormRouter({ type, settings, onChange }: SectionFormRoute
     case 'about_teaser': return <AboutTeaserForm {...props} />
     case 'medellin': return <MedellinForm {...props} />
     case 'team_preview': return <TeamPreviewForm {...props} />
+    case 'team_grid':    return <TeamGridForm {...props} />
     case 'process': return <ProcessForm {...props} />
     case 'cta': return <CtaForm {...props} />
     case 'testimonials': return <TestimonialsForm {...props} />
