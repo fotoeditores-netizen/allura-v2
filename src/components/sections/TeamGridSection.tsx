@@ -6,17 +6,9 @@ import { X } from 'lucide-react'
 import { SectionHeading } from '@/components/ui/SectionHeading'
 import { Link } from '@/navigation'
 
-type I18n = { es?: string; en?: string }
+import { normalizeMember, type TeamMember, type RawTeamMember } from '@/lib/team-member'
 
-interface TeamMember {
-  id: string
-  name: string
-  role: I18n
-  imageUrl: string
-  formacion: string[]
-  enfoque: string[]
-  slug?: string
-}
+type I18n = { es?: string; en?: string }
 
 interface TeamGridSettings {
   eyebrow?: I18n
@@ -26,7 +18,7 @@ interface TeamGridSettings {
   ctaLabel?: I18n
   ctaUrl?: string
   bg?: 'white' | 'light'
-  members?: TeamMember[]
+  members?: RawTeamMember[]
 }
 
 interface Props {
@@ -99,37 +91,23 @@ function MemberCard({
               <X size={14} />
             </button>
 
-            {member.formacion.length > 0 && (
-              <div>
-                <p className="font-body text-[9px] tracking-[0.18em] uppercase text-brand-blue mb-1.5">
-                  Formación
-                </p>
-                <ul className="space-y-1">
-                  {member.formacion.map(item => (
-                    <li key={item} className="font-body text-[11px] text-white/85 leading-snug flex gap-1.5">
-                      <span className="text-brand-blue flex-shrink-0">—</span>
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {member.enfoque.length > 0 && (
-              <div>
-                <p className="font-body text-[9px] tracking-[0.18em] uppercase text-brand-blue mb-1.5">
-                  Enfoque
-                </p>
-                <ul className="space-y-1">
-                  {member.enfoque.map(item => (
-                    <li key={item} className="font-body text-[11px] text-white/85 leading-snug flex gap-1.5">
-                      <span className="text-brand-blue flex-shrink-0">—</span>
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+            {member.hoverBlocks.map(block => (
+              block.items.length > 0 && (
+                <div key={block.id}>
+                  <p className="font-body text-[9px] tracking-[0.18em] uppercase text-brand-blue mb-1.5">
+                    {block.title[loc] || block.title.es}
+                  </p>
+                  <ul className="space-y-1">
+                    {block.items.map(item => (
+                      <li key={item} className="font-body text-[11px] text-white/85 leading-snug flex gap-1.5">
+                        <span className="text-brand-blue flex-shrink-0">—</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )
+            ))}
           </div>
         )}
       </div>
@@ -156,7 +134,7 @@ export function TeamGridSection({ locale = 'es', settings = {} }: Props) {
   const s = settings as TeamGridSettings
   const loc = locale as 'es' | 'en'
   const showHover = s.showHover !== false
-  const members: TeamMember[] = s.members ?? []
+  const members: TeamMember[] = (s.members ?? []).map(normalizeMember)
   const bg = s.bg === 'light' ? 'bg-brand-light' : 'bg-white'
 
   const ctaLabel = s.ctaLabel?.[loc] || s.ctaLabel?.es
