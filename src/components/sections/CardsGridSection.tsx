@@ -15,9 +15,9 @@ type Settings = {
 }
 
 const CTA_ALIGN_CLS: Record<CtaAlign, string> = {
-  left:   'items-start',
-  center: 'items-center',
-  right:  'items-end',
+  left:   'justify-start',
+  center: 'justify-center',
+  right:  'justify-end',
 }
 
 const CTA_CLS: Record<CtaStyle, string> = {
@@ -64,7 +64,7 @@ export function CardsGridSection({ locale = 'es', settings = {} }: CardsGridSect
 
   return (
     <section className={`${BG[s.bg ?? 'white']} py-16`}>
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
+      <div className="mx-auto max-w-7xl px-8 sm:px-16 lg:px-32">
         {(eyebrow || title || subtitle) && (
           <div className="mb-12">
             <SectionHeading
@@ -104,7 +104,7 @@ export function CardsGridSection({ locale = 'es', settings = {} }: CardsGridSect
                   </div>
                 )}
 
-                <div className={cardStyle === 'image-top' ? 'p-6 flex flex-col gap-3 flex-1' : 'flex flex-col gap-3 flex-1'}>
+                <div className={cardStyle === 'image-top' ? 'p-6 flex flex-col gap-3 flex-1 h-full' : 'flex flex-col gap-3 flex-1 h-full'}>
                   {/* Icon */}
                   {(card.iconType ?? 'emoji') === 'emoji' && card.icon && (
                     <div className="w-12 h-12 rounded-xl bg-[#051c33]/5 flex items-center justify-center text-2xl flex-shrink-0">
@@ -126,14 +126,14 @@ export function CardsGridSection({ locale = 'es', settings = {} }: CardsGridSect
 
                   {/* Body */}
                   {cardBody && (
-                    <p className={`font-body text-sm leading-relaxed flex-1 ${isCardNavy ? 'text-white/70' : 'text-[#abacae]'}`}>
+                    <p className={`font-body text-sm leading-relaxed ${isCardNavy ? 'text-white/70' : 'text-[#abacae]'}`}>
                       {cardBody}
                     </p>
                   )}
 
                   {/* CTA */}
                   {ctaLabel && ctaUrl && (
-                    <div className={`flex w-full ${CTA_ALIGN_CLS[ctaAlign]}`}>
+                    <div className={`flex w-full mt-auto pt-2 ${CTA_ALIGN_CLS[ctaAlign]}`}>
                       <Link
                         href={ctaUrl as `/${string}`}
                         className={`${CTA_CLS[card.ctaStyle ?? 'link']} ${(card.ctaStyle ?? 'link') === 'link' ? (isCardNavy ? 'text-white/80' : 'text-[#051c33]') : ''}`}

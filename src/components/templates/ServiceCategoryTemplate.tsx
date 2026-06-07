@@ -92,7 +92,7 @@ export async function ServiceCategoryTemplate({
 
       {/* Sub-services grid */}
       <section className="section-padding bg-brand-light">
-        <div className="container-allura">
+        <div className="container-allura px-8 sm:px-12 lg:px-20">
           <SectionHeading
             eyebrow={t("treatmentsLabel")}
             title={t("treatmentsTitle")}
@@ -110,8 +110,8 @@ export async function ServiceCategoryTemplate({
                   {name}
                 </h3>
                 <p className="font-body text-sm text-brand-silver leading-relaxed flex-1 mb-5">{desc}</p>
-                <div className="flex justify-center">
-                  <span className="inline-flex items-center gap-1.5 font-body text-sm text-[#eaeeef] bg-brand-navy px-6 py-[10px] rounded transition-all duration-300 ease-out group-hover:bg-brand-blue group-hover:text-white">
+                <div className="w-full flex justify-center mt-auto">
+                  <span className="inline-flex items-center gap-1.5 font-body text-sm font-normal text-[#eaeeef] bg-brand-navy px-6 py-[10px] rounded transition-all duration-300 ease-out group-hover:bg-brand-blue group-hover:text-white">
                     {t("learnMore")} <ArrowRight size={14} />
                   </span>
                 </div>
