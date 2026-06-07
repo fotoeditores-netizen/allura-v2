@@ -36,6 +36,7 @@ export async function getFaqs(): Promise<Faq[]> {
     question: row.question_i18n ?? {},
     answer: row.answer_i18n ?? {},
     sortOrder: row.sort_order,
+    isOpenByDefault: row.is_open_by_default ?? false,
   }))
 }
 

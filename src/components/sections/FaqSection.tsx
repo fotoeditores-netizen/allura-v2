@@ -26,7 +26,7 @@ export async function FaqSection({ locale = 'es', settings = {} }: FaqSectionPro
         <SectionHeading eyebrow={eyebrow} title={title} centered />
         <div className="mt-12 space-y-4">
           {faqs.map((faq, i) => (
-            <details key={i} className="group border border-brand-navy/10 rounded-xl overflow-hidden">
+            <details key={i} open={faq.isOpenByDefault} className="group border border-brand-navy/10 rounded-xl overflow-hidden">
               <summary className="flex items-center justify-between px-6 py-4 cursor-pointer font-heading text-brand-navy text-base select-none list-none">
                 <span>{locale === 'en' ? (faq.question as any)?.en || faq.question : (faq.question as any)?.es || faq.question}</span>
                 <span className="text-brand-blue group-open:rotate-180 transition-transform duration-200 flex-shrink-0 ml-4">▾</span>

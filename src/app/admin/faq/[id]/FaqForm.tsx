@@ -13,6 +13,7 @@ const schema = z.object({
   answer_en: z.string().min(5, 'Requerido'),
   sort_order: z.coerce.number(),
   is_visible: z.boolean(),
+  is_open_by_default: z.boolean(),
 })
 type FormData = z.infer<typeof schema>
 const inputCls = 'w-full border border-[#8b9fb3]/40 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#051c33]'
@@ -32,6 +33,7 @@ export function FaqForm({ faq, siteId }: { faq: any; siteId: string }) {
       answer_en: faq?.answer_i18n?.en ?? '',
       sort_order: faq?.sort_order ?? 0,
       is_visible: faq?.is_visible ?? true,
+      is_open_by_default: faq?.is_open_by_default ?? false,
     },
   })
 
@@ -44,6 +46,7 @@ export function FaqForm({ faq, siteId }: { faq: any; siteId: string }) {
       answer_i18n: { es: data.answer_es, en: data.answer_en },
       sort_order: data.sort_order,
       is_visible: data.is_visible,
+      is_open_by_default: data.is_open_by_default,
       updated_at: new Date().toISOString(),
     }
     const { error: err } = faq
@@ -66,6 +69,7 @@ export function FaqForm({ faq, siteId }: { faq: any; siteId: string }) {
       <div className="flex gap-6">
         <div><label className={labelCls}>Orden</label><input type="number" {...register('sort_order')} className="w-20 border border-[#8b9fb3]/40 rounded-lg px-3 py-2 text-sm" /></div>
         <div className="flex items-end pb-1"><label className="flex items-center gap-2 text-sm text-[#051c33]"><input type="checkbox" {...register('is_visible')} className="w-4 h-4" /> Visible</label></div>
+        <div className="flex items-end pb-1"><label className="flex items-center gap-2 text-sm text-[#051c33]"><input type="checkbox" {...register('is_open_by_default')} className="w-4 h-4" /> Mostrar respuesta abierta</label></div>
       </div>
       {error && <p className="text-red-500 text-sm">{error}</p>}
       <div className="flex gap-3 pt-2">

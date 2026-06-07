@@ -100,6 +100,7 @@ export interface Faq {
   question: I18nField
   answer: I18nField
   sortOrder: number
+  isOpenByDefault: boolean
 }
 
 export interface GalleryItem {
