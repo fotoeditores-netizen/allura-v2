@@ -1,10 +1,11 @@
 'use client'
 import { useState } from 'react'
 import { ImageUploader } from '@/components/admin/ImageUploader'
-import { Plus, Trash2 } from 'lucide-react'
+import { Plus, Trash2, AlignLeft, AlignCenter, AlignRight } from 'lucide-react'
 
 type I18n = { es: string; en: string }
 type CtaStyle = 'link' | 'button-navy' | 'button-whatsapp' | 'button-outline'
+type CtaAlign = 'left' | 'center' | 'right'
 type Card = {
   iconType: 'none' | 'emoji' | 'image'
   icon: string
@@ -15,6 +16,8 @@ type Card = {
   ctaLabel: I18n
   ctaUrl: string
   ctaStyle: CtaStyle
+  ctaAlign: CtaAlign
+  cardBg: 'white' | 'light' | 'navy'
 }
 
 const CTA_STYLES: { value: CtaStyle; label: string; preview: string }[] = [
@@ -30,7 +33,6 @@ type Settings = {
   subtitle: I18n
   columns: 2 | 3 | 4
   bg: 'white' | 'light' | 'navy'
-  cardBg: 'white' | 'light' | 'navy'
   cardStyle: 'flat' | 'shadow' | 'bordered' | 'image-top'
   cards: Card[]
 }
@@ -57,6 +59,8 @@ const emptyCard = (): Card => ({
   ctaLabel: { es: '', en: '' },
   ctaUrl: '',
   ctaStyle: 'button-navy',
+  ctaAlign: 'left',
+  cardBg: 'white',
 })
 
 export function CardsGridForm({ settings, onChange }: { settings: Record<string, unknown>; onChange: (s: Record<string, unknown>) => void }) {
@@ -234,6 +238,20 @@ export function CardsGridForm({ settings, onChange }: { settings: Record<string,
                 </div>
               </div>
 
+              {/* Fondo de esta tarjeta */}
+              <div>
+                <label className={labelCls}>Fondo de la tarjeta</label>
+                <div className="flex gap-2">
+                  {([{value:'white',label:'Blanco',cls:'bg-white border border-gray-200'},{value:'light',label:'Claro',cls:'bg-[#eaeeef]'},{value:'navy',label:'Oscuro',cls:'bg-[#051c33]'}] as const).map(opt => (
+                    <label key={opt.value} className="flex flex-col items-center gap-1 cursor-pointer">
+                      <input type="radio" name={`cardBg-${activeCard}`} className="sr-only" checked={(cards[activeCard].cardBg ?? 'white') === opt.value} onChange={() => updCard(activeCard, 'cardBg', opt.value)} />
+                      <div className={`w-9 h-9 rounded-lg ${opt.cls} ${(cards[activeCard].cardBg ?? 'white') === opt.value ? 'ring-2 ring-[#051c33] ring-offset-2' : ''}`} />
+                      <span className="text-xs text-gray-500">{opt.label}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
               {/* Estilo del botón */}
               <div>
                 <label className={labelCls}>Estilo del botón</label>
@@ -246,6 +264,27 @@ export function CardsGridForm({ settings, onChange }: { settings: Record<string,
                       className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-xs transition-colors ${(cards[activeCard].ctaStyle ?? 'button-navy') === opt.value ? 'border-[#051c33] ring-1 ring-[#051c33] bg-[#051c33]/5' : 'border-gray-200 hover:border-gray-300'}`}
                     >
                       <span className={opt.preview}>{opt.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Alineación del botón */}
+              <div>
+                <label className={labelCls}>Alineación del botón</label>
+                <div className="flex gap-2">
+                  {([
+                    { value: 'left',   icon: <AlignLeft size={14} />,   label: 'Izq.' },
+                    { value: 'center', icon: <AlignCenter size={14} />, label: 'Centro' },
+                    { value: 'right',  icon: <AlignRight size={14} />,  label: 'Der.' },
+                  ] as const).map(opt => (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      onClick={() => updCard(activeCard, 'ctaAlign', opt.value)}
+                      className={`flex-1 flex flex-col items-center gap-1 py-2 rounded-lg border text-xs transition-colors ${(cards[activeCard].ctaAlign ?? 'left') === opt.value ? 'border-[#051c33] bg-[#051c33]/5 text-[#051c33] font-semibold' : 'border-gray-200 text-gray-400 hover:border-gray-300'}`}
+                    >
+                      {opt.icon}{opt.label}
                     </button>
                   ))}
                 </div>
@@ -295,18 +334,6 @@ export function CardsGridForm({ settings, onChange }: { settings: Record<string,
             </div>
           </div>
 
-          <div>
-            <label className={labelCls}>Fondo de las tarjetas</label>
-            <div className="flex gap-3">
-              {[{value:'white',label:'Blanco',cls:'bg-white border border-gray-200'},{value:'light',label:'Claro',cls:'bg-[#eaeeef]'},{value:'navy',label:'Oscuro',cls:'bg-[#051c33]'}].map(opt => (
-                <label key={opt.value} className="flex flex-col items-center gap-1 cursor-pointer">
-                  <input type="radio" name="cardBg" value={opt.value} checked={(s.cardBg ?? 'white') === opt.value} onChange={() => upd('cardBg', opt.value)} className="sr-only" />
-                  <div className={`w-10 h-10 rounded-lg ${opt.cls} ${(s.cardBg ?? 'white') === opt.value ? 'ring-2 ring-[#051c33] ring-offset-2' : ''}`} />
-                  <span className="text-xs text-gray-500">{opt.label}</span>
-                </label>
-              ))}
-            </div>
-          </div>
         </div>
       )}
     </div>

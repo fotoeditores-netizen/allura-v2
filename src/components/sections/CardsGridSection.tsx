@@ -4,14 +4,20 @@ import { SectionHeading } from '@/components/ui/SectionHeading'
 
 type I18n = { es?: string; en?: string }
 type CtaStyle = 'link' | 'button-navy' | 'button-whatsapp' | 'button-outline'
-type Card = { iconType?: 'none' | 'emoji' | 'image'; icon?: string; iconImageUrl?: string; title?: I18n; body?: I18n; imageUrl?: string; ctaLabel?: I18n; ctaUrl?: string; ctaStyle?: CtaStyle }
+type CtaAlign = 'left' | 'center' | 'right'
+type Card = { iconType?: 'none' | 'emoji' | 'image'; icon?: string; iconImageUrl?: string; title?: I18n; body?: I18n; imageUrl?: string; ctaLabel?: I18n; ctaUrl?: string; ctaStyle?: CtaStyle; ctaAlign?: CtaAlign; cardBg?: 'white' | 'light' | 'navy' }
 type Settings = {
   eyebrow?: I18n; title?: I18n; subtitle?: I18n
   columns?: 2 | 3 | 4
   bg?: 'white' | 'light' | 'navy'
-  cardBg?: 'white' | 'light' | 'navy'
   cardStyle?: 'flat' | 'shadow' | 'bordered' | 'image-top'
   cards?: Card[]
+}
+
+const CTA_ALIGN_CLS: Record<CtaAlign, string> = {
+  left:   'items-start',
+  center: 'items-center',
+  right:  'items-end',
 }
 
 const CTA_CLS: Record<CtaStyle, string> = {
@@ -78,8 +84,9 @@ export function CardsGridSection({ locale = 'es', settings = {} }: CardsGridSect
             const ctaLabel   = card.ctaLabel?.[loc] || card.ctaLabel?.es || ''
             const ctaUrl     = card.ctaUrl || ''
 
-            const cardBgCls = CARD_BG_CLS[s.cardBg ?? 'white']
-            const isCardNavy = (s.cardBg ?? 'white') === 'navy'
+            const cardBgCls = CARD_BG_CLS[card.cardBg ?? 'white']
+            const isCardNavy = (card.cardBg ?? 'white') === 'navy'
+            const ctaAlign = card.ctaAlign ?? 'left'
 
             return (
               <div key={i} className={`${CARD_BASE[cardStyle] ?? CARD_BASE.bordered} ${cardBgCls} transition-shadow duration-200 hover:shadow-lg`}>
@@ -126,12 +133,14 @@ export function CardsGridSection({ locale = 'es', settings = {} }: CardsGridSect
 
                   {/* CTA */}
                   {ctaLabel && ctaUrl && (
-                    <Link
-                      href={ctaUrl as `/${string}`}
-                      className={`${CTA_CLS[card.ctaStyle ?? 'link']} ${(card.ctaStyle ?? 'link') === 'link' ? (isCardNavy ? 'text-white/80' : 'text-[#051c33]') : ''}`}
-                    >
-                      {ctaLabel}{(card.ctaStyle ?? 'link') === 'link' ? ' →' : ''}
-                    </Link>
+                    <div className={`flex ${CTA_ALIGN_CLS[ctaAlign]}`}>
+                      <Link
+                        href={ctaUrl as `/${string}`}
+                        className={`${CTA_CLS[card.ctaStyle ?? 'link']} ${(card.ctaStyle ?? 'link') === 'link' ? (isCardNavy ? 'text-white/80' : 'text-[#051c33]') : ''}`}
+                      >
+                        {ctaLabel}{(card.ctaStyle ?? 'link') === 'link' ? ' →' : ''}
+                      </Link>
+                    </div>
                   )}
                 </div>
               </div>
