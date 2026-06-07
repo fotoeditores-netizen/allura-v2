@@ -7,6 +7,7 @@ import { z } from 'zod'
 import dynamic from 'next/dynamic'
 import { createBrowserSupabaseClient } from '@/lib/supabase/browser-client'
 import { ImageUploader } from '@/components/admin/ImageUploader'
+import { LayoutTemplate } from 'lucide-react'
 import '@uiw/react-md-editor/markdown-editor.css'
 import '@uiw/react-markdown-preview/markdown.css'
 
@@ -181,7 +182,7 @@ export function ServiceForm({ service, siteId, categories = [] }: { service: any
 
       {error && <p className="text-red-500 text-sm">{error}</p>}
 
-      <div className="flex gap-3 pt-2">
+      <div className="flex gap-3 pt-2 flex-wrap">
         <button
           type="submit"
           disabled={saving}
@@ -189,6 +190,21 @@ export function ServiceForm({ service, siteId, categories = [] }: { service: any
         >
           {saving ? 'Guardando...' : 'Guardar servicio'}
         </button>
+        {service && categoryId && (() => {
+          const cat = categories.find(c => c.id === categoryId)
+          if (!cat) return null
+          const pageSlug = `servicios--${cat.slug}--${service.slug}`
+          return (
+            <button
+              type="button"
+              onClick={() => router.push(`/admin/paginas/${pageSlug}`)}
+              className="flex items-center gap-2 border border-[#051c33] text-[#051c33] px-5 py-2 rounded-lg text-sm hover:bg-[#eaeeef] transition-colors"
+            >
+              <LayoutTemplate size={14} />
+              Editar página
+            </button>
+          )
+        })()}
         <button
           type="button"
           onClick={() => router.push('/admin/servicios')}

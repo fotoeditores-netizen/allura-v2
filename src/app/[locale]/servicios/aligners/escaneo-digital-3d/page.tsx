@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { ServiceDetailTemplate } from "@/components/templates/ServiceDetailTemplate";
+import { getPageBySlug, getSectionsByPage } from '@/lib/supabase/pages';
+import { renderSection } from '@/lib/render-section';
 
 export const revalidate = process.env.NODE_ENV === "development" ? 0 : 3600;
 
@@ -74,5 +76,20 @@ export async function generateMetadata({ params: { locale } }: { params: { local
 
 export default async function EscaneoDigital3DPage({ params: { locale } }: { params: { locale: string } }) {
   const content = locale === "en" ? contentEn : contentEs;
+
+  // Try to render from Supabase CMS sections
+  const page = await getPageBySlug('/servicios/aligners/escaneo-digital-3d')
+  if (page) {
+    const sections = await getSectionsByPage(page.id)
+    const visible = sections.filter(s => s.is_visible)
+    if (visible.length > 0) {
+      return (
+        <div className="pt-24">
+          {visible.map(s => renderSection(s, locale))}
+        </div>
+      )
+    }
+  }
+
   return <ServiceDetailTemplate {...content} sanityData={undefined} locale={locale} />;
 }
