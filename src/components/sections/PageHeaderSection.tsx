@@ -89,7 +89,7 @@ export function PageHeaderSection({ locale = 'es', settings = {} }: PageHeaderSe
             {ctaLabel && ctaUrl && (
               <Link
                 href={ctaUrl as `/${string}`}
-                className={`inline-flex items-center gap-2 px-7 py-3 rounded-full font-body font-bold text-sm transition-colors w-fit ${ctaCls}`}
+                className={`inline-flex items-center gap-2 px-7 py-3 rounded-full font-body font-normal text-sm transition-colors w-fit ${ctaCls}`}
               >
                 {ctaLabel}
               </Link>
@@ -121,7 +121,7 @@ export function PageHeaderSection({ locale = 'es', settings = {} }: PageHeaderSe
         {ctaLabel && ctaUrl && (
           <Link
             href={ctaUrl as `/${string}`}
-            className={`inline-flex items-center gap-2 px-7 py-3 rounded-full font-body font-bold text-sm transition-colors w-fit ${ctaCls}`}
+            className={`inline-flex items-center gap-2 px-7 py-3 rounded-full font-body font-normal text-sm transition-colors w-fit ${ctaCls}`}
           >
             {ctaLabel}
           </Link>

@@ -22,9 +22,9 @@ const CTA_ALIGN_CLS: Record<CtaAlign, string> = {
 
 const CTA_CLS: Record<CtaStyle, string> = {
   'link':             'mt-2 inline-flex items-center gap-1 text-sm font-medium hover:underline w-fit',
-  'button-navy':      'mt-2 inline-flex items-center gap-2 px-5 py-2.5 bg-[#051c33] text-white rounded-lg font-body font-bold text-sm hover:bg-[#062a4e] transition-colors w-fit',
-  'button-whatsapp':  'mt-2 inline-flex items-center gap-2 px-5 py-2.5 bg-[#25D366] text-white rounded-lg font-body font-bold text-sm hover:bg-[#1ebe5d] transition-colors w-fit',
-  'button-outline':   'mt-2 inline-flex items-center gap-2 px-5 py-2.5 border border-[#051c33] text-[#051c33] rounded-lg font-body font-bold text-sm hover:bg-[#051c33]/5 transition-colors w-fit',
+  'button-navy':      'mt-2 inline-flex items-center gap-2 px-5 py-2.5 bg-[#051c33] text-white rounded-lg font-body font-normal text-sm hover:bg-[#062a4e] transition-colors w-fit',
+  'button-whatsapp':  'mt-2 inline-flex items-center gap-2 px-5 py-2.5 bg-[#25D366] text-white rounded-lg font-body font-normal text-sm hover:bg-[#1ebe5d] transition-colors w-fit',
+  'button-outline':   'mt-2 inline-flex items-center gap-2 px-5 py-2.5 border border-[#051c33] text-[#051c33] rounded-lg font-body font-normal text-sm hover:bg-[#051c33]/5 transition-colors w-fit',
 }
 
 interface CardsGridSectionProps {
