@@ -64,7 +64,7 @@ export function CardsGridSection({ locale = 'es', settings = {} }: CardsGridSect
 
   return (
     <section className={`${BG[s.bg ?? 'white']} py-16`}>
-      <div className="container mx-auto max-w-6xl px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
         {(eyebrow || title || subtitle) && (
           <div className="mb-12">
             <SectionHeading
@@ -77,7 +77,7 @@ export function CardsGridSection({ locale = 'es', settings = {} }: CardsGridSect
           </div>
         )}
 
-        <div className={`grid ${COLS[cols] ?? COLS[3]} gap-6`}>
+        <div className={`grid ${COLS[cols] ?? COLS[3]} gap-5`}>
           {cards.map((card, i) => {
             const cardTitle  = card.title?.[loc]    || card.title?.es    || ''
             const cardBody   = card.body?.[loc]     || card.body?.es     || ''
@@ -86,7 +86,7 @@ export function CardsGridSection({ locale = 'es', settings = {} }: CardsGridSect
 
             const cardBgCls = CARD_BG_CLS[card.cardBg ?? 'white']
             const isCardNavy = (card.cardBg ?? 'white') === 'navy'
-            const ctaAlign = card.ctaAlign ?? 'left'
+            const ctaAlign: CtaAlign = card.ctaAlign ?? 'left'
 
             return (
               <div key={i} className={`${CARD_BASE[cardStyle] ?? CARD_BASE.bordered} ${cardBgCls} transition-shadow duration-200 hover:shadow-lg`}>
