@@ -16,7 +16,10 @@ type Settings = {
   imageUrl: string
   ctaLabel: I18n
   ctaUrl: string
-  ctaStyle: 'primary' | 'secondary' | 'outline'
+  ctaStyle: 'primary' | 'secondary' | 'outline' | 'whatsapp'
+  cta2Label: I18n
+  cta2Url: string
+  cta2Style: 'primary' | 'secondary' | 'outline' | 'whatsapp'
 }
 
 const LAYOUTS = [
@@ -46,9 +49,10 @@ const ALIGNS = [
 ]
 
 const CTA_STYLES = [
-  { value: 'primary',  label: 'Primario (oscuro)' },
-  { value: 'secondary',label: 'Secundario (borde blanco)' },
-  { value: 'outline',  label: 'Outline (borde oscuro)' },
+  { value: 'primary',   label: 'Primario (oscuro)' },
+  { value: 'secondary', label: 'Secundario (borde blanco)' },
+  { value: 'outline',   label: 'Outline (borde oscuro)' },
+  { value: 'whatsapp',  label: '💬 WhatsApp (verde)' },
 ]
 
 const inputCls = 'w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#051c33] bg-white'
@@ -189,29 +193,55 @@ export function CustomSectionForm({ settings, onChange }: { settings: Record<str
 
       {/* CTA TAB */}
       {tab === 'cta' && (
-        <div className="space-y-3">
-          <p className="text-xs text-gray-400 bg-gray-50 rounded p-2">El botón solo aparece si completas el texto y la URL.</p>
+        <div className="space-y-4">
+          <p className="text-xs text-gray-400 bg-gray-50 rounded p-2">Los botones solo aparecen si completas el texto y la URL.</p>
           <div className="flex gap-2 mb-1">
             {(['es', 'en'] as const).map(l => (
               <button key={l} onClick={() => setLang(l)}
                 className={`px-3 py-1 rounded text-xs font-bold uppercase ${lang === l ? 'bg-[#051c33] text-white' : 'bg-gray-100 text-gray-500'}`}>{l}</button>
             ))}
           </div>
-          <div>
-            <label className={labelCls}>Texto del botón</label>
-            <input value={s.ctaLabel?.[lang] ?? ''} onChange={e => updI18n('ctaLabel', e.target.value)} className={inputCls} placeholder="Ej: Ver más" />
+
+          {/* Botón 1 */}
+          <div className="border border-gray-200 rounded-lg p-3 space-y-3">
+            <p className="text-xs font-semibold text-[#051c33]">Botón 1</p>
+            <div>
+              <label className={labelCls}>Texto</label>
+              <input value={s.ctaLabel?.[lang] ?? ''} onChange={e => updI18n('ctaLabel', e.target.value)} className={inputCls} placeholder="Ej: Ver más" />
+            </div>
+            <div>
+              <label className={labelCls}>URL destino</label>
+              <input value={s.ctaUrl ?? ''} onChange={e => upd('ctaUrl', e.target.value)} className={inputCls} placeholder="/contacto" />
+            </div>
+            <div>
+              <label className={labelCls}>Estilo</label>
+              <select value={s.ctaStyle ?? 'primary'} onChange={e => upd('ctaStyle', e.target.value)} className={inputCls}>
+                {CTA_STYLES.map(opt => (
+                  <option key={opt.value} value={opt.value}>{opt.label}</option>
+                ))}
+              </select>
+            </div>
           </div>
-          <div>
-            <label className={labelCls}>URL destino</label>
-            <input value={s.ctaUrl ?? ''} onChange={e => upd('ctaUrl', e.target.value)} className={inputCls} placeholder="/contacto" />
-          </div>
-          <div>
-            <label className={labelCls}>Estilo del botón</label>
-            <select value={s.ctaStyle ?? 'primary'} onChange={e => upd('ctaStyle', e.target.value)} className={inputCls}>
-              {CTA_STYLES.map(opt => (
-                <option key={opt.value} value={opt.value}>{opt.label}</option>
-              ))}
-            </select>
+
+          {/* Botón 2 */}
+          <div className="border border-gray-200 rounded-lg p-3 space-y-3">
+            <p className="text-xs font-semibold text-[#051c33]">Botón 2 <span className="font-normal text-gray-400">(opcional)</span></p>
+            <div>
+              <label className={labelCls}>Texto</label>
+              <input value={s.cta2Label?.[lang] ?? ''} onChange={e => updI18n('cta2Label', e.target.value)} className={inputCls} placeholder="Ej: WhatsApp" />
+            </div>
+            <div>
+              <label className={labelCls}>URL destino</label>
+              <input value={s.cta2Url ?? ''} onChange={e => upd('cta2Url', e.target.value)} className={inputCls} placeholder="https://wa.me/57..." />
+            </div>
+            <div>
+              <label className={labelCls}>Estilo</label>
+              <select value={s.cta2Style ?? 'whatsapp'} onChange={e => upd('cta2Style', e.target.value)} className={inputCls}>
+                {CTA_STYLES.map(opt => (
+                  <option key={opt.value} value={opt.value}>{opt.label}</option>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
       )}

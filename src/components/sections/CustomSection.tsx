@@ -15,6 +15,9 @@ type Settings = {
   ctaLabel?: I18n
   ctaUrl?: string
   ctaStyle?: string
+  cta2Label?: I18n
+  cta2Url?: string
+  cta2Style?: string
 }
 
 interface CustomSectionProps {
@@ -44,6 +47,7 @@ const CTA_CLASSES: Record<string, string> = {
   primary:   'bg-[#051c33] text-white hover:bg-[#051c33]/90',
   secondary: 'border border-white text-white hover:bg-white/10',
   outline:   'border border-[#051c33] text-[#051c33] hover:bg-[#051c33]/5',
+  whatsapp:  'bg-[#25D366] text-white hover:bg-[#1ebe5d]',
 }
 
 export function CustomSection({ locale = 'es', settings = {} }: CustomSectionProps) {
@@ -59,8 +63,10 @@ export function CustomSection({ locale = 'es', settings = {} }: CustomSectionPro
   const title   = s.title?.[loc]   || s.title?.es   || ''
   const subtitle = s.subtitle?.[loc] || s.subtitle?.es || ''
   const body    = s.body?.[loc]    || s.body?.es    || ''
-  const ctaLabel = s.ctaLabel?.[loc] || s.ctaLabel?.es || ''
-  const ctaUrl  = s.ctaUrl || ''
+  const ctaLabel  = s.ctaLabel?.[loc]  || s.ctaLabel?.es  || ''
+  const ctaUrl    = s.ctaUrl || ''
+  const cta2Label = s.cta2Label?.[loc] || s.cta2Label?.es || ''
+  const cta2Url   = s.cta2Url || ''
   const hasImage = !!s.imageUrl && ['text-image-right','text-image-left'].includes(s.layout ?? '')
   const imageLeft = s.layout === 'text-image-left'
   const isHero = s.layout === 'hero-dark'
@@ -87,16 +93,26 @@ export function CustomSection({ locale = 'es', settings = {} }: CustomSectionPro
           {body}
         </p>
       )}
-      {ctaLabel && ctaUrl && (
-        <div className={`pt-2 ${s.align === 'center' ? 'flex justify-center' : s.align === 'right' ? 'flex justify-end' : ''}`}>
-          <Link
-            href={ctaUrl as `/${string}`}
-            className={`inline-block px-6 py-3 rounded-xl text-sm font-medium transition-colors ${CTA_CLASSES[s.ctaStyle ?? 'primary']}`}
-          >
-            {ctaLabel}
-          </Link>
+      {(ctaLabel && ctaUrl) || (cta2Label && cta2Url) ? (
+        <div className={`pt-2 flex flex-wrap gap-3 ${s.align === 'center' ? 'justify-center' : s.align === 'right' ? 'justify-end' : ''}`}>
+          {ctaLabel && ctaUrl && (
+            <Link
+              href={ctaUrl as `/${string}`}
+              className={`inline-block px-6 py-3 rounded-xl text-sm font-normal transition-colors ${CTA_CLASSES[s.ctaStyle ?? 'primary']}`}
+            >
+              {ctaLabel}
+            </Link>
+          )}
+          {cta2Label && cta2Url && (
+            <Link
+              href={cta2Url as `/${string}`}
+              className={`inline-block px-6 py-3 rounded-xl text-sm font-normal transition-colors ${CTA_CLASSES[s.cta2Style ?? 'whatsapp']}`}
+            >
+              {cta2Label}
+            </Link>
+          )}
         </div>
-      )}
+      ) : null}
     </div>
   )
 
