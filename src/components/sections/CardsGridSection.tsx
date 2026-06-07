@@ -63,8 +63,8 @@ export function CardsGridSection({ locale = 'es', settings = {} }: CardsGridSect
   if (cards.length === 0) return null
 
   return (
-    <section className={`${BG[s.bg ?? 'white']} py-16 px-4 md:px-8`}>
-      <div className="container mx-auto max-w-6xl">
+    <section className={`${BG[s.bg ?? 'white']} py-16`}>
+      <div className="container mx-auto max-w-6xl px-6 lg:px-8">
         {(eyebrow || title || subtitle) && (
           <div className="mb-12">
             <SectionHeading
@@ -133,7 +133,7 @@ export function CardsGridSection({ locale = 'es', settings = {} }: CardsGridSect
 
                   {/* CTA */}
                   {ctaLabel && ctaUrl && (
-                    <div className={`flex ${CTA_ALIGN_CLS[ctaAlign]}`}>
+                    <div className={`flex w-full ${CTA_ALIGN_CLS[ctaAlign]}`}>
                       <Link
                         href={ctaUrl as `/${string}`}
                         className={`${CTA_CLS[card.ctaStyle ?? 'link']} ${(card.ctaStyle ?? 'link') === 'link' ? (isCardNavy ? 'text-white/80' : 'text-[#051c33]') : ''}`}
