@@ -1,6 +1,5 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { createBrowserSupabaseClient } from '@/lib/supabase/browser-client'
 import { Plus, Trash2, GripVertical } from 'lucide-react'
 
 const SITE_ID = '00000000-0000-0000-0000-000000000001'
@@ -162,14 +161,12 @@ export default function FooterEditorPage() {
   const [values, setValues] = useState<Record<string, string>>(DEFAULTS)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [saveError, setSaveError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const supabase = createBrowserSupabaseClient()
-    supabase
-      .from('site_settings')
-      .select('key, value')
-      .eq('site_id', SITE_ID)
+    fetch('/api/admin/footer')
+      .then(r => r.json())
       .then(({ data }) => {
         if (data) {
           const map: Record<string, string> = { ...DEFAULTS }
@@ -181,6 +178,7 @@ export default function FooterEditorPage() {
         }
         setLoading(false)
       })
+      .catch(() => setLoading(false))
   }, [])
 
   const set = (key: string, val: string) => setValues(v => ({ ...v, [key]: val }))
@@ -189,8 +187,7 @@ export default function FooterEditorPage() {
   async function handleSave(e: React.FormEvent) {
     e.preventDefault()
     setSaving(true)
-    const supabase = createBrowserSupabaseClient()
-    // Upsert all fields that are in state (including empty strings to allow clearing)
+    setSaveError(null)
     const upserts = Object.entries(values)
       .filter(([, value]) => value !== null && value !== undefined)
       .map(([key, value]) => ({
@@ -199,7 +196,17 @@ export default function FooterEditorPage() {
         value,
         updated_at: new Date().toISOString(),
       }))
-    await supabase.from('site_settings').upsert(upserts, { onConflict: 'site_id,key' })
+    const res = await fetch('/api/admin/footer', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ upserts }),
+    })
+    const json = await res.json()
+    if (!res.ok || json.error) {
+      setSaveError(`Error al guardar: ${json.error ?? 'Error desconocido'}`)
+      setSaving(false)
+      return
+    }
     setSaving(false)
     setSaved(true)
     setTimeout(() => setSaved(false), 3000)
@@ -394,7 +401,7 @@ export default function FooterEditorPage() {
           />
         </Section>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 flex-wrap">
           <button
             type="submit"
             disabled={saving}
@@ -402,7 +409,8 @@ export default function FooterEditorPage() {
           >
             {saving ? 'Guardando...' : 'Guardar cambios'}
           </button>
-          {saved && <span className="text-green-600 text-sm font-medium">✅ Guardado correctamente</span>}
+          {saved && <span className="text-green-600 text-sm font-medium">✅ Guardado y sitio actualizado</span>}
+          {saveError && <span className="text-red-600 text-sm font-medium">{saveError}</span>}
         </div>
       </form>
     </div>

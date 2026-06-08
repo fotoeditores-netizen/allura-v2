@@ -1,4 +1,4 @@
-import { createClient } from './client'
+import { createServiceClient as createClient } from './client'
 import type { SiteSettings, TrackingScripts } from './types'
 
 const SITE_ID = '00000000-0000-0000-0000-000000000001'
