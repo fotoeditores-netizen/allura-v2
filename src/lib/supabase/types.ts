@@ -26,6 +26,27 @@ export interface SiteSettings {
   seoTitle?: I18nField
   seoDescription?: I18nField
   seoImageUrl?: string
+  // Footer-specific editable fields
+  footerSlogan?: I18nField
+  footerBrandText?: I18nField
+  footerWaHeading?: I18nField
+  footerWaSub?: I18nField
+  footerWaCta?: I18nField
+  footerCopyright?: I18nField
+  footerNavSectionTitle?: I18nField
+  footerServicesSectionTitle?: I18nField
+  footerContactSectionTitle?: I18nField
+  footerLocation?: I18nField
+  footerWaAvail?: I18nField
+  footerLegalPrivacy?: I18nField
+  footerLegalTerms?: I18nField
+  footerLegalMedical?: I18nField
+  footerLegalAccess?: I18nField
+  footerNavItemsEs?: string
+  footerNavItemsEn?: string
+  footerServiceItems?: string
+  footerPartners?: string
+  footerQualityLogos?: string
 }
 
 export interface TrackingScripts {

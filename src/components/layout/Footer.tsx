@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Instagram, Facebook, Linkedin, MessageCircle } from "lucide-react";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getLocale } from "next-intl/server";
 import { Link } from "@/navigation";
 import { QualitySlider } from "./QualitySlider";
 import { getSiteSettings } from "@/lib/getSiteSettings";
@@ -9,18 +9,56 @@ const WHATSAPP_FALLBACK =
   "https://wa.me/17862087572?text=Hola%2C%20me%20interesa%20conocer%20m%C3%A1s%20sobre%20los%20servicios%20de%20Allura%20Healthcare";
 const EMAIL_FALLBACK = "contact@allurahealthcare.com";
 
-const serviceLinks = [
-  { href: "/servicios/full-mouth-reconstruction", label: "Full Mouth Reconstruction" },
-  { href: "/servicios/smile-makeover",            label: "Smile Makeover" },
-  { href: "/servicios/aligners",                  label: "Allura Aligners" },
-  { href: "/servicios/facial-harmony",            label: "Facial Harmony" },
-];
+type LinkItem = { label: string; href: string }
+type LogoItem = { src: string; alt: string }
+
+function parseJson<T>(val: string | undefined, fallback: T): T {
+  if (!val) return fallback
+  try { return JSON.parse(val) as T } catch { return fallback }
+}
+
+const DEFAULT_NAV_ES: LinkItem[] = [
+  { label: 'Inicio', href: '/' },
+  { label: 'Cómo funciona', href: '/como-funciona' },
+  { label: 'Servicios', href: '/servicios' },
+  { label: 'Sobre nosotros', href: '/nosotros' },
+  { label: 'Equipo', href: '/equipo' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'Contáctanos', href: '/contacto' },
+]
+
+const DEFAULT_NAV_EN: LinkItem[] = [
+  { label: 'Home', href: '/' },
+  { label: 'How It Works', href: '/como-funciona' },
+  { label: 'Services', href: '/servicios' },
+  { label: 'About Us', href: '/nosotros' },
+  { label: 'Team', href: '/equipo' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'Contact', href: '/contacto' },
+]
+
+const DEFAULT_SERVICES: LinkItem[] = [
+  { label: 'Full Mouth Reconstruction', href: '/servicios/full-mouth-reconstruction' },
+  { label: 'Smile Makeover', href: '/servicios/smile-makeover' },
+  { label: 'Allura Aligners', href: '/servicios/aligners' },
+  { label: 'Facial Harmony', href: '/servicios/facial-harmony' },
+]
+
+const DEFAULT_PARTNERS: LogoItem[] = [
+  { src: '/images/imagenes_web/logo-muvon-travel.png', alt: 'Muvon Travel' },
+  { src: '/images/imagenes_web/logo-maskart.png', alt: 'Maskart' },
+  { src: '/images/imagenes_web/logo-odontologia-de-precision.png', alt: 'Odontología de Precisión' },
+  { src: '/images/imagenes_web/logo-orto-rio.png', alt: 'Orto Río' },
+]
 
 export async function Footer() {
-  const [t, config] = await Promise.all([
+  const [t, config, locale] = await Promise.all([
     getTranslations("footer"),
     getSiteSettings(),
+    getLocale(),
   ]);
+
+  const l = (locale === 'en' ? 'en' : 'es') as 'es' | 'en'
 
   const whatsappUrl = config?.whatsappNumber
     ? `https://wa.me/${config.whatsappNumber.replace(/^\+/, '')}`
@@ -30,15 +68,29 @@ export async function Footer() {
   const facebook = config?.socialFacebook;
   const linkedin = config?.socialLinkedin;
 
-  const navLinks = [
-    { href: "/",              label: t("navLinks.home") },
-    { href: "/como-funciona", label: t("navLinks.howItWorks") },
-    { href: "/servicios",     label: t("navLinks.services") },
-    { href: "/nosotros",      label: t("navLinks.about") },
-    { href: "/equipo",        label: t("navLinks.team") },
-    { href: "/blog",          label: t("navLinks.blog") },
-    { href: "/contacto",      label: t("navLinks.contact") },
-  ];
+  // CMS-driven content with fallbacks
+  const slogan = config?.footerSlogan?.[l] || (l === 'en' ? 'Health that inspires, Journeys that transform' : 'Salud que inspira, Viajes que transforman')
+  const brandText = config?.footerBrandText?.[l] || t("brand")
+  const waHeading = config?.footerWaHeading?.[l] || t("whatsappHeading")
+  const waSub = config?.footerWaSub?.[l] || t("whatsappSub")
+  const waCta = config?.footerWaCta?.[l] || t("whatsappCta")
+  const navSectionTitle = config?.footerNavSectionTitle?.[l] || t("navSection")
+  const servicesSectionTitle = config?.footerServicesSectionTitle?.[l] || t("servicesSection")
+  const contactSectionTitle = config?.footerContactSectionTitle?.[l] || t("contactSection")
+  const locationText = config?.footerLocation?.[l] || t("location")
+  const waAvail = config?.footerWaAvail?.[l] || t("whatsappAvail")
+  const copyrightText = config?.footerCopyright?.[l] || t("copyright")
+  const legalPrivacy = config?.footerLegalPrivacy?.[l] || t("legal.privacy")
+  const legalTerms = config?.footerLegalTerms?.[l] || t("legal.terms")
+  const legalMedical = config?.footerLegalMedical?.[l] || t("legal.medicalDisclaimer")
+  const legalAccess = config?.footerLegalAccess?.[l] || t("legal.accessibility")
+
+  const navItems = parseJson<LinkItem[]>(
+    l === 'en' ? config?.footerNavItemsEn : config?.footerNavItemsEs,
+    l === 'en' ? DEFAULT_NAV_EN : DEFAULT_NAV_ES
+  )
+  const serviceItems = parseJson<LinkItem[]>(config?.footerServiceItems, DEFAULT_SERVICES)
+  const partners = parseJson<LogoItem[]>(config?.footerPartners, DEFAULT_PARTNERS)
 
   return (
     <footer className="bg-brand-navy text-brand-light">
@@ -46,8 +98,8 @@ export async function Footer() {
       <div className="border-b border-white/10">
         <div className="container-allura px-6 md:px-12 py-8 flex flex-col sm:flex-row items-center justify-between gap-6">
           <div>
-            <p className="font-heading text-lg text-white mb-1">{t("whatsappHeading")}</p>
-            <p className="font-body text-sm text-brand-silver">{t("whatsappSub")}</p>
+            <p className="font-heading text-lg text-white mb-1">{waHeading}</p>
+            <p className="font-body text-sm text-brand-silver">{waSub}</p>
           </div>
           <a
             href={whatsappUrl}
@@ -56,7 +108,7 @@ export async function Footer() {
             className="inline-flex items-center gap-2 px-6 py-3 bg-[#25D366] text-white rounded-full font-body font-bold text-sm hover:bg-[#22c55e] transition-colors flex-shrink-0"
           >
             <MessageCircle size={16} />
-            {t("whatsappCta")}
+            {waCta}
           </a>
         </div>
       </div>
@@ -68,12 +120,7 @@ export async function Footer() {
             Nuestros aliados
           </p>
           <div className="flex items-center justify-center gap-8 md:gap-14 flex-wrap">
-            {[
-              { src: "/images/imagenes_web/logo-muvon-travel.png",              alt: "Muvon Travel" },
-              { src: "/images/imagenes_web/logo-maskart.png",                   alt: "Maskart" },
-              { src: "/images/imagenes_web/logo-odontologia-de-precision.png",  alt: "Odontología de Precisión" },
-              { src: "/images/imagenes_web/logo-orto-rio.png",                  alt: "Orto Río" },
-            ].map(({ src, alt }) => (
+            {partners.map(({ src, alt }) => (
               <div key={alt} className="flex items-center justify-center h-16">
                 <Image
                   src={src}
@@ -94,7 +141,7 @@ export async function Footer() {
           <p className="font-heading text-sm tracking-widest uppercase text-brand-navy text-center mb-6">
             Comprometidos con la calidad
           </p>
-          <QualitySlider />
+          <QualitySlider qualityLogos={config?.footerQualityLogos} />
         </div>
       </div>
 
@@ -113,10 +160,10 @@ export async function Footer() {
               />
             </Link>
             <p className="font-heading text-sm text-white/60 italic mb-4 tracking-wide">
-              Salud que inspira, Viajes que transforman
+              {slogan}
             </p>
             <p className="font-body text-sm leading-relaxed text-brand-silver mb-6">
-              {t("brand")}
+              {brandText}
             </p>
             <div className="flex gap-4">
               <a href={instagram ?? "#"} aria-label="Instagram" className="text-brand-silver hover:text-white transition-colors">
@@ -134,15 +181,12 @@ export async function Footer() {
           {/* Navigation */}
           <div>
             <p className="font-heading text-sm tracking-widest uppercase text-white mb-4">
-              {t("navSection")}
+              {navSectionTitle}
             </p>
             <ul className="space-y-2">
-              {navLinks.map(({ href, label }) => (
+              {navItems.map(({ href, label }) => (
                 <li key={href}>
-                  <Link
-                    href={href}
-                    className="font-body text-sm text-brand-silver hover:text-white transition-colors"
-                  >
+                  <Link href={href as any} className="font-body text-sm text-brand-silver hover:text-white transition-colors">
                     {label}
                   </Link>
                 </li>
@@ -153,15 +197,12 @@ export async function Footer() {
           {/* Services */}
           <div>
             <p className="font-heading text-sm tracking-widest uppercase text-white mb-4">
-              {t("servicesSection")}
+              {servicesSectionTitle}
             </p>
             <ul className="space-y-2">
-              {serviceLinks.map(({ href, label }) => (
+              {serviceItems.map(({ href, label }) => (
                 <li key={href}>
-                  <Link
-                    href={href}
-                    className="font-body text-sm text-brand-silver hover:text-white transition-colors"
-                  >
+                  <Link href={href as any} className="font-body text-sm text-brand-silver hover:text-white transition-colors">
                     {label}
                   </Link>
                 </li>
@@ -172,22 +213,17 @@ export async function Footer() {
           {/* Contact */}
           <div>
             <p className="font-heading text-sm tracking-widest uppercase text-white mb-4">
-              {t("contactSection")}
+              {contactSectionTitle}
             </p>
-            <p className="font-body text-sm text-brand-silver mb-1">{t("location")}</p>
+            <p className="font-body text-sm text-brand-silver mb-1">{locationText}</p>
             <p className="font-body text-sm text-brand-silver mb-1">
               <a href={`mailto:${email}`} className="hover:text-white transition-colors">
                 {email}
               </a>
             </p>
             <p className="font-body text-sm text-brand-silver">
-              <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-white transition-colors"
-              >
-                {t("whatsappAvail")}
+              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+                {waAvail}
               </a>
             </p>
           </div>
@@ -196,32 +232,20 @@ export async function Footer() {
         {/* Bottom bar */}
         <div className="border-t border-brand-blue/20 mt-12 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="font-body text-xs text-brand-silver" suppressHydrationWarning>
-            © {new Date().getFullYear()} Allura Healthcare. {t("copyright")}
+            © {new Date().getFullYear()} Allura Healthcare. {copyrightText}
           </p>
           <div className="flex flex-wrap justify-center sm:justify-end gap-x-6 gap-y-2">
-            <Link
-              href="/politicas-de-privacidad"
-              className="font-body text-xs text-brand-silver hover:text-white transition-colors"
-            >
-              {t("legal.privacy")}
+            <Link href="/politicas-de-privacidad" className="font-body text-xs text-brand-silver hover:text-white transition-colors">
+              {legalPrivacy}
             </Link>
-            <Link
-              href="/terminos-y-condiciones"
-              className="font-body text-xs text-brand-silver hover:text-white transition-colors"
-            >
-              {t("legal.terms")}
+            <Link href="/terminos-y-condiciones" className="font-body text-xs text-brand-silver hover:text-white transition-colors">
+              {legalTerms}
             </Link>
-            <Link
-              href="/medical-disclaimer"
-              className="font-body text-xs text-brand-silver hover:text-white transition-colors"
-            >
-              {t("legal.medicalDisclaimer")}
+            <Link href="/medical-disclaimer" className="font-body text-xs text-brand-silver hover:text-white transition-colors">
+              {legalMedical}
             </Link>
-            <Link
-              href="/accesibilidad"
-              className="font-body text-xs text-brand-silver hover:text-white transition-colors"
-            >
-              {t("legal.accessibility")}
+            <Link href="/accesibilidad" className="font-body text-xs text-brand-silver hover:text-white transition-colors">
+              {legalAccess}
             </Link>
           </div>
         </div>

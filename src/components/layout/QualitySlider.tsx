@@ -2,7 +2,9 @@
 
 import Image from "next/image";
 
-const logos = [
+type LogoItem = { src: string; alt: string }
+
+const DEFAULT_LOGOS: LogoItem[] = [
   { src: "/images/imagenes_web/ITI-transparent-logo.png",                        alt: "ITI – International Team for Implantology" },
   { src: "/images/imagenes_web/sco-sociedad-colombiana-de-ortodoncia.png",        alt: "SCO – Sociedad Colombiana de Ortodoncia" },
   { src: "/images/imagenes_web/asociacion-colombiana-de-prostodoncia.png",        alt: "Asociación Colombiana de Prostodoncia" },
@@ -14,10 +16,20 @@ const logos = [
   { src: "/images/imagenes_web/marca-pais-colombia.png",                          alt: "Marca País Colombia" },
 ];
 
-// Duplicamos para loop infinito sin saltos
-const track = [...logos, ...logos];
+function parseLogos(raw: string | undefined): LogoItem[] {
+  if (!raw) return DEFAULT_LOGOS
+  try {
+    const parsed = JSON.parse(raw) as LogoItem[]
+    return parsed.length > 0 ? parsed : DEFAULT_LOGOS
+  } catch {
+    return DEFAULT_LOGOS
+  }
+}
 
-export function QualitySlider() {
+export function QualitySlider({ qualityLogos }: { qualityLogos?: string }) {
+  const logos = parseLogos(qualityLogos)
+  const track = [...logos, ...logos]
+
   return (
     <>
       <div className="quality-wrapper overflow-hidden w-full">
@@ -26,22 +38,19 @@ export function QualitySlider() {
           style={{ gap: "var(--gap)" }}
         >
           {track.map(({ src, alt }, i) => (
-              <div
-                key={`${alt}-${i}`}
-                className="flex items-center justify-center flex-shrink-0"
-                style={{
-                  width: "var(--item-w)",
-                  height: "88px",
-                }}
-              >
-                <Image
-                  src={src}
-                  alt={alt}
-                  width={240}
-                  height={88}
-                  className="max-h-full w-auto object-contain"
-                />
-              </div>
+            <div
+              key={`${alt}-${i}`}
+              className="flex items-center justify-center flex-shrink-0"
+              style={{ width: "var(--item-w)", height: "88px" }}
+            >
+              <Image
+                src={src}
+                alt={alt}
+                width={240}
+                height={88}
+                className="max-h-full w-auto object-contain"
+              />
+            </div>
           ))}
         </div>
       </div>
