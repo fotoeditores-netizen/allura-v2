@@ -64,10 +64,10 @@ export async function Footer() {
     ? `https://wa.me/${config.whatsappNumber.replace(/^\+/, '')}`
     : WHATSAPP_FALLBACK;
   const email = config?.contactEmail ?? EMAIL_FALLBACK;
-  const instagram = config?.socialInstagram;
-  const facebook = config?.socialFacebook;
-  const tiktok = config?.socialTiktok;
-  const socialX = config?.socialX;
+  const instagram = config?.socialInstagram || undefined;
+  const facebook = config?.socialFacebook || undefined;
+  const tiktok = config?.socialTiktok || undefined;
+  const socialX = config?.socialX || undefined;
 
   // CMS-driven content with fallbacks
   const slogan = config?.footerSlogan?.[l] || (l === 'en' ? 'Health that inspires, Journeys that transform' : 'Salud que inspira, Viajes que transforman')
