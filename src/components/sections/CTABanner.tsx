@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import type { LocaleString, CtaField } from "@/types/cms";
 
-const WA_URL = "https://wa.me/17862087572?text=Hola%2C%20me%20interesa%20conocer%20m%C3%A1s%20sobre%20los%20servicios%20de%20Allura%20Healthcare";
+const DEFAULT_URL = "https://allura-healthcare-v2.vercel.app/es/contacto";
 
 const BUTTON_STYLES: Record<string, { bg: string; hover: string; text: string }> = {
   whatsapp: { bg: '#25D366', hover: '#22c55e', text: 'white' },
@@ -44,7 +44,7 @@ export function CTABanner({ sanityData, locale = "es", settings }: CTABannerProp
 
   const colorKey = (settings?.buttonColor as string) || 'whatsapp';
   const btnStyle = BUTTON_STYLES[colorKey] ?? BUTTON_STYLES.whatsapp;
-  const btnUrl = (settings?.buttonUrl as string)?.trim() || WA_URL;
+  const btnUrl = (settings?.buttonUrl as string)?.trim() || DEFAULT_URL;
   const isExternal = btnUrl.startsWith('http');
 
   return (
