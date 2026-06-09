@@ -2,9 +2,16 @@
 
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
-import type { LocaleString, SanityImage, CtaField } from "@/types/cms";
+import type { LocaleString, CtaField } from "@/types/cms";
 
 const WA_URL = "https://wa.me/17862087572?text=Hola%2C%20me%20interesa%20conocer%20m%C3%A1s%20sobre%20los%20servicios%20de%20Allura%20Healthcare";
+
+const BUTTON_STYLES: Record<string, { bg: string; hover: string; text: string }> = {
+  whatsapp: { bg: '#25D366', hover: '#22c55e', text: 'white' },
+  navy:     { bg: '#051c33', hover: '#0a3260', text: 'white' },
+  blue:     { bg: '#8b9fb3', hover: '#7a8fa3', text: 'white' },
+  white:    { bg: '#ffffff', hover: '#eaeeef', text: '#051c33' },
+}
 
 export interface CTABannerProps {
   sanityData?: {
@@ -12,7 +19,6 @@ export interface CTABannerProps {
     title?: LocaleString;
     body?: LocaleString;
     cta?: CtaField;
-    backgroundImage?: SanityImage;
   };
   locale?: string;
   settings?: Record<string, unknown>;
@@ -36,6 +42,11 @@ export function CTABanner({ sanityData, locale = "es", settings }: CTABannerProp
       ? sanityData.cta.label[locale as keyof LocaleString] || t("button")
       : t("button"));
 
+  const colorKey = (settings?.buttonColor as string) || 'whatsapp';
+  const btnStyle = BUTTON_STYLES[colorKey] ?? BUTTON_STYLES.whatsapp;
+  const btnUrl = (settings?.buttonUrl as string)?.trim() || WA_URL;
+  const isExternal = btnUrl.startsWith('http');
+
   return (
     <section className="bg-brand-navy section-padding">
       <div className="container-allura text-center">
@@ -55,10 +66,13 @@ export function CTABanner({ sanityData, locale = "es", settings }: CTABannerProp
             {getText(sanityData?.body, "body", "subtitle")}
           </p>
           <a
-            href={WA_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#25D366] text-white rounded-full font-body font-bold text-sm hover:bg-[#22c55e] transition-colors"
+            href={btnUrl}
+            target={isExternal ? "_blank" : undefined}
+            rel={isExternal ? "noopener noreferrer" : undefined}
+            className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full font-body font-bold text-sm transition-colors"
+            style={{ backgroundColor: btnStyle.bg, color: btnStyle.text }}
+            onMouseEnter={e => (e.currentTarget.style.backgroundColor = btnStyle.hover)}
+            onMouseLeave={e => (e.currentTarget.style.backgroundColor = btnStyle.bg)}
           >
             {ctaLabel}
           </a>
