@@ -1,7 +1,15 @@
-import { createServiceClient as createClient } from './client'
+import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import type { SiteSettings, TrackingScripts } from './types'
 
 const SITE_ID = '00000000-0000-0000-0000-000000000001'
+
+function createClient() {
+  return createSupabaseClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    { auth: { persistSession: false } }
+  )
+}
 
 export async function getSiteSettings(): Promise<SiteSettings | null> {
   const supabase = createClient()
