@@ -42,7 +42,7 @@ export function CTABanner({ sanityData, locale = "es", settings }: CTABannerProp
       ? sanityData.cta.label[locale as keyof LocaleString] || t("button")
       : t("button"));
 
-  const colorKey = (settings?.buttonColor as string) || 'whatsapp';
+  const colorKey = (settings?.buttonColor as string) || 'white';
   const btnStyle = BUTTON_STYLES[colorKey] ?? BUTTON_STYLES.whatsapp;
   const btnUrl = (settings?.buttonUrl as string)?.trim() || DEFAULT_URL;
   const isExternal = btnUrl.startsWith('http');
