@@ -167,7 +167,11 @@ export async function ServiceDetailTemplate({
         </div>
       </section>
 
-      <CTABanner />
+      <CTABanner settings={{
+        buttonLabel: { es: 'Contactar ahora', en: 'Contact now' },
+        buttonUrl: 'https://allura-healthcare-v2.vercel.app/es/contacto',
+        buttonColor: 'navy',
+      }} />
     </>
   );
 }
