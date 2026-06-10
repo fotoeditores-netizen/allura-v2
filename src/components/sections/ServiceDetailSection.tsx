@@ -46,7 +46,7 @@ export async function ServiceDetailSection({ locale = 'es', settings = {} }: Pro
         <div className="container-allura">
           {categorySlug && category && (
             <nav className="flex items-center gap-2 font-body text-xs text-white/50 mb-8">
-              <Link href="/servicios" className="hover:text-white transition-colors">Servicios</Link>
+              <Link href="/servicios" className="hover:text-white transition-colors">{loc === 'en' ? 'Services' : 'Servicios'}</Link>
               <ChevronRight size={12} />
               <Link href={`/servicios/${categorySlug}`} className="hover:text-white transition-colors">{category}</Link>
               <ChevronRight size={12} />
@@ -59,7 +59,7 @@ export async function ServiceDetailSection({ locale = 'es', settings = {} }: Pro
             {description && <p className="font-body text-base text-white/70 leading-relaxed mb-10">{description}</p>}
             <a href={whatsappUrl} target="_blank" rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-7 py-3 bg-[#25D366] text-white rounded-full font-body font-normal text-sm hover:bg-[#22c55e] transition-colors">
-              Agenda por WhatsApp
+              {loc === 'en' ? 'Book via WhatsApp' : 'Agenda por WhatsApp'}
             </a>
           </div>
         </div>
@@ -69,7 +69,10 @@ export async function ServiceDetailSection({ locale = 'es', settings = {} }: Pro
       {benefits.length > 0 && (
         <section className="py-16 px-6 md:px-12 bg-white">
           <div className="container-allura">
-            <SectionHeading eyebrow="Beneficios" title="¿Qué lograrás con este tratamiento?" />
+            <SectionHeading
+              eyebrow={loc === 'en' ? 'Benefits' : 'Beneficios'}
+              title={loc === 'en' ? 'What will you achieve with this treatment?' : '¿Qué lograrás con este tratamiento?'}
+            />
             <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-10">
               {benefits.map((b, i) => {
                 const text = b[loc] || b.es || ''
@@ -89,7 +92,11 @@ export async function ServiceDetailSection({ locale = 'es', settings = {} }: Pro
       {steps.length > 0 && (
         <section className="py-16 px-6 md:px-12 bg-[#eaeeef]">
           <div className="container-allura">
-            <SectionHeading eyebrow="Proceso" title="¿Cómo funciona?" centered />
+            <SectionHeading
+              eyebrow={loc === 'en' ? 'Process' : 'Proceso'}
+              title={loc === 'en' ? 'How does it work?' : '¿Cómo funciona?'}
+              centered
+            />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
               {steps.map((step, i) => {
                 const stepTitle = step.title?.[loc] || step.title?.es || ''
@@ -113,7 +120,10 @@ export async function ServiceDetailSection({ locale = 'es', settings = {} }: Pro
           <div className="container-allura grid grid-cols-1 md:grid-cols-2 gap-14">
             {candidates.length > 0 && (
               <div>
-                <SectionHeading eyebrow="¿Para quién es?" title="Candidatos ideales" />
+                <SectionHeading
+                eyebrow={loc === 'en' ? 'Who is it for?' : '¿Para quién es?'}
+                title={loc === 'en' ? 'Ideal candidates' : 'Candidatos ideales'}
+              />
                 <ul className="mt-8 space-y-3">
                   {candidates.map((c, i) => {
                     const text = c[loc] || c.es || ''
@@ -129,7 +139,10 @@ export async function ServiceDetailSection({ locale = 'es', settings = {} }: Pro
             )}
             {timeline && (
               <div>
-                <SectionHeading eyebrow="Duración" title="¿Cuánto tiempo toma?" />
+                <SectionHeading
+                eyebrow={loc === 'en' ? 'Duration' : 'Duración'}
+                title={loc === 'en' ? 'How long does it take?' : '¿Cuánto tiempo toma?'}
+              />
                 <div className="mt-8 bg-[#eaeeef] rounded-2xl p-7">
                   <p className="font-body text-base text-[#051c33] leading-relaxed">{timeline}</p>
                 </div>
@@ -143,12 +156,12 @@ export async function ServiceDetailSection({ locale = 'es', settings = {} }: Pro
       {whyBody && (
         <section className="py-16 px-6 md:px-12 bg-[#051c33]">
           <div className="container-allura text-center max-w-2xl mx-auto">
-            <p className="font-body text-xs tracking-[0.2em] uppercase text-[#8b9fb3] mb-4">Por qué Allura</p>
-            <h2 className="font-heading text-3xl text-white mb-6">Tu salud en las mejores manos</h2>
+            <p className="font-body text-xs tracking-[0.2em] uppercase text-[#8b9fb3] mb-4">{loc === 'en' ? 'Why Allura' : 'Por qué Allura'}</p>
+            <h2 className="font-heading text-3xl text-white mb-6">{loc === 'en' ? 'Your health in the best hands' : 'Tu salud en las mejores manos'}</h2>
             <p className="font-body text-[#abacae] leading-relaxed mb-10">{whyBody}</p>
             <a href={whatsappUrl} target="_blank" rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-7 py-3 bg-[#25D366] text-white rounded-full font-body font-normal text-sm hover:bg-[#22c55e] transition-colors">
-              Agenda por WhatsApp
+              {loc === 'en' ? 'Book via WhatsApp' : 'Agenda por WhatsApp'}
             </a>
           </div>
         </section>
