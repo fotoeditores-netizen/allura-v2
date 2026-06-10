@@ -5,7 +5,7 @@ export type I18n = { es: string; en: string }
 export interface HoverBlock {
   id: string
   title: I18n
-  items: string[]
+  items: I18n[]
 }
 
 export interface TeamMember {
@@ -26,10 +26,20 @@ export interface RawTeamMember {
   name: string
   role?: Partial<I18n>
   imageUrl?: string
-  hoverBlocks?: HoverBlock[]
+  hoverBlocks?: Array<{
+    id: string
+    title: Partial<I18n>
+    items: Array<string | Partial<I18n>>
+  }>
   formacion?: string[]
   enfoque?: string[]
   slug?: string
+}
+
+/** Coerce a raw item (string or I18n object) to a full I18n object. */
+function normalizeItem(item: string | Partial<I18n>): I18n {
+  if (typeof item === 'string') return { es: item, en: '' }
+  return { es: item.es ?? '', en: item.en ?? '' }
 }
 
 /**
@@ -44,21 +54,25 @@ export function normalizeMember(raw: RawTeamMember): TeamMember {
 
   let hoverBlocks: HoverBlock[]
   if (raw.hoverBlocks && raw.hoverBlocks.length > 0) {
-    hoverBlocks = raw.hoverBlocks.map(b => ({ ...b, items: [...b.items] }))
+    hoverBlocks = raw.hoverBlocks.map(b => ({
+      id: b.id,
+      title: { es: b.title?.es ?? '', en: b.title?.en ?? '' },
+      items: (b.items ?? []).map(normalizeItem),
+    }))
   } else {
     hoverBlocks = []
     if (raw.formacion && raw.formacion.length > 0) {
       hoverBlocks.push({
         id: 'auto-formacion',
         title: { es: 'Formación', en: 'Training' },
-        items: raw.formacion,
+        items: raw.formacion.map(s => ({ es: s, en: '' })),
       })
     }
     if (raw.enfoque && raw.enfoque.length > 0) {
       hoverBlocks.push({
         id: 'auto-enfoque',
         title: { es: 'Enfoque', en: 'Focus areas' },
-        items: raw.enfoque,
+        items: raw.enfoque.map(s => ({ es: s, en: '' })),
       })
     }
   }

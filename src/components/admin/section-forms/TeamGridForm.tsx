@@ -8,7 +8,7 @@ type I18n = { es: string; en: string }
 interface HoverBlock {
   id: string
   title: I18n
-  items: string[]
+  items: I18n[]
 }
 
 interface TeamMember {
@@ -87,6 +87,10 @@ export function TeamGridForm({ settings, onChange }: { settings: Record<string, 
     setActiveMember(Math.min(activeMember, updated.length - 1))
   }
 
+  // Coerce any legacy string items to I18n objects when loading from Supabase
+  const normalizeItems = (items: unknown[]): I18n[] =>
+    items.map(it => typeof it === 'string' ? { es: it, en: '' } : (it as I18n))
+
   const addHoverBlock = (memberIdx: number) => {
     const updated = members.map((m, i) => {
       if (i !== memberIdx) return m
@@ -121,8 +125,8 @@ export function TeamGridForm({ settings, onChange }: { settings: Record<string, 
       if (i !== memberIdx) return m
       const blocks = (m.hoverBlocks ?? []).map((b, bi) => {
         if (bi !== blockIdx) return b
-        const items = [...b.items]
-        items[itemIdx] = value
+        const items = normalizeItems([...b.items])
+        items[itemIdx] = { ...items[itemIdx], [lang]: value }
         return { ...b, items }
       })
       return { ...m, hoverBlocks: blocks }
@@ -135,7 +139,7 @@ export function TeamGridForm({ settings, onChange }: { settings: Record<string, 
       if (i !== memberIdx) return m
       const blocks = (m.hoverBlocks ?? []).map((b, bi) => {
         if (bi !== blockIdx) return b
-        return { ...b, items: [...b.items, ''] }
+        return { ...b, items: [...normalizeItems(b.items), { es: '', en: '' }] }
       })
       return { ...m, hoverBlocks: blocks }
     })
@@ -308,13 +312,13 @@ export function TeamGridForm({ settings, onChange }: { settings: Record<string, 
                             className={inputCls}
                             placeholder="Ej: Idiomas, Certificaciones..."
                           />
-                          {block.items.map((item, li) => (
+                          {normalizeItems(block.items).map((item, li) => (
                             <div key={li} className="flex gap-1">
                               <input
-                                value={item}
+                                value={item[lang] ?? ''}
                                 onChange={e => updHoverBlockItem(activeMember, bi, li, e.target.value)}
                                 className={`${inputCls} flex-1`}
-                                placeholder="Ej: Inglés avanzado"
+                                placeholder={lang === 'en' ? 'e.g. Advanced English' : 'Ej: Inglés avanzado'}
                               />
                               <button onClick={() => removeHoverBlockItem(activeMember, bi, li)} className="text-red-400 hover:text-red-600 p-1 flex-shrink-0">
                                 <Trash2 size={12} />
