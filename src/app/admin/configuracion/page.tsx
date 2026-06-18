@@ -18,6 +18,17 @@ const FIELDS = [
   { key: 'meta_pixel_id', label: 'Meta Pixel ID', type: 'text' },
 ]
 
+const HEADER_CTA_FIELDS = [
+  { key: 'header_pay_label_es', label: 'Botón "Paga aquí" — texto ES', type: 'text' },
+  { key: 'header_pay_label_en', label: 'Botón "Pay here" — texto EN', type: 'text' },
+  { key: 'header_pay_url', label: 'Botón "Paga aquí" — URL (ej: https://...)', type: 'text' },
+  { key: 'header_cta_label_es', label: 'Botón CTA principal — texto ES', type: 'text' },
+  { key: 'header_cta_label_en', label: 'Botón CTA principal — texto EN', type: 'text' },
+  { key: 'header_cta_url', label: 'Botón CTA principal — URL (ej: /contacto)', type: 'text' },
+]
+
+const ALL_FIELDS = [...FIELDS, ...HEADER_CTA_FIELDS]
+
 export default function ConfiguracionPage() {
   const [values, setValues] = useState<Record<string, string>>({})
   const [saving, setSaving] = useState(false)
@@ -40,7 +51,7 @@ export default function ConfiguracionPage() {
     e.preventDefault()
     setSaving(true)
     setSaveError(null)
-    const upserts = FIELDS
+    const upserts = ALL_FIELDS
       .filter(({ key }) => values[key] !== undefined)
       .map(({ key }) => ({ site_id: SITE_ID, key, value: values[key], updated_at: new Date().toISOString() }))
     const res = await fetch('/api/admin/footer', {
@@ -64,13 +75,28 @@ export default function ConfiguracionPage() {
   return (
     <div>
       <h1 className="text-2xl font-bold text-[#051c33] mb-6">Configuración del sitio</h1>
-      <form onSubmit={handleSave} className="bg-white rounded-xl shadow-sm p-6 space-y-4 max-w-xl">
-        {FIELDS.map(({ key, label }) => (
-          <div key={key}>
-            <label className="block text-sm font-medium text-[#051c33] mb-1">{label}</label>
-            <input type="text" value={values[key] ?? ''} onChange={e => setValues(v => ({ ...v, [key]: e.target.value }))} className={inputCls} />
-          </div>
-        ))}
+      <form onSubmit={handleSave} className="space-y-6 max-w-xl">
+        <div className="bg-white rounded-xl shadow-sm p-6 space-y-4">
+          <h2 className="text-base font-semibold text-[#051c33] border-b border-[#eaeeef] pb-2">Datos generales</h2>
+          {FIELDS.map(({ key, label }) => (
+            <div key={key}>
+              <label className="block text-sm font-medium text-[#051c33] mb-1">{label}</label>
+              <input type="text" value={values[key] ?? ''} onChange={e => setValues(v => ({ ...v, [key]: e.target.value }))} className={inputCls} />
+            </div>
+          ))}
+        </div>
+
+        <div className="bg-white rounded-xl shadow-sm p-6 space-y-4">
+          <h2 className="text-base font-semibold text-[#051c33] border-b border-[#eaeeef] pb-2">Botones del header</h2>
+          <p className="text-xs text-[#8b9fb3]">Textos y destinos de los dos botones que aparecen en la barra superior del sitio.</p>
+          {HEADER_CTA_FIELDS.map(({ key, label }) => (
+            <div key={key}>
+              <label className="block text-sm font-medium text-[#051c33] mb-1">{label}</label>
+              <input type="text" value={values[key] ?? ''} onChange={e => setValues(v => ({ ...v, [key]: e.target.value }))} className={inputCls} />
+            </div>
+          ))}
+        </div>
+
         <div className="flex items-center gap-3 pt-2 flex-wrap">
           <button type="submit" disabled={saving} className="bg-[#051c33] text-white px-5 py-2 rounded-lg text-sm disabled:opacity-50">
             {saving ? 'Guardando...' : 'Guardar cambios'}

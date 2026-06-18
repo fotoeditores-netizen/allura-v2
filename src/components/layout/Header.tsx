@@ -22,6 +22,24 @@ export function Header({ hasPromo = false, menuItems = defaultMenu }: { hasPromo
   const [openSubmenu,   setOpenSubmenu]   = useState<string | null>(null);
   const [searchOpen,    setSearchOpen]    = useState(false);
   const t = useTranslations("nav");
+  const [ctaConfig, setCtaConfig] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    fetch('/api/admin/footer')
+      .then(r => r.json())
+      .then(({ data }) => {
+        if (data) {
+          const map: Record<string, string> = {}
+          data.forEach((r: { key: string; value: unknown }) => {
+            if (typeof r.key === 'string' && r.key.startsWith('header_')) {
+              map[r.key] = typeof r.value === 'string' ? r.value : String(r.value ?? '')
+            }
+          })
+          setCtaConfig(map)
+        }
+      })
+      .catch(() => {})
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -49,18 +67,18 @@ export function Header({ hasPromo = false, menuItems = defaultMenu }: { hasPromo
 
           {/* Pay here — outline pill */}
           <Link
-            href="#"
+            href={(ctaConfig.header_pay_url || '#') as `/${string}`}
             className="inline-flex items-center px-3 py-1 text-xs font-body font-semibold border border-brand-navy text-brand-navy rounded-full hover:bg-brand-navy hover:text-white transition-colors duration-200 flex-shrink-0"
           >
-            {t("pay")}
+            {(locale === 'en' ? ctaConfig.header_pay_label_en : ctaConfig.header_pay_label_es) || t("pay")}
           </Link>
 
           {/* Book consultation — solid pill */}
           <Link
-            href="/contacto"
+            href={(ctaConfig.header_cta_url || '/contacto') as `/${string}`}
             className="inline-flex items-center px-4 py-1 text-xs font-body font-bold bg-brand-navy text-white rounded-full hover:bg-brand-blue transition-colors duration-200 flex-shrink-0"
           >
-            {t("cta")}
+            {(locale === 'en' ? ctaConfig.header_cta_label_en : ctaConfig.header_cta_label_es) || t("cta")}
           </Link>
         </div>
       </div>
@@ -168,20 +186,20 @@ export function Header({ hasPromo = false, menuItems = defaultMenu }: { hasPromo
 
           {/* Pay here — mobile */}
           <Link
-            href="#"
+            href={(ctaConfig.header_pay_url || '#') as `/${string}`}
             className="mt-2 text-center px-5 py-3 text-sm font-body font-semibold border border-brand-navy text-brand-navy rounded-full hover:bg-brand-navy hover:text-white transition-colors"
             onClick={() => setMenuOpen(false)}
           >
-            {t("pay")}
+            {(locale === 'en' ? ctaConfig.header_pay_label_en : ctaConfig.header_pay_label_es) || t("pay")}
           </Link>
 
           {/* Book consultation — mobile */}
           <Link
-            href="/contacto"
+            href={(ctaConfig.header_cta_url || '/contacto') as `/${string}`}
             className="mt-2 text-center px-5 py-3 text-sm font-body font-bold bg-brand-navy text-white rounded-full hover:bg-brand-blue transition-colors"
             onClick={() => setMenuOpen(false)}
           >
-            {t("cta")}
+            {(locale === 'en' ? ctaConfig.header_cta_label_en : ctaConfig.header_cta_label_es) || t("cta")}
           </Link>
         </div>
       )}
