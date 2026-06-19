@@ -118,7 +118,7 @@ export async function Footer() {
       <div className="border-b border-white/10">
         <div className="container-allura px-6 md:px-12 py-6">
           <p className="font-heading text-sm tracking-widest uppercase text-white text-center mb-5">
-            Nuestros aliados
+            {l === 'en' ? 'Our Partners' : 'Nuestros aliados'}
           </p>
           <div className="flex items-center justify-center gap-8 md:gap-14 flex-wrap">
             {partners.map(({ src, alt }) => (
@@ -140,7 +140,7 @@ export async function Footer() {
       <div className="bg-white">
         <div className="container-allura px-6 md:px-12 py-8">
           <p className="font-heading text-sm tracking-widest uppercase text-brand-navy text-center mb-6">
-            Comprometidos con la calidad
+            {l === 'en' ? 'Committed to Quality' : 'Comprometidos con la calidad'}
           </p>
           <QualitySlider qualityLogos={config?.footerQualityLogos} />
         </div>

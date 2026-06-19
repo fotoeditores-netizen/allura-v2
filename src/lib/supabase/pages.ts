@@ -121,3 +121,8 @@ export async function publishPage(pageId: string, slug: string): Promise<void> {
   revalidatePath(`/es${slug === '/' ? '' : slug}`)
   revalidatePath(`/en${slug === '/' ? '' : slug}`)
 }
+
+export function revalidatePagePaths(slug: string): void {
+  revalidatePath(`/es${slug === '/' ? '' : slug}`)
+  revalidatePath(`/en${slug === '/' ? '' : slug}`)
+}

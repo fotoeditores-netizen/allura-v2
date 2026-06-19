@@ -92,19 +92,22 @@ function MemberCard({
             </button>
 
             {member.hoverBlocks
-              .filter(block => block.items.length > 0)
+              .filter(block => block.items.some(it => it[loc] || it.es))
               .map(block => (
                 <div key={block.id}>
                   <p className="font-body text-[9px] tracking-[0.18em] uppercase text-brand-blue mb-1.5">
                     {block.title[loc] || block.title.es}
                   </p>
                   <ul className="space-y-1">
-                    {block.items.map((item, idx) => (
-                      <li key={idx} className="font-body text-[11px] text-white/85 leading-snug flex gap-1.5">
-                        <span className="text-brand-blue flex-shrink-0">—</span>
-                        <span>{item}</span>
-                      </li>
-                    ))}
+                    {block.items.map((item, idx) => {
+                      const text = item[loc] || item.es
+                      return text ? (
+                        <li key={idx} className="font-body text-[11px] text-white/85 leading-snug flex gap-1.5">
+                          <span className="text-brand-blue flex-shrink-0">—</span>
+                          <span>{text}</span>
+                        </li>
+                      ) : null
+                    })}
                   </ul>
                 </div>
               ))}
