@@ -22,6 +22,7 @@ const HEADER_CTA_FIELDS = [
   { key: 'header_pay_label_es', label: 'Botón "Paga aquí" — texto ES', type: 'text' },
   { key: 'header_pay_label_en', label: 'Botón "Pay here" — texto EN', type: 'text' },
   { key: 'header_pay_url', label: 'Botón "Paga aquí" — URL (ej: https://...)', type: 'text' },
+  { key: 'header_pay_new_tab', label: 'Botón "Paga aquí" — abrir en pestaña nueva', type: 'checkbox' },
   { key: 'header_cta_label_es', label: 'Botón CTA principal — texto ES', type: 'text' },
   { key: 'header_cta_label_en', label: 'Botón CTA principal — texto EN', type: 'text' },
   { key: 'header_cta_url', label: 'Botón CTA principal — URL (ej: /contacto)', type: 'text' },
@@ -89,11 +90,23 @@ export default function ConfiguracionPage() {
         <div className="bg-white rounded-xl shadow-sm p-6 space-y-4">
           <h2 className="text-base font-semibold text-[#051c33] border-b border-[#eaeeef] pb-2">Botones del header</h2>
           <p className="text-xs text-[#8b9fb3]">Textos y destinos de los dos botones que aparecen en la barra superior del sitio.</p>
-          {HEADER_CTA_FIELDS.map(({ key, label }) => (
-            <div key={key}>
-              <label className="block text-sm font-medium text-[#051c33] mb-1">{label}</label>
-              <input type="text" value={values[key] ?? ''} onChange={e => setValues(v => ({ ...v, [key]: e.target.value }))} className={inputCls} />
-            </div>
+          {HEADER_CTA_FIELDS.map(({ key, label, type }) => (
+            type === 'checkbox' ? (
+              <label key={key} className="flex items-center gap-2 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={values[key] === 'true'}
+                  onChange={e => setValues(v => ({ ...v, [key]: e.target.checked ? 'true' : 'false' }))}
+                  className="h-4 w-4 rounded border-[#8b9fb3]/40 accent-[#051c33]"
+                />
+                <span className="text-sm font-medium text-[#051c33]">{label}</span>
+              </label>
+            ) : (
+              <div key={key}>
+                <label className="block text-sm font-medium text-[#051c33] mb-1">{label}</label>
+                <input type="text" value={values[key] ?? ''} onChange={e => setValues(v => ({ ...v, [key]: e.target.value }))} className={inputCls} />
+              </div>
+            )
           ))}
         </div>
 

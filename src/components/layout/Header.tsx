@@ -47,6 +47,22 @@ export function Header({ hasPromo = false, menuItems = defaultMenu }: { hasPromo
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  const payUrl = ctaConfig.header_pay_url || "#";
+  const payNewTab = ctaConfig.header_pay_new_tab === "true";
+  const payLabel = (locale === "en" ? ctaConfig.header_pay_label_en : ctaConfig.header_pay_label_es) || t("pay");
+
+  // "Pay here" usa <a> nativo cuando abre en pestaña nueva (URL externa como pasarela de pago);
+  // de lo contrario usa el Link locale-aware de next-intl.
+  const PayButton = ({ className, onClick }: { className: string; onClick?: () => void }) =>
+    payNewTab ? (
+      <a href={payUrl} target="_blank" rel="noopener noreferrer" className={className} onClick={onClick}>
+        {payLabel}
+      </a>
+    ) : (
+      <Link href={payUrl as `/${string}`} className={className} onClick={onClick}>
+        {payLabel}
+      </Link>
+    );
 
   return (
     <header className={`fixed left-0 right-0 z-50 ${hasPromo ? 'top-9' : 'top-0'}`}>
@@ -66,12 +82,7 @@ export function Header({ hasPromo = false, menuItems = defaultMenu }: { hasPromo
           <LanguageSwitcher />
 
           {/* Pay here — outline pill */}
-          <Link
-            href={(ctaConfig.header_pay_url || '#') as `/${string}`}
-            className="inline-flex items-center px-3 py-1 text-xs font-body font-semibold border border-brand-navy text-brand-navy rounded-full hover:bg-brand-navy hover:text-white transition-colors duration-200 flex-shrink-0"
-          >
-            {(locale === 'en' ? ctaConfig.header_pay_label_en : ctaConfig.header_pay_label_es) || t("pay")}
-          </Link>
+          <PayButton className="inline-flex items-center px-3 py-1 text-xs font-body font-semibold border border-brand-navy text-brand-navy rounded-full hover:bg-brand-navy hover:text-white transition-colors duration-200 flex-shrink-0" />
 
           {/* Book consultation — solid pill */}
           <Link
@@ -185,13 +196,10 @@ export function Header({ hasPromo = false, menuItems = defaultMenu }: { hasPromo
           </div>
 
           {/* Pay here — mobile */}
-          <Link
-            href={(ctaConfig.header_pay_url || '#') as `/${string}`}
+          <PayButton
             className="mt-2 text-center px-5 py-3 text-sm font-body font-semibold border border-brand-navy text-brand-navy rounded-full hover:bg-brand-navy hover:text-white transition-colors"
             onClick={() => setMenuOpen(false)}
-          >
-            {(locale === 'en' ? ctaConfig.header_pay_label_en : ctaConfig.header_pay_label_es) || t("pay")}
-          </Link>
+          />
 
           {/* Book consultation — mobile */}
           <Link
