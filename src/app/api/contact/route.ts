@@ -3,6 +3,7 @@ import nodemailer from 'nodemailer'
 import { z } from 'zod'
 import { getSiteSettings } from '@/lib/getSiteSettings'
 import { createServiceClient } from '@/lib/supabase/client'
+import { getEmailConfig } from '@/lib/integrations'
 
 const contactSchema = z.object({
   nombre: z.string().min(2).max(100),
@@ -75,27 +76,50 @@ export async function POST(request: Request) {
     console.error('Failed to save lead to Supabase:', e)
   }
 
-  const settings = await getSiteSettings()
-  const toEmail = settings?.contactEmail || process.env.SMTP_USER!
+  const [settings, emailCfg] = await Promise.all([getSiteSettings(), getEmailConfig()])
 
-  const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT ?? 587),
-    secure: false,
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
-    },
-  })
+  // Destinatario(s): email_to del panel → email de contacto → SMTP_USER
+  const toList = (emailCfg.to || settings?.contactEmail || process.env.SMTP_USER || '')
+    .split(',')
+    .map(s => s.trim())
+    .filter(Boolean)
+
+  const subject = `Nuevo lead: ${result.data.nombre} — ${result.data.servicio}`
+  const text = formatEmailText(result.data)
+  const html = formatEmailHtml(result.data)
 
   try {
-    await transporter.sendMail({
-      from: process.env.SMTP_FROM || `Allura Healthcare <${process.env.SMTP_USER}>`,
-      to: toEmail,
-      subject: `Nuevo lead: ${result.data.nombre} — ${result.data.servicio}`,
-      text: formatEmailText(result.data),
-      html: formatEmailHtml(result.data),
-    })
+    if (emailCfg.resendApiKey) {
+      // ── Resend (si hay API key configurada en el panel) ──
+      const from = emailCfg.from || 'Allura Healthcare <onboarding@resend.dev>'
+      const res = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${emailCfg.resendApiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ from, to: toList, subject, text, html }),
+      })
+      if (!res.ok) {
+        const detail = await res.text().catch(() => '')
+        throw new Error(`Resend respondió ${res.status}: ${detail}`)
+      }
+    } else {
+      // ── SMTP / nodemailer (respaldo, comportamiento actual) ──
+      const transporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST,
+        port: Number(process.env.SMTP_PORT ?? 587),
+        secure: false,
+        auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
+      })
+      await transporter.sendMail({
+        from: emailCfg.from || process.env.SMTP_FROM || `Allura Healthcare <${process.env.SMTP_USER}>`,
+        to: toList.join(', '),
+        subject,
+        text,
+        html,
+      })
+    }
   } catch (error) {
     console.error('Email send failed:', error)
     return NextResponse.json({ error: 'No se pudo enviar el mensaje' }, { status: 500 })

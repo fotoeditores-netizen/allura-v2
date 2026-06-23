@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils'
 import {
   LayoutDashboard, FileText, Stethoscope, BookOpen,
   Users, Star, Image, HelpCircle, Mail, ArrowLeftRight,
-  Settings, UserCog, LogOut, Video, Megaphone, MousePointerClick, Menu, PanelBottom
+  Settings, UserCog, LogOut, Video, Megaphone, MousePointerClick, Menu, PanelBottom, Plug
 } from 'lucide-react'
 
 const navItems = [
@@ -28,6 +28,7 @@ const navItems = [
   { href: '/admin/formularios', label: 'Formularios', icon: Mail },
   { href: '/admin/redirects', label: 'Redirecciones', icon: ArrowLeftRight },
   { href: '/admin/configuracion', label: 'Configuración', icon: Settings },
+  { href: '/admin/integraciones', label: 'Integraciones', icon: Plug },
   { href: '/admin/usuarios', label: 'Usuarios', icon: UserCog },
 ]
 

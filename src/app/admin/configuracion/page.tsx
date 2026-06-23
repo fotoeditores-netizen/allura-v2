@@ -15,17 +15,6 @@ const FIELDS = [
   { key: 'social_x', label: 'X (Twitter) URL', type: 'text' },
 ]
 
-const ANALYTICS_FIELDS = [
-  { key: 'ga_measurement_id', label: 'Google Analytics 4 (G-...)', type: 'text', hint: 'En analytics.google.com → Administrar → Flujos de datos → tu sitio. Empieza por "G-". Si usas Tag Manager, este campo es opcional.' },
-  { key: 'gtm_container_id', label: 'Google Tag Manager (GTM-...)', type: 'text', hint: 'En tagmanager.google.com, arriba junto al nombre del contenedor. Empieza por "GTM-". Si lo pones, tiene prioridad sobre GA4.' },
-  { key: 'google_search_console', label: 'Google Search Console (código de verificación)', type: 'text', hint: 'En search.google.com/search-console → agregar propiedad → método "Etiqueta HTML". Pega SOLO el valor de content="..." (no la etiqueta completa).' },
-  { key: 'meta_pixel_id', label: 'Meta Pixel (Facebook/Instagram)', type: 'text', hint: 'En business.facebook.com → Administrador de eventos → tu pixel. Son solo números. Úsalo si harás publicidad en Instagram/Facebook.' },
-  { key: 'clarity_id', label: 'Microsoft Clarity (GRATIS — mapas de calor)', type: 'text', hint: 'En clarity.microsoft.com (gratis). Crea un proyecto y copia el ID. Muy recomendado: muestra cómo navegan los visitantes.' },
-  { key: 'google_ads_id', label: 'Google Ads (AW-...)', type: 'text', hint: 'En ads.google.com → Herramientas → Etiqueta de Google. Empieza por "AW-". Solo si pautan en Google Ads.' },
-  { key: 'tiktok_pixel_id', label: 'TikTok Pixel', type: 'text', hint: 'En el Administrador de eventos de TikTok Ads. Solo si pautan en TikTok.' },
-  { key: 'hotjar_id', label: 'Hotjar ID', type: 'text', hint: 'En hotjar.com → Site ID. Alternativa de pago a Clarity; si ya usas Clarity (gratis), no hace falta.' },
-]
-
 const HEADER_CTA_FIELDS = [
   { key: 'header_pay_label_es', label: 'Botón "Paga aquí" — texto ES', type: 'text' },
   { key: 'header_pay_label_en', label: 'Botón "Pay here" — texto EN', type: 'text' },
@@ -36,7 +25,7 @@ const HEADER_CTA_FIELDS = [
   { key: 'header_cta_url', label: 'Botón CTA principal — URL (ej: /contacto)', type: 'text' },
 ]
 
-const ALL_FIELDS = [...FIELDS, ...ANALYTICS_FIELDS, ...HEADER_CTA_FIELDS]
+const ALL_FIELDS = [...FIELDS, ...HEADER_CTA_FIELDS]
 
 export default function ConfiguracionPage() {
   const [values, setValues] = useState<Record<string, string>>({})
@@ -91,18 +80,6 @@ export default function ConfiguracionPage() {
             <div key={key}>
               <label className="block text-sm font-medium text-[#051c33] mb-1">{label}</label>
               <input type="text" value={values[key] ?? ''} onChange={e => setValues(v => ({ ...v, [key]: e.target.value }))} className={inputCls} />
-            </div>
-          ))}
-        </div>
-
-        <div className="bg-white rounded-xl shadow-sm p-6 space-y-4">
-          <h2 className="text-base font-semibold text-[#051c33] border-b border-[#eaeeef] pb-2">Analítica y seguimiento</h2>
-          <p className="text-xs text-[#8b9fb3]">Pega aquí los códigos de cada herramienta. Solo los que uses; los demás déjalos vacíos. Los cambios se reflejan en el sitio publicado (no en vista previa de desarrollo).</p>
-          {ANALYTICS_FIELDS.map(({ key, label, hint }) => (
-            <div key={key}>
-              <label className="block text-sm font-medium text-[#051c33] mb-1">{label}</label>
-              <input type="text" value={values[key] ?? ''} onChange={e => setValues(v => ({ ...v, [key]: e.target.value }))} className={inputCls} />
-              {hint && <p className="text-xs text-[#8b9fb3] mt-1">{hint}</p>}
             </div>
           ))}
         </div>
