@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manual de Usuario — Panel Administrativo Allura Healthcare</title>
+  <style>
+    :root {
+      --navy: #051c33;
+      --blue: #8b9fb3;
+      --silver: #abacae;
+      --bg: #eaeeef;
+      --white: #ffffff;
+      --green: #25D366;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: 15px;
+      color: #222;
+      background: var(--bg);
+      line-height: 1.7;
+    }
+    /* ── COVER ── */
+    .cover {
+      background: var(--navy);
+      color: white;
+      padding: 80px 60px;
+      min-height: 280px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .cover-logo {
+      font-size: 11px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 16px;
+    }
+    .cover h1 {
+      font-size: 38px;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 12px;
+      line-height: 1.2;
+    }
+    .cover p {
+      color: var(--blue);
+      font-size: 16px;
+      max-width: 560px;
+    }
+    .cover-meta {
+      margin-top: 40px;
+      font-size: 12px;
+      color: var(--silver);
+    }
+    /* ── LAYOUT ── */
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 40px 32px 80px;
+    }
+    /* ── TOC ── */
+    .toc {
+      background: white;
+      border-radius: 12px;
+      padding: 32px 36px;
+      margin-bottom: 48px;
+      border-left: 4px solid var(--navy);
+      box-shadow: 0 2px 12px rgba(5,28,51,.07);
+    }
+    .toc h2 {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--navy);
+      margin-bottom: 20px;
+    }
+    .toc ol { padding-left: 20px; }
+    .toc li { margin-bottom: 6px; }
+    .toc a { color: var(--navy); text-decoration: none; font-weight: 500; }
+    .toc a:hover { text-decoration: underline; color: var(--blue); }
+    .toc .sub { padding-left: 20px; margin-top: 4px; list-style: disc; }
+    .toc .sub li { margin-bottom: 3px; }
+    .toc .sub a { font-weight: 400; font-size: 14px; color: #555; }
+    /* ── SECTIONS ── */
+    .section {
+      background: white;
+      border-radius: 12px;
+      padding: 40px 44px;
+      margin-bottom: 32px;
+      box-shadow: 0 2px 12px rgba(5,28,51,.07);
+    }
+    .section-number {
+      display: inline-block;
+      background: var(--navy);
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+    }
+    h2.section-title {
+      font-size: 24px;
+      color: var(--navy);
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+    .section-subtitle {
+      color: var(--blue);
+      font-size: 14px;
+      margin-bottom: 28px;
+      border-bottom: 1px solid var(--bg);
+      padding-bottom: 16px;
+    }
+    h3 {
+      font-size: 17px;
+      color: var(--navy);
+      margin: 28px 0 10px;
+      font-weight: 600;
+    }
+    h4 {
+      font-size: 14px;
+      color: #444;
+      margin: 18px 0 6px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+    p { margin-bottom: 12px; color: #333; }
+    ul, ol { padding-left: 22px; margin-bottom: 14px; }
+    li { margin-bottom: 6px; color: #333; }
+    /* ── CALLOUTS ── */
+    .tip, .warning, .info {
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin: 18px 0;
+      font-size: 14px;
+    }
+    .tip { background: #e8f5e9; border-left: 4px solid var(--green); color: #1b5e20; }
+    .warning { background: #fff3e0; border-left: 4px solid #f57c00; color: #7a3900; }
+    .info { background: #e3f0fb; border-left: 4px solid var(--blue); color: #0d3659; }
+    .tip strong, .warning strong, .info strong { display: block; margin-bottom: 4px; }
+    /* ── STEPS ── */
+    .steps { counter-reset: step; margin: 16px 0; }
+    .step {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+      align-items: flex-start;
+    }
+    .step-num {
+      counter-increment: step;
+      min-width: 32px;
+      height: 32px;
+      background: var(--navy);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .step-body { padding-top: 4px; }
+    .step-body strong { color: var(--navy); }
+    /* ── TABLE ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0 24px;
+      font-size: 14px;
+    }
+    th {
+      background: var(--navy);
+      color: white;
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+    td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--bg);
+      color: #333;
+    }
+    tr:nth-child(even) td { background: #f7f9fa; }
+    /* ── CODE / PATH ── */
+    code {
+      background: var(--bg);
+      color: var(--navy);
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+    }
+    /* ── BADGE ── */
+    .badge {
+      display: inline-block;
+      padding: 2px 9px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+    }
+    .badge-green { background: #c8f7d4; color: #1a5e2a; }
+    .badge-blue { background: #ddeeff; color: #0a3a6e; }
+    .badge-gray { background: #e8e8e8; color: #555; }
+    /* ── MODULE GRID ── */
+    .modules-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin: 20px 0;
+    }
+    .module-card {
+      border: 1px solid var(--bg);
+      border-radius: 8px;
+      padding: 16px 18px;
+      background: #fafbfc;
+    }
+    .module-card .module-icon { font-size: 22px; margin-bottom: 6px; }
+    .module-card strong { color: var(--navy); display: block; margin-bottom: 4px; font-size: 14px; }
+    .module-card span { font-size: 13px; color: #666; }
+    /* ── FOOTER ── */
+    .doc-footer {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--silver);
+      font-size: 13px;
+    }
+    .doc-footer strong { color: var(--navy); }
+    /* ── PRINT ── */
+    @media print {
+      body { background: white; }
+      .section { box-shadow: none; border: 1px solid #ddd; }
+      .toc { box-shadow: none; border: 1px solid #ddd; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- PORTADA -->
+<div class="cover">
+  <div class="cover-logo">Allura Healthcare · Documentación interna</div>
+  <h1>Manual de Usuario<br>Panel Administrativo</h1>
+  <p>Guía completa para gestionar el contenido, configuración y operación del sitio web de Allura Healthcare.</p>
+  <div class="cover-meta">Versión 1.0 &nbsp;·&nbsp; Junio 2026 &nbsp;·&nbsp; Confidencial</div>
+</div>
+
+<div class="container">
+
+  <!-- TABLA DE CONTENIDO -->
+  <div class="toc" id="top">
+    <h2>Tabla de contenido</h2>
+    <ol>
+      <li><a href="#s1">Acceso al panel administrativo</a></li>
+      <li><a href="#s2">Visión general del panel</a></li>
+      <li><a href="#s3">Gestión de páginas</a>
+        <ul class="sub">
+          <li><a href="#s3-crear">Crear una nueva página</a></li>
+          <li><a href="#s3-editar">Editar secciones de una página</a></li>
+          <li><a href="#s3-publicar">Publicar y despublicar</a></li>
+        </ul>
+      </li>
+      <li><a href="#s4">Editor de Footer</a></li>
+      <li><a href="#s5">Configuración del sitio</a></li>
+      <li><a href="#s6">Menú de navegación</a></li>
+      <li><a href="#s7">Blog</a></li>
+      <li><a href="#s8">Servicios</a></li>
+      <li><a href="#s9">Equipo</a></li>
+      <li><a href="#s10">Testimonios</a></li>
+      <li><a href="#s11">Galería de imágenes</a></li>
+      <li><a href="#s12">Videos</a></li>
+      <li><a href="#s13">Preguntas frecuentes (FAQ)</a></li>
+      <li><a href="#s14">Promociones</a></li>
+      <li><a href="#s15">Popups</a></li>
+      <li><a href="#s16">Formularios de contacto</a></li>
+      <li><a href="#s17">Medios (biblioteca de archivos)</a></li>
+      <li><a href="#s18">Redirects</a></li>
+      <li><a href="#s19">Usuarios administradores</a></li>
+      <li><a href="#s20">Preguntas frecuentes de uso</a></li>
+    </ol>
+  </div>
+
+  <!-- 1. ACCESO -->
+  <div class="section" id="s1">
+    <div class="section-number">01</div>
+    <h2 class="section-title">Acceso al panel administrativo</h2>
+    <p class="section-subtitle">Cómo iniciar sesión de forma segura</p>
+
+    <h3>URL de acceso</h3>
+    <p>El panel administrativo está disponible en:</p>
+    <p><code>https://allura-healthcare-v2.vercel.app/admin</code></p>
+
+    <div class="info">
+      <strong>Nota importante</strong>
+      Cuando el dominio definitivo esté activo, la URL cambiará. Tu proveedor te informará la nueva dirección de acceso.
+    </div>
+
+    <h3>Iniciar sesión</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Abre la URL del panel</strong> en tu navegador (Chrome o Edge recomendado).</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Ingresa tu correo electrónico</strong> y contraseña en el formulario de inicio de sesión.</div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Haz clic en "Iniciar sesión".</strong> Serás redirigido automáticamente al Dashboard.</div></div>
+    </div>
+
+    <div class="warning">
+      <strong>Seguridad</strong>
+      No compartas tu contraseña. Si sospechas que tu cuenta fue comprometida, contacta al administrador técnico para restablecer el acceso.
+    </div>
+
+    <h3>Cerrar sesión</h3>
+    <p>En la parte inferior del menú lateral izquierdo encontrarás el botón <strong>"Cerrar sesión"</strong>. Úsalo siempre al terminar, especialmente en computadores compartidos.</p>
+  </div>
+
+  <!-- 2. VISIÓN GENERAL -->
+  <div class="section" id="s2">
+    <div class="section-number">02</div>
+    <h2 class="section-title">Visión general del panel</h2>
+    <p class="section-subtitle">Estructura y módulos disponibles</p>
+
+    <p>Al ingresar verás el <strong>Dashboard</strong> con un mensaje de bienvenida. El menú lateral izquierdo contiene todos los módulos de gestión:</p>
+
+    <div class="modules-grid">
+      <div class="module-card"><div class="module-icon">📄</div><strong>Páginas</strong><span>Crea y edita el contenido de cada página del sitio</span></div>
+      <div class="module-card"><div class="module-icon">🦶</div><strong>Footer</strong><span>Edita el pie de página: textos, redes sociales, links</span></div>
+      <div class="module-card"><div class="module-icon">⚙️</div><strong>Configuración</strong><span>Datos del sitio, WhatsApp, email, redes sociales</span></div>
+      <div class="module-card"><div class="module-icon">🧭</div><strong>Menú</strong><span>Gestiona los links del menú de navegación</span></div>
+      <div class="module-card"><div class="module-icon">✍️</div><strong>Blog</strong><span>Publica y gestiona artículos del blog</span></div>
+      <div class="module-card"><div class="module-icon">💉</div><strong>Servicios</strong><span>Gestiona los servicios médicos del sitio</span></div>
+      <div class="module-card"><div class="module-icon">👥</div><strong>Equipo</strong><span>Perfiles del equipo médico</span></div>
+      <div class="module-card"><div class="module-icon">⭐</div><strong>Testimonios</strong><span>Reseñas y opiniones de pacientes</span></div>
+      <div class="module-card"><div class="module-icon">🖼️</div><strong>Galería</strong><span>Imágenes del sitio y casos clínicos</span></div>
+      <div class="module-card"><div class="module-icon">🎬</div><strong>Videos</strong><span>Videos institucionales o de procedimientos</span></div>
+      <div class="module-card"><div class="module-icon">❓</div><strong>FAQ</strong><span>Preguntas y respuestas frecuentes</span></div>
+      <div class="module-card"><div class="module-icon">🎁</div><strong>Promociones</strong><span>Banners de ofertas y promociones activas</span></div>
+      <div class="module-card"><div class="module-icon">💬</div><strong>Popups</strong><span>Ventanas emergentes con mensajes clave</span></div>
+      <div class="module-card"><div class="module-icon">📬</div><strong>Formularios</strong><span>Mensajes recibidos desde el sitio</span></div>
+      <div class="module-card"><div class="module-icon">🖇️</div><strong>Redirects</strong><span>Redirecciones de URLs antiguas</span></div>
+      <div class="module-card"><div class="module-icon">👤</div><strong>Usuarios</strong><span>Gestión de cuentas administrativas</span></div>
+    </div>
+
+    <div class="tip">
+      <strong>Consejo</strong>
+      Los cambios que haces en el panel se reflejan en el sitio público en menos de 60 segundos, o de forma inmediata si el módulo incluye un botón "Guardar cambios".
+    </div>
+  </div>
+
+  <!-- 3. PÁGINAS -->
+  <div class="section" id="s3">
+    <div class="section-number">03</div>
+    <h2 class="section-title">Gestión de páginas</h2>
+    <p class="section-subtitle">Crea, edita y publica el contenido de cada página</p>
+
+    <p>El módulo <strong>Páginas</strong> es el corazón del CMS. Desde aquí puedes controlar el contenido de cualquier página del sitio de forma visual, sin tocar código.</p>
+
+    <h3 id="s3-crear">Crear una nueva página</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Ve a Páginas</strong> en el menú lateral.</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Haz clic en "Nueva página"</strong> (botón superior derecho).</div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Completa el formulario:</strong> título (español e inglés), slug (URL de la página, ej: <code>/mi-pagina</code>), y estado inicial.</div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body"><strong>Haz clic en "Crear página".</strong> Serás redirigido al editor de secciones.</div></div>
+    </div>
+
+    <div class="info">
+      <strong>¿Qué es el slug?</strong>
+      Es la parte de la URL que identifica la página. Por ejemplo, para <code>allurahealthcare.com/es/nosotros</code>, el slug es <code>/nosotros</code>. Usa solo letras minúsculas, números y guiones. Sin espacios ni caracteres especiales.
+    </div>
+
+    <h3 id="s3-editar">Editar secciones de una página</h3>
+    <p>Cada página está compuesta por <strong>secciones</strong>. Puedes agregar, editar, reordenar y ocultar secciones de forma independiente.</p>
+
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Desde la lista de páginas</strong>, haz clic en el nombre de la página que deseas editar.</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Verás el árbol de secciones</strong> a la izquierda. Haz clic en cualquier sección para editarla.</div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Edita los campos</strong> del panel derecho. Los cambios se guardan al hacer clic en <strong>"Guardar sección"</strong>.</div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body"><strong>Para agregar una sección nueva</strong>, haz clic en "Agregar sección" y elige el tipo (Hero, CTA, Beneficios, etc.).</div></div>
+      <div class="step"><div class="step-num">5</div><div class="step-body"><strong>Para reordenar</strong>, arrastra las secciones en el árbol lateral usando el ícono de arrastre (⠿).</div></div>
+    </div>
+
+    <h4>Tipos de sección disponibles</h4>
+    <table>
+      <tr><th>Tipo</th><th>Descripción</th></tr>
+      <tr><td><strong>hero</strong></td><td>Sección principal de bienvenida con imagen y CTA</td></tr>
+      <tr><td><strong>cta</strong></td><td>Bloque de llamada a la acción con botón personalizable</td></tr>
+      <tr><td><strong>benefits</strong></td><td>Lista de beneficios o características</td></tr>
+      <tr><td><strong>text_image</strong></td><td>Texto a la izquierda con imagen a la derecha</td></tr>
+      <tr><td><strong>cards_grid</strong></td><td>Cuadrícula de tarjetas con imagen, título y botón</td></tr>
+      <tr><td><strong>faq</strong></td><td>Preguntas y respuestas expandibles</td></tr>
+      <tr><td><strong>testimonials</strong></td><td>Carrusel de testimonios de pacientes</td></tr>
+      <tr><td><strong>team_preview</strong></td><td>Vista previa del equipo médico</td></tr>
+      <tr><td><strong>contact_form</strong></td><td>Formulario de contacto integrado</td></tr>
+      <tr><td><strong>page_header</strong></td><td>Encabezado de página con título y descripción</td></tr>
+      <tr><td><strong>service_detail</strong></td><td>Detalle completo de un servicio médico</td></tr>
+    </table>
+
+    <h3 id="s3-publicar">Publicar y despublicar páginas</h3>
+    <p>Cada página tiene un estado visible en la lista:</p>
+    <ul>
+      <li><span class="badge badge-green">Publicada</span> — visible para todos los visitantes del sitio.</li>
+      <li><span class="badge badge-gray">Borrador</span> — solo visible en el panel admin, no en el sitio público.</li>
+    </ul>
+    <p>Para cambiar el estado, abre la página y usa el botón <strong>"Publicar"</strong> o <strong>"Despublicar"</strong> en la parte superior del editor.</p>
+
+    <div class="warning">
+      <strong>Atención</strong>
+      Despublicar una página la hace invisible al público inmediatamente. Si la página está enlazada desde el menú, los visitantes verán un error 404.
+    </div>
+  </div>
+
+  <!-- 4. FOOTER -->
+  <div class="section" id="s4">
+    <div class="section-number">04</div>
+    <h2 class="section-title">Editor de Footer</h2>
+    <p class="section-subtitle">Gestiona el pie de página del sitio</p>
+
+    <p>Desde <strong>Footer</strong> en el menú lateral puedes editar todos los textos, links, redes sociales e imágenes que aparecen en el pie de página del sitio.</p>
+
+    <h3>Campos disponibles</h3>
+    <table>
+      <tr><th>Campo</th><th>Descripción</th></tr>
+      <tr><td>Slogan</td><td>Frase debajo del logo (español e inglés)</td></tr>
+      <tr><td>Texto de marca</td><td>Descripción corta de la empresa (español e inglés)</td></tr>
+      <tr><td>Email de contacto</td><td>Correo visible en la columna de contacto</td></tr>
+      <tr><td>WhatsApp</td><td>Número en formato internacional, ej: <code>+17862087572</code></td></tr>
+      <tr><td>Dirección / Ciudad</td><td>Texto de ubicación (español e inglés)</td></tr>
+      <tr><td>Facebook URL</td><td>URL completa del perfil de Facebook</td></tr>
+      <tr><td>Instagram URL</td><td>URL completa del perfil de Instagram</td></tr>
+      <tr><td>TikTok URL</td><td>URL completa del perfil de TikTok</td></tr>
+      <tr><td>X (Twitter) URL</td><td>URL completa del perfil de X</td></tr>
+      <tr><td>Links de navegación</td><td>Links de las columnas del footer (español e inglés)</td></tr>
+      <tr><td>Links de especialidades</td><td>Links a los servicios médicos</td></tr>
+      <tr><td>Nuestros Aliados</td><td>Logos de empresas aliadas con ruta de imagen</td></tr>
+      <tr><td>Comprometidos con la calidad</td><td>Logos del slider animado de certificaciones</td></tr>
+      <tr><td>Textos legales</td><td>Textos del pie: copyright, privacidad, términos, etc.</td></tr>
+    </table>
+
+    <div class="tip">
+      <strong>Para guardar</strong>
+      Al finalizar todos los cambios, haz clic en el botón <strong>"Guardar cambios"</strong> al final del formulario. El sitio se actualiza automáticamente.
+    </div>
+
+    <h3>Agregar o editar logos de aliados</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body">En la sección "Nuestros Aliados", haz clic en <strong>"+ Agregar logo"</strong>.</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body">Ingresa la <strong>ruta de la imagen</strong> (debe estar subida previamente en Medios), ej: <code>/images/imagenes_web/logo.png</code></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body">Ingresa el <strong>nombre del aliado</strong> en el campo "Alt".</div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body">Haz clic en <strong>"Guardar cambios"</strong>.</div></div>
+    </div>
+  </div>
+
+  <!-- 5. CONFIGURACIÓN -->
+  <div class="section" id="s5">
+    <div class="section-number">05</div>
+    <h2 class="section-title">Configuración del sitio</h2>
+    <p class="section-subtitle">Datos globales del sitio web</p>
+
+    <p>La sección <strong>Configuración</strong> centraliza los datos que se usan en múltiples partes del sitio.</p>
+
+    <h3>Datos generales</h3>
+    <table>
+      <tr><th>Campo</th><th>Descripción</th></tr>
+      <tr><td>Nombre del sitio</td><td>Nombre que aparece en el título del navegador</td></tr>
+      <tr><td>Email de contacto</td><td>Correo de contacto principal</td></tr>
+      <tr><td>WhatsApp</td><td>Número con código de país: <code>+17862087572</code></td></tr>
+      <tr><td>Dirección</td><td>Dirección física de la clínica</td></tr>
+      <tr><td>Instagram / Facebook / TikTok / X</td><td>URLs completas de cada red social</td></tr>
+    </table>
+
+    <div class="info">
+      <strong>Redes sociales</strong>
+      Los links de redes sociales ingresados aquí son los que aparecen en el footer del sitio. Ingresa siempre la URL completa, ej: <code>https://www.instagram.com/allurahealthcare/</code>
+    </div>
+
+    <h3>Analítica y seguimiento</h3>
+    <p>En la sección <strong>"Analítica y seguimiento"</strong> puedes conectar el sitio con las herramientas de medición. Solo pega el código de cada herramienta que vayas a usar; las que no uses, déjalas en blanco. Cada campo tiene una nota debajo indicando dónde obtener el código.</p>
+
+    <table>
+      <tr><th>Herramienta</th><th>Para qué sirve</th><th>Dónde obtener el código</th></tr>
+      <tr><td>Google Analytics 4</td><td>Mide visitas y comportamiento de los usuarios</td><td>analytics.google.com → Administrar → Flujos de datos. Empieza por <code>G-</code></td></tr>
+      <tr><td>Google Tag Manager</td><td>Contenedor maestro de etiquetas (si lo usas, reemplaza a GA4 directo)</td><td>tagmanager.google.com, junto al nombre del contenedor. Empieza por <code>GTM-</code></td></tr>
+      <tr><td>Google Search Console</td><td>Verifica el sitio en Google y muestra las búsquedas que llevan a él</td><td>search.google.com/search-console → método "Etiqueta HTML". Pega solo el valor de <code>content="..."</code></td></tr>
+      <tr><td>Meta Pixel</td><td>Seguimiento para publicidad en Instagram y Facebook</td><td>business.facebook.com → Administrador de eventos. Son solo números</td></tr>
+      <tr><td>Microsoft Clarity ⭐</td><td><strong>Gratis.</strong> Mapas de calor y grabaciones de sesión: muestra cómo navegan los visitantes</td><td>clarity.microsoft.com → crea proyecto y copia el ID</td></tr>
+      <tr><td>Google Ads</td><td>Seguimiento de conversiones de campañas en Google Ads</td><td>ads.google.com → Herramientas → Etiqueta de Google. Empieza por <code>AW-</code></td></tr>
+      <tr><td>TikTok Pixel</td><td>Seguimiento para publicidad en TikTok</td><td>Administrador de eventos de TikTok Ads</td></tr>
+      <tr><td>Hotjar</td><td>Mapas de calor (alternativa de pago a Clarity)</td><td>hotjar.com → Site ID</td></tr>
+    </table>
+
+    <div class="info">
+      <strong>Recomendación para empezar</strong>
+      Conecta primero estos cuatro: <strong>Google Analytics 4</strong>, <strong>Google Search Console</strong>, <strong>Google Tag Manager</strong> y <strong>Microsoft Clarity</strong> (este último es gratis y muy útil). El Meta Pixel actívalo cuando se inicien campañas en redes sociales.
+    </div>
+
+    <div class="warning">
+      <strong>Importante</strong>
+      Los códigos de analítica <strong>solo funcionan en el sitio publicado</strong>, no en versiones de prueba locales. Después de guardar, verifica que funcionen visitando el sitio en su dirección real (ej. con la extensión "Google Tag Assistant" o en los reportes de cada herramienta, que pueden tardar unas horas en mostrar datos).
+    </div>
+  </div>
+
+  <!-- 6. MENÚ -->
+  <div class="section" id="s6">
+    <div class="section-number">06</div>
+    <h2 class="section-title">Menú de navegación</h2>
+    <p class="section-subtitle">Gestiona los links del header del sitio</p>
+
+    <p>Desde <strong>Menú</strong> puedes editar los ítems que aparecen en la barra de navegación superior del sitio.</p>
+
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Ve a Menú</strong> en el menú lateral.</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Edita los campos</strong> de cada ítem: etiqueta (español e inglés) y URL de destino.</div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Agrega ítems nuevos</strong> con el botón correspondiente, o <strong>elimínalos</strong> con el ícono de papelera.</div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body"><strong>Guarda los cambios</strong> con el botón al final.</div></div>
+    </div>
+
+    <div class="warning">
+      <strong>Precaución</strong>
+      Si eliminas un ítem del menú, los visitantes no podrán navegar a esa sección fácilmente. Asegúrate de que los links apunten a páginas existentes y publicadas.
+    </div>
+  </div>
+
+  <!-- 7. BLOG -->
+  <div class="section" id="s7">
+    <div class="section-number">07</div>
+    <h2 class="section-title">Blog</h2>
+    <p class="section-subtitle">Publica y gestiona artículos</p>
+
+    <h3>Crear un artículo</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Ve a Blog</strong> en el menú lateral.</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Haz clic en "Nuevo artículo".</strong></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Completa los campos:</strong> título, extracto, cuerpo del artículo, imagen de portada, autor, categoría y etiquetas SEO (título y descripción para Google).</div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body"><strong>Todos los campos tienen versión en español e inglés.</strong> Usa las pestañas ES / EN para cambiar de idioma.</div></div>
+      <div class="step"><div class="step-num">5</div><div class="step-body"><strong>Guarda y publica</strong> usando el botón correspondiente.</div></div>
+    </div>
+
+    <h3>Estados de un artículo</h3>
+    <ul>
+      <li><span class="badge badge-gray">Borrador</span> — Visible solo en el panel admin.</li>
+      <li><span class="badge badge-green">Publicado</span> — Visible en el sitio público.</li>
+      <li><span class="badge badge-blue">Archivado</span> — Guardado pero retirado del sitio.</li>
+    </ul>
+
+    <div class="tip">
+      <strong>SEO del blog</strong>
+      Completa siempre el título SEO y la descripción SEO. Estos son los textos que Google muestra en los resultados de búsqueda. El título ideal tiene entre 50–60 caracteres y la descripción entre 120–160 caracteres.
+    </div>
+  </div>
+
+  <!-- 8. SERVICIOS -->
+  <div class="section" id="s8">
+    <div class="section-number">08</div>
+    <h2 class="section-title">Servicios</h2>
+    <p class="section-subtitle">Gestiona los servicios médicos del sitio</p>
+
+    <p>El módulo <strong>Servicios</strong> permite administrar los tratamientos y especialidades que Allura ofrece. Cada servicio tiene su propia página en el sitio.</p>
+
+    <h3>Campos de un servicio</h3>
+    <table>
+      <tr><th>Campo</th><th>Descripción</th></tr>
+      <tr><td>Título</td><td>Nombre del servicio (español e inglés)</td></tr>
+      <tr><td>Slug</td><td>URL del servicio, ej: <code>/servicios/smile-makeover</code></td></tr>
+      <tr><td>Descripción corta</td><td>Resumen para listados y SEO</td></tr>
+      <tr><td>Cuerpo</td><td>Contenido completo de la página del servicio</td></tr>
+      <tr><td>Imagen principal</td><td>Foto representativa del servicio</td></tr>
+      <tr><td>Categoría</td><td>Especialidad a la que pertenece (dental, facial, etc.)</td></tr>
+      <tr><td>SEO</td><td>Título y descripción para Google</td></tr>
+      <tr><td>Estado</td><td>Borrador / Publicado / Archivado</td></tr>
+    </table>
+
+    <div class="info">
+      <strong>Idiomas</strong>
+      Cada campo de texto tiene versión en español e inglés. Cambia entre idiomas usando las pestañas ES / EN en el formulario.
+    </div>
+  </div>
+
+  <!-- 9. EQUIPO -->
+  <div class="section" id="s9">
+    <div class="section-number">09</div>
+    <h2 class="section-title">Equipo</h2>
+    <p class="section-subtitle">Perfiles del equipo médico</p>
+
+    <p>Gestiona los perfiles del equipo que aparecen en la sección "Equipo" del sitio.</p>
+
+    <h3>Campos de un perfil</h3>
+    <table>
+      <tr><th>Campo</th><th>Descripción</th></tr>
+      <tr><td>Nombre</td><td>Nombre completo del profesional</td></tr>
+      <tr><td>Slug</td><td>URL de su perfil, ej: <code>/equipo/dr-nombre</code></td></tr>
+      <tr><td>Rol / Especialidad</td><td>Cargo o especialidad (español e inglés)</td></tr>
+      <tr><td>Biografía</td><td>Texto descriptivo del profesional (español e inglés)</td></tr>
+      <tr><td>Foto</td><td>Ruta a la imagen del profesional</td></tr>
+      <tr><td>Orden</td><td>Número que define el orden de aparición en la lista</td></tr>
+    </table>
+
+    <div class="tip">
+      <strong>Orden de aparición</strong>
+      El campo "Orden" determina qué profesional aparece primero. El número más bajo aparece primero. Ej: orden 1 aparece antes que orden 2.
+    </div>
+  </div>
+
+  <!-- 10. TESTIMONIOS -->
+  <div class="section" id="s10">
+    <div class="section-number">10</div>
+    <h2 class="section-title">Testimonios</h2>
+    <p class="section-subtitle">Reseñas y opiniones de pacientes</p>
+
+    <p>Los testimonios aparecen en el carrusel de la página de inicio y en otras páginas que incluyan la sección de testimonios.</p>
+
+    <h3>Campos de un testimonio</h3>
+    <table>
+      <tr><th>Campo</th><th>Descripción</th></tr>
+      <tr><td>Nombre del autor</td><td>Nombre del paciente</td></tr>
+      <tr><td>Ubicación</td><td>Ciudad o país del paciente (opcional)</td></tr>
+      <tr><td>Testimonio</td><td>Texto de la reseña (español e inglés)</td></tr>
+      <tr><td>Calificación</td><td>Estrellas del 1 al 5 (opcional)</td></tr>
+      <tr><td>Foto</td><td>Foto del paciente (opcional)</td></tr>
+    </table>
+
+    <div class="warning">
+      <strong>Privacidad</strong>
+      Asegúrate de tener autorización del paciente antes de publicar su nombre, foto o testimonio. Puedes usar iniciales o seudónimos si es necesario.
+    </div>
+  </div>
+
+  <!-- 11. GALERÍA -->
+  <div class="section" id="s11">
+    <div class="section-number">11</div>
+    <h2 class="section-title">Galería de imágenes</h2>
+    <p class="section-subtitle">Gestiona las imágenes del sitio</p>
+
+    <p>La galería muestra imágenes organizadas por categorías. Se puede filtrar desde el sitio público.</p>
+
+    <h3>Agregar una imagen a la galería</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Ve a Galería</strong> y haz clic en "Nueva imagen".</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Ingresa la URL de la imagen.</strong> La imagen debe estar previamente subida en el módulo Medios.</div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Completa el texto alternativo</strong> (descripción breve de la imagen para accesibilidad y SEO).</div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body"><strong>Agrega una categoría y caption</strong> opcionales (español e inglés).</div></div>
+      <div class="step"><div class="step-num">5</div><div class="step-body"><strong>Define el orden</strong> de aparición y guarda.</div></div>
+    </div>
+  </div>
+
+  <!-- 12. VIDEOS -->
+  <div class="section" id="s12">
+    <div class="section-number">12</div>
+    <h2 class="section-title">Videos</h2>
+    <p class="section-subtitle">Videos institucionales o de procedimientos</p>
+
+    <h3>Campos de un video</h3>
+    <table>
+      <tr><th>Campo</th><th>Descripción</th></tr>
+      <tr><td>Título</td><td>Nombre del video (español e inglés)</td></tr>
+      <tr><td>URL del video</td><td>Link de YouTube o Vimeo del video</td></tr>
+      <tr><td>Miniatura</td><td>Imagen de vista previa (opcional, si no se usa la automática)</td></tr>
+      <tr><td>Orden</td><td>Posición en el listado de videos</td></tr>
+    </table>
+  </div>
+
+  <!-- 13. FAQ -->
+  <div class="section" id="s13">
+    <div class="section-number">13</div>
+    <h2 class="section-title">Preguntas frecuentes (FAQ)</h2>
+    <p class="section-subtitle">Gestiona las preguntas y respuestas del sitio</p>
+
+    <p>Las FAQ aparecen en las páginas que incluyan la sección de tipo <code>faq</code>.</p>
+
+    <h3>Campos de una pregunta</h3>
+    <table>
+      <tr><th>Campo</th><th>Descripción</th></tr>
+      <tr><td>Pregunta</td><td>Texto de la pregunta (español e inglés)</td></tr>
+      <tr><td>Respuesta</td><td>Texto de la respuesta (español e inglés)</td></tr>
+      <tr><td>Orden</td><td>Posición en el listado</td></tr>
+      <tr><td>Abierta por defecto</td><td>Si la respuesta aparece expandida al cargar la página</td></tr>
+    </table>
+  </div>
+
+  <!-- 14. PROMOCIONES -->
+  <div class="section" id="s14">
+    <div class="section-number">14</div>
+    <h2 class="section-title">Promociones</h2>
+    <p class="section-subtitle">Banners de ofertas y promociones</p>
+
+    <p>Las promociones activas aparecen como un banner en la parte superior del sitio (encima del menú de navegación).</p>
+
+    <h3>Campos de una promoción</h3>
+    <table>
+      <tr><th>Campo</th><th>Descripción</th></tr>
+      <tr><td>Título</td><td>Texto principal del banner (español e inglés)</td></tr>
+      <tr><td>Descripción</td><td>Texto secundario opcional (español e inglés)</td></tr>
+      <tr><td>CTA / Botón</td><td>Texto del botón y URL de destino</td></tr>
+      <tr><td>Color de fondo</td><td>Color del banner (navy, azul, etc.)</td></tr>
+      <tr><td>Válida desde / hasta</td><td>Fechas de vigencia (opcional)</td></tr>
+    </table>
+
+    <div class="tip">
+      <strong>Solo una activa a la vez</strong>
+      El sitio muestra la primera promoción activa. Si tienes varias, solo se mostrará la primera de la lista.
+    </div>
+  </div>
+
+  <!-- 15. POPUPS -->
+  <div class="section" id="s15">
+    <div class="section-number">15</div>
+    <h2 class="section-title">Popups</h2>
+    <p class="section-subtitle">Ventanas emergentes con mensajes clave</p>
+
+    <p>Los popups aparecen automáticamente después de que el visitante lleva cierto tiempo en el sitio.</p>
+
+    <h3>Campos de un popup</h3>
+    <table>
+      <tr><th>Campo</th><th>Descripción</th></tr>
+      <tr><td>Título</td><td>Encabezado del popup (español e inglés)</td></tr>
+      <tr><td>Cuerpo</td><td>Texto del mensaje (español e inglés)</td></tr>
+      <tr><td>Imagen</td><td>Imagen decorativa opcional</td></tr>
+      <tr><td>CTA / Botón</td><td>Texto del botón y URL</td></tr>
+      <tr><td>Demora</td><td>Segundos que espera antes de aparecer (ej: 5)</td></tr>
+    </table>
+
+    <div class="warning">
+      <strong>Úsalos con moderación</strong>
+      Los popups que aparecen muy rápido o muy frecuentemente afectan negativamente la experiencia del usuario. Se recomienda una demora mínima de 5–10 segundos.
+    </div>
+  </div>
+
+  <!-- 16. FORMULARIOS -->
+  <div class="section" id="s16">
+    <div class="section-number">16</div>
+    <h2 class="section-title">Formularios de contacto</h2>
+    <p class="section-subtitle">Mensajes recibidos desde el sitio web</p>
+
+    <p>Cada vez que un visitante completa el formulario de contacto del sitio, el mensaje queda registrado aquí.</p>
+
+    <h3>Información de cada mensaje</h3>
+    <table>
+      <tr><th>Campo</th><th>Descripción</th></tr>
+      <tr><td>Nombre</td><td>Nombre del visitante</td></tr>
+      <tr><td>Email</td><td>Correo electrónico de contacto</td></tr>
+      <tr><td>Teléfono</td><td>Número de contacto (si fue ingresado)</td></tr>
+      <tr><td>Servicio de interés</td><td>Especialidad seleccionada en el formulario</td></tr>
+      <tr><td>Mensaje</td><td>Texto del mensaje enviado</td></tr>
+      <tr><td>Página de origen</td><td>Desde qué página del sitio envió el mensaje</td></tr>
+      <tr><td>Estado</td><td>Nuevo / Revisado / Archivado</td></tr>
+      <tr><td>Fecha</td><td>Fecha y hora de recepción</td></tr>
+    </table>
+
+    <div class="tip">
+      <strong>Gestión de mensajes</strong>
+      Cambia el estado a "Revisado" cuando hayas atendido el mensaje, y a "Archivado" cuando ya no necesites consultarlo. Esto ayuda a mantener ordenada la bandeja.
+    </div>
+  </div>
+
+  <!-- 17. MEDIOS -->
+  <div class="section" id="s17">
+    <div class="section-number">17</div>
+    <h2 class="section-title">Medios (biblioteca de archivos)</h2>
+    <p class="section-subtitle">Sube y gestiona imágenes del sitio</p>
+
+    <p>El módulo <strong>Medios</strong> es la biblioteca de imágenes del sitio. Aquí puedes subir nuevas imágenes que luego podrás usar en cualquier otra sección.</p>
+
+    <h3>Subir una imagen</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Ve a Medios</strong> en el menú lateral.</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Haz clic en "Subir imagen"</strong> o arrastra el archivo al área de carga.</div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Espera a que cargue.</strong> Verás una vista previa y la URL de la imagen.</div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body"><strong>Copia la URL</strong> para usarla en otros módulos (blog, galería, footer, etc.).</div></div>
+    </div>
+
+    <div class="info">
+      <strong>Formatos recomendados</strong>
+      Usa imágenes en formato <strong>WebP o JPG</strong> para mejor rendimiento. El tamaño recomendado para imágenes de portada es 1200×630 px. Para logos, usa PNG con fondo transparente.
+    </div>
+  </div>
+
+  <!-- 18. REDIRECTS -->
+  <div class="section" id="s18">
+    <div class="section-number">18</div>
+    <h2 class="section-title">Redirects</h2>
+    <p class="section-subtitle">Redirecciones de URLs antiguas o cambiadas</p>
+
+    <p>Los redirects permiten que una URL antigua lleve automáticamente a una nueva dirección. Útil cuando cambias el nombre de una página o eliminas contenido.</p>
+
+    <h3>Campos de un redirect</h3>
+    <table>
+      <tr><th>Campo</th><th>Descripción</th></tr>
+      <tr><td>URL origen</td><td>La URL antigua que ya no existe, ej: <code>/old-page</code></td></tr>
+      <tr><td>URL destino</td><td>La nueva URL a donde se redirige, ej: <code>/new-page</code></td></tr>
+      <tr><td>Tipo</td><td>301 (permanente) o 302 (temporal)</td></tr>
+    </table>
+
+    <div class="info">
+      <strong>¿Cuándo usar 301 vs 302?</strong>
+      Usa <strong>301</strong> cuando el cambio es definitivo (Google transfiere el posicionamiento SEO). Usa <strong>302</strong> cuando es temporal, por ejemplo durante una promoción.
+    </div>
+  </div>
+
+  <!-- 19. USUARIOS -->
+  <div class="section" id="s19">
+    <div class="section-number">19</div>
+    <h2 class="section-title">Usuarios administradores</h2>
+    <p class="section-subtitle">Gestión de cuentas con acceso al panel</p>
+
+    <p>Desde <strong>Usuarios</strong> puedes crear nuevas cuentas para que otros miembros del equipo puedan acceder al panel administrativo.</p>
+
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Ve a Usuarios</strong> en el menú lateral.</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Haz clic en "Crear usuario".</strong></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Ingresa el correo electrónico</strong> del nuevo usuario. Recibirá un email para establecer su contraseña.</div></div>
+    </div>
+
+    <div class="warning">
+      <strong>Acceso total</strong>
+      Todos los usuarios administradores tienen acceso completo al panel. Crea cuentas solo para personas de confianza del equipo.
+    </div>
+  </div>
+
+  <!-- 20. FAQ DE USO -->
+  <div class="section" id="s20">
+    <div class="section-number">20</div>
+    <h2 class="section-title">Preguntas frecuentes de uso</h2>
+    <p class="section-subtitle">Respuestas a dudas comunes del panel</p>
+
+    <h3>¿Cuánto demora en verse un cambio en el sitio?</h3>
+    <p>La mayoría de los cambios se ven en menos de 60 segundos. Los módulos que tienen botón "Guardar cambios" actualizan el sitio de forma inmediata al guardar.</p>
+
+    <h3>¿Puedo editar el sitio desde el celular?</h3>
+    <p>El panel es accesible desde celular, pero se recomienda usarlo desde un computador para mayor comodidad, especialmente al editar páginas con muchas secciones.</p>
+
+    <h3>¿Qué pasa si borro algo por error?</h3>
+    <p>Los cambios en Supabase (la base de datos) no tienen papelera de reciclaje. Si eliminas contenido por error, contacta al administrador técnico lo antes posible para intentar recuperarlo.</p>
+
+    <h3>¿Cómo agrego una nueva red social que no aparece en el formulario?</h3>
+    <p>El sitio actualmente tiene soporte para Instagram, Facebook, TikTok y X (Twitter). Para agregar otra red social es necesario una actualización técnica del sitio.</p>
+
+    <h3>¿El sitio tiene versión en inglés?</h3>
+    <p>Sí. El sitio es completamente bilingüe (español e inglés). Todos los campos de texto en el panel tienen pestaña ES / EN para gestionar ambos idiomas de forma independiente.</p>
+
+    <h3>¿Cómo cambio el dominio del sitio?</h3>
+    <p>El cambio de dominio se hace desde el panel de Vercel (el servicio de hosting). No requiere cambios en el contenido del panel administrativo. Contacta al administrador técnico para este proceso.</p>
+
+    <h3>¿Puedo programar la publicación de un artículo de blog?</h3>
+    <p>Actualmente el blog no tiene publicación programada. Los artículos se publican en el momento en que haces clic en "Publicar".</p>
+
+    <h3>¿Hay respaldo automático del contenido?</h3>
+    <p>Sí. El contenido está almacenado en Supabase, que realiza copias de seguridad automáticas periódicamente. Sin embargo, se recomienda no eliminar contenido sin estar seguro.</p>
+  </div>
+
+  <!-- FOOTER DEL DOCUMENTO -->
+  <div class="doc-footer">
+    <p><strong>Allura Healthcare</strong> · Panel Administrativo · Manual de Usuario v1.0</p>
+    <p style="margin-top:6px;">Para soporte técnico contacta a tu proveedor de desarrollo web.</p>
+    <p style="margin-top:6px; color:#ccc;">© 2026 Allura Healthcare · Documento confidencial de uso interno</p>
+  </div>
+
+</div>
+</body>
+</html>
