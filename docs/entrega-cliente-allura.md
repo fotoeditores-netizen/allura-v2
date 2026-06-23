@@ -12,6 +12,7 @@
 
 | Pieza | Plataforma | A nombre de | Costo |
 |-------|-----------|-------------|-------|
+| Código fuente | GitHub | Cliente | Gratis |
 | Sitio web (hosting) | Vercel | Cliente | Gratis (plan Hobby) o ~20 USD/mes (Pro, si se necesita) |
 | Base de datos + imágenes + login | Supabase | Cliente | Gratis (plan Free alcanza) |
 | Dominio | Registrador a elección (Hostinger, Namecheap, GoDaddy…) | Cliente | ~10–15 USD/año |
@@ -26,13 +27,18 @@
 El cliente NO necesita comprar hosting ni servidores. Solo necesita **crear cuentas
 a su nombre** (con su correo y su tarjeta) en:
 
-1. **Cuenta en Vercel** — https://vercel.com → "Sign Up" con el correo del cliente.
+1. **Cuenta en GitHub** — https://github.com → "Sign Up" con el correo del cliente.
+   - Gratis. Aquí vivirá el **código fuente** del sitio. Da independencia: si algún día
+     cambia de desarrollador, el código es suyo.
+2. **Cuenta en Vercel** — https://vercel.com → "Sign Up" con el correo del cliente.
    - Plan **Hobby (gratis)** sirve para empezar. Si el tráfico crece, se sube a Pro (~20 USD/mes).
-2. **Cuenta en Supabase** — https://supabase.com → "Start your project" con el correo del cliente.
+   - Conviene registrarse en Vercel **usando la cuenta de GitHub** del cliente (botón
+     "Continue with GitHub"), así quedan enlazadas desde el inicio.
+3. **Cuenta en Supabase** — https://supabase.com → "Start your project" con el correo del cliente.
    - Plan **Free** alcanza para este sitio (500 MB BD + 1 GB imágenes + 50.000 usuarios/mes).
-3. **Dominio propio** — si aún no lo tiene, comprarlo en cualquier registrador.
+4. **Dominio propio** — si aún no lo tiene, comprarlo en cualquier registrador.
    - Recomendado: que lo compre donde también tendrá los correos, para simplificar.
-4. **(Opcional) Correos corporativos** — ej. `info@allurahealthcare.com`.
+5. **(Opcional) Correos corporativos** — ej. `info@allurahealthcare.com`.
    - Zoho Mail tiene plan gratis; Google Workspace ~6 USD/mes; Hostinger los incluye con dominio.
 
 > ✅ **Importante:** que el cliente cree estas cuentas con SU correo y SU tarjeta.
@@ -45,6 +51,27 @@ a su nombre** (con su correo y su tarjeta) en:
 
 > Regla de oro: **NO borrar las cuentas actuales (Vercel/Supabase tuyas) hasta que
 > el sitio nuevo del cliente esté 100% probado y funcionando.** Sirven de respaldo.
+
+> Orden recomendado: **GitHub → Supabase → Vercel → Dominio → Verificación.**
+> (El código va primero porque Vercel se conecta a él; la base de datos antes que
+> el sitio porque el sitio necesita sus claves.)
+
+### Fase 0 — Código fuente (GitHub)
+
+El código está hoy en `fotoeditores-netizen/allura-v2` (el repo que usa Vercel). Para
+pasarlo al cliente:
+
+1. El cliente crea su cuenta de GitHub (ver Parte 1).
+2. **Transferir el repositorio** al cliente:
+   GitHub → repo `allura-v2` → Settings → General → **Transfer ownership** → poner el
+   usuario del cliente. El cliente recibe un correo y debe **aceptar** la transferencia.
+3. El cliente te agrega de vuelta como **colaborador**:
+   repo → Settings → Collaborators → Add people → tu usuario. Así sigues manteniéndolo.
+4. (Alternativa si no quieres transferir ESE repo) Crear un repo nuevo en la cuenta del
+   cliente y subir el código ahí con `git push`. Igual de válido; transferir es más directo
+   porque conserva el historial y la conexión.
+
+> Resultado: el **código es del cliente**, tú conservas acceso de colaborador.
 
 ### Fase A — Base de datos (Supabase)
 
@@ -69,15 +96,16 @@ Tienes dos caminos. **El B1 es el recomendado.**
 1. En Vercel (cuenta actual) → proyecto → Settings → **Transfer Project** a la cuenta del cliente.
 2. Vercel pide que el cliente acepte la transferencia. Listo: mismo proyecto, nuevo dueño.
 
-**B2 — Crear el proyecto desde cero en la cuenta del cliente (si prefieres empezar limpio):**
-1. El repositorio Git debe estar accesible para la cuenta del cliente (o transferir el repo).
-2. En Vercel del cliente → "Add New Project" → importar el repo.
+**B2 — Crear el proyecto desde cero en la cuenta del cliente (recomendado si ya hiciste
+la Fase 0 de GitHub):**
+1. El repo ya está en la cuenta del cliente (Fase 0).
+2. En Vercel del cliente → "Add New Project" → importar **su** repo de GitHub.
 3. Configurar las **variables de entorno** (las de Supabase nuevas de la Fase A + las de correo).
 4. Hacer el primer deploy y probar.
 
-> ⚠️ **Recordatorio del proyecto:** hoy Vercel despliega producción desde la rama
-> `feature/supabase-migration`, NO desde `main`. Al montar el proyecto nuevo conviene
-> dejar **`main` como Production Branch** para simplificar (y mergear esa rama a main antes).
+> ✅ **Production Branch:** las ramas `main` y `feature/supabase-migration` ya están
+> sincronizadas (mismo código). Al montar el proyecto nuevo, dejar **`main` como
+> Production Branch** — es lo limpio y evita la confusión que había antes.
 
 ### Fase C — Variables de entorno a configurar en el Vercel del cliente
 
@@ -135,8 +163,8 @@ Un documento/correo con:
      haciendo cambios sin tener el control económico.
 
 5. **Código fuente:**
-   - Acceso al repositorio Git (o una copia entregada), por si el cliente algún día
-     cambia de desarrollador.
+   - Ya queda en el **GitHub del cliente** (Fase 0), así que el código es suyo.
+   - Confirmar que el cliente tiene el acceso de dueño del repo y tú el de colaborador.
 
 ---
 
